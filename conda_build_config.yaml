@@ -1,0 +1,16 @@
+c_compiler:
+- gcc # [linux64]
+- vs2022 # [win64]
+c_compiler_version:
+- '19.36' # [win64]
+cxx_compiler:
+- gxx # [linux64]
+- vs2022 # [win64]
+cxx_compiler_version:
+- '19.36' # [win64]
+cdt_name:
+- cos7 # [linux64]
+python:
+- '3.11'
+numpy:
+- '1.25'
