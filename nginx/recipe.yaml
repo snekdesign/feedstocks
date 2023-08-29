@@ -1,5 +1,6 @@
 context:
   version: 1.25.2
+  sha256: 2895fc98287a7e5f12e15cd02b88d84d2e1c484ca9d229efb3f69152e488f6fc
 
 package:
   name: nginx
@@ -7,7 +8,7 @@ package:
 
 source:
 - url: https://github.com/nginx/nginx/archive/refs/tags/release-{{ version }}.tar.gz
-  sha256: 2895fc98287a7e5f12e15cd02b88d84d2e1c484ca9d229efb3f69152e488f6fc
+  sha256: '{{ sha256 }}'
   folder: nginx
   patches:
   - 0001-conda-build.patch
