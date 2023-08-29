@@ -12,6 +12,8 @@ source:
 build:
   include_recipe: false
   number: 0
+  script_env:
+    MSYSTEM: UCRT64
   skip:
   - not win64
   - build_platform != target_platform
