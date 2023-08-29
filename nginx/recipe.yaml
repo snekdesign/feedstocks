@@ -1,0 +1,40 @@
+context:
+  version: 1.25.2
+
+package:
+  name: nginx
+  version: '{{ version }}'
+
+source:
+- url: https://github.com/nginx/nginx/archive/refs/tags/release-{{ version }}.tar.gz
+  sha256: 2895fc98287a7e5f12e15cd02b88d84d2e1c484ca9d229efb3f69152e488f6fc
+  folder: nginx
+  patches:
+  - 0001-conda-build.patch
+- path: scripts
+  folder: scripts
+
+build:
+  include_recipe: false
+  number: 0
+  script_env:
+    MSYS2_PATH_TYPE: inherit
+  skip:
+  - not win64
+  - build_platform != target_platform
+
+requirements:
+  build:
+  - "{{ compiler('c') }}"
+  host:
+  - openssl
+  - posix
+  run:
+  - openssl
+
+test:
+  commands:
+  - nginx -V
+
+about:
+  summary: Nginx is an HTTP and reverse proxy server

@@ -1,0 +1,52 @@
+From f10fc5b8e3c898ff5fd84225f20a1b5f01223b62 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Wed, 30 Aug 2023 01:59:16 +0800
+Subject: [PATCH] conda build
+
+---
+ auto/cc/msvc          | 2 +-
+ auto/lib/openssl/conf | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/auto/cc/msvc b/auto/cc/msvc
+index 567bac7..9d04c9e 100644
+--- a/auto/cc/msvc
++++ b/auto/cc/msvc
+@@ -110,7 +110,7 @@ CORE_LINK="$CORE_LINK -link -verbose:lib"
+ LIBC="-MT"
+ # link with msvcrt.dll
+ # however, MSVC Toolkit 2003 has no MSVCRT.LIB
+-#LIBC="-MD"
++LIBC="-MD"
+ 
+ CFLAGS="$CFLAGS $LIBC"
+ 
+diff --git a/auto/lib/openssl/conf b/auto/lib/openssl/conf
+index eda1c0f..f9f75e1 100644
+--- a/auto/lib/openssl/conf
++++ b/auto/lib/openssl/conf
+@@ -20,8 +20,8 @@ if [ $OPENSSL != NONE ]; then
+         cl | bcc32)
+             CFLAGS="$CFLAGS -DNO_SYS_TYPES_H"
+ 
+-            CORE_INCS="$CORE_INCS $OPENSSL/openssl/include"
+-            CORE_DEPS="$CORE_DEPS $OPENSSL/openssl/include/openssl/ssl.h"
++            CORE_INCS="$CORE_INCS $LIBRARY_PREFIX/include"
++            CORE_DEPS="$CORE_DEPS $LIBRARY_PREFIX/include/openssl/ssl.h"
+ 
+             if [ -f $OPENSSL/ms/do_ms.bat ]; then
+                 # before OpenSSL 1.1.0
+@@ -29,8 +29,8 @@ if [ $OPENSSL != NONE ]; then
+                 CORE_LIBS="$CORE_LIBS $OPENSSL/openssl/lib/libeay32.lib"
+             else
+                 # OpenSSL 1.1.0+
+-                CORE_LIBS="$CORE_LIBS $OPENSSL/openssl/lib/libssl.lib"
+-                CORE_LIBS="$CORE_LIBS $OPENSSL/openssl/lib/libcrypto.lib"
++                CORE_LIBS="$CORE_LIBS $LIBRARY_PREFIX/lib/libssl.lib"
++                CORE_LIBS="$CORE_LIBS $LIBRARY_PREFIX/lib/libcrypto.lib"
+             fi
+ 
+             # libeay32.lib requires gdi32.lib
+-- 
+2.42.0.windows.1
+
