@@ -1,0 +1,25 @@
+From ab3bae2db100df81dec5d94ea98ec839e22556cc Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Sat, 23 Sep 2023 16:03:01 +0800
+Subject: [PATCH] conda build
+
+---
+ src/utils/FileUtil.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/utils/FileUtil.cpp b/src/utils/FileUtil.cpp
+index ab2abf6..1c1ffa0 100644
+--- a/src/utils/FileUtil.cpp
++++ b/src/utils/FileUtil.cpp
+@@ -478,7 +478,7 @@ WCHAR* GetPathOfFileInAppDir(const WCHAR* fileName) {
+         return str::Dup(modulePath);
+     }
+     AutoFreeWstr moduleDir = path::GetDir(modulePath);
+-    AutoFreeWstr path = path::Join(moduleDir, fileName);
++    AutoFreeWstr path = path::Join(moduleDir, L"..\\etc", fileName);
+     return path::Normalize(path);
+ }
+ } // namespace path
+-- 
+2.42.0.windows.1
+

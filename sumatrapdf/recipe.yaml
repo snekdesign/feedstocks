@@ -1,0 +1,29 @@
+context:
+  version: 3.4.6
+  sha256: cf5f0f526dcf8956241d918124d692a658e2fcdacf71647bd773e9d7151dc500
+
+package:
+  name: sumatrapdf
+  version: '{{ version }}'
+
+source:
+- url: https://github.com/sumatrapdfreader/sumatrapdf/archive/refs/tags/{{ version }}rel.tar.gz
+  sha256: '{{ sha256 }}'
+  patches:
+  - 0001-conda-build.patch
+- path: SumatraPDF-settings.txt
+
+build:
+  include_recipe: false
+  number: 0
+  skip:
+  - not win64
+  - build_platform != target_platform
+
+requirements:
+  build:
+  - "{{ compiler('c') }}"
+
+about:
+  license_file: AUTHORS
+  summary: SumatraPDF reader
