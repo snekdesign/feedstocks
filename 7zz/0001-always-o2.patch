@@ -1,0 +1,25 @@
+From 6da2f085d26dc18474aa358c7360da7d4b57ef52 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Sat, 23 Sep 2023 14:40:20 +0800
+Subject: [PATCH] always o2
+
+---
+ CPP/Build.mak | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CPP/Build.mak b/CPP/Build.mak
+index 6317048..b173eda 100644
+--- a/CPP/Build.mak
++++ b/CPP/Build.mak
+@@ -124,7 +124,7 @@ CFLAGS = $(CFLAGS) -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE
+ !ENDIF
+ 
+ !IF "$(PLATFORM)" == "x64"
+-CFLAGS_O1 = $(CFLAGS) -O1
++CFLAGS_O1 = $(CFLAGS) -O2
+ !ELSE
+ CFLAGS_O1 = $(CFLAGS) -O1
+ !ENDIF
+-- 
+2.42.0.windows.1
+
