@@ -1,0 +1,29 @@
+context:
+  version: 2.4.0
+  sha256: 5850947c23db6fbce032d15560551408ab155b16a94a7ac4412dc3bb85762d2d
+
+package:
+  name: jerryscript
+  version: '{{ version }}'
+
+source:
+- url: https://github.com/jerryscript-project/jerryscript/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: '{{ sha256 }}'
+
+build:
+  include_recipe: false
+  number: 0
+  skip:
+  - not (win64 or linux64)
+  - build_platform != target_platform
+
+requirements:
+  build:
+  - "{{ compiler('c') }}"
+  - sel(linux64): cmake
+  - sel(linux64): make
+
+about:
+  license: Apache-2.0
+  license_file: LICENSE
+  summary: Ultra-lightweight JavaScript engine for the Internet of things
