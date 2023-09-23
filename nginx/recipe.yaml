@@ -38,4 +38,7 @@ test:
   - nginx -V
 
 about:
+  license: BSD-2-Clause
+  license_family: BSD
+  license_file: nginx/docs/text/LICENSE
   summary: Nginx is an HTTP and reverse proxy server
