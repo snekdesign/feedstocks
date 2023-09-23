@@ -1,0 +1,124 @@
+From 593739e69d0cbb3f72b30751bcae24c3add616b9 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Sat, 23 Sep 2023 16:28:04 +0800
+Subject: [PATCH] customize
+
+---
+ .../Langs/Resources/Chinese (Simplified).rc   | 25 ++++++++-----------
+ Edit.c                                        |  2 +-
+ 2 files changed, 11 insertions(+), 16 deletions(-)
+
+diff --git a/AkelFiles/Langs/Resources/Chinese (Simplified).rc b/AkelFiles/Langs/Resources/Chinese (Simplified).rc
+index 20530b8..069c55d 100644
+--- a/AkelFiles/Langs/Resources/Chinese (Simplified).rc	
++++ b/AkelFiles/Langs/Resources/Chinese (Simplified).rc	
+@@ -66,7 +66,7 @@ BEGIN
+     POPUP "编辑(&E)"
+     BEGIN
+         MENUITEM "撤消(&N)\tCtrl+Z",            IDM_EDIT_UNDO
+-        MENUITEM "恢复(&E)\tCtrl+Shift+Z",      IDM_EDIT_REDO
++        MENUITEM "恢复(&E)\tCtrl+Y",            IDM_EDIT_REDO
+         MENUITEM SEPARATOR
+         MENUITEM "剪切(&C)\tCtrl+X",            IDM_EDIT_CUT
+         MENUITEM "复制(&O)\tCtrl+C",            IDM_EDIT_COPY
+@@ -77,7 +77,7 @@ BEGIN
+         MENUITEM "查找(&F)...\tCtrl+F",         IDM_EDIT_FIND
+         MENUITEM "向下查找下一个(&W)\tF3",      IDM_EDIT_FINDNEXTDOWN
+         MENUITEM "向上查找下一个(&U)\tShift+F3", IDM_EDIT_FINDNEXTUP
+-        MENUITEM "替换(&R)...\tCtrl+R",         IDM_EDIT_REPLACE
++        MENUITEM "替换(&R)...\tCtrl+H",         IDM_EDIT_REPLACE
+         MENUITEM "转到(&G)...\tCtrl+G",         IDM_EDIT_GOTO
+         MENUITEM SEPARATOR
+         MENUITEM "插入符号(&H)\tCtrl+I",        IDM_EDIT_INSERTCHAR
+@@ -88,9 +88,9 @@ BEGIN
+             MENUITEM SEPARATOR
+             MENUITEM "制表符缩进(&B)\tTab",         IDM_EDIT_INSERT_TAB_MENU
+             MENUITEM "制表符反缩进(&T)\tShift+Tab", IDM_EDIT_DELETE_TAB_MENU
+-            MENUITEM "空格缩进(&C)\tSpace",         IDM_EDIT_INSERT_SPACE_MENU
++            MENUITEM "空格缩进(&C)",                IDM_EDIT_INSERT_SPACE_MENU
+ 
+-            MENUITEM "空格反缩进(&A)\tShift+Space", IDM_EDIT_DELETE_SPACE_MENU
++            MENUITEM "空格反缩进(&A)",              IDM_EDIT_DELETE_SPACE_MENU
+ 
+             MENUITEM "删除第一个字符(&F)\tShift+Backspace", 
+                                                     IDM_EDIT_DELETE_FIRST_CHAR_MENU
+@@ -121,7 +121,7 @@ BEGIN
+         MENUITEM "字体(&F)...",                 IDM_VIEW_FONT
+         MENUITEM "颜色(&C)...",                 IDM_VIEW_COLORS
+         MENUITEM SEPARATOR
+-        MENUITEM "只读(&R)",                    IDM_VIEW_READONLY
++        MENUITEM "只读(&R)\tCtrl+R",            IDM_VIEW_READONLY
+         MENUITEM "自动换行(&W)\tCtrl+U",        IDM_VIEW_WORDWRAP
+         MENUITEM "拆分窗格(&P)",                IDM_VIEW_SPLIT_WINDOW_ONOFF
+         MENUITEM "总在最前(&A)\tCtrl+T",        IDM_VIEW_ONTOP
+@@ -313,7 +313,7 @@ BEGIN
+                                                     NOINVERT
+     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
+     "P",            IDM_OPTIONS_PLUGINS,    VIRTKEY, ALT, NOINVERT
+-    "R",            IDM_EDIT_REPLACE,       VIRTKEY, CONTROL, NOINVERT
++    "R",            IDM_VIEW_READONLY,      VIRTKEY, CONTROL, NOINVERT
+     "R",            IDM_EDIT_RECODE,        VIRTKEY, ALT, NOINVERT
+     "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+     "S",            IDM_FILE_SAVEAS,        VIRTKEY, SHIFT, CONTROL, 
+@@ -353,29 +353,24 @@ BEGIN
+     VK_F8,          IDM_EDIT_DELLINE,       VIRTKEY, NOINVERT
+     VK_F9,          IDM_WINDOW_CLONENEXT,   VIRTKEY, NOINVERT
+     VK_F9,          IDM_WINDOW_CLONEPREV,   VIRTKEY, SHIFT, NOINVERT
+-    VK_INSERT,      IDM_EDIT_INSERTMODE,    VIRTKEY, NOINVERT
+     VK_INSERT,      IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+     VK_INSERT,      IDM_EDIT_PASTE,         VIRTKEY, SHIFT, NOINVERT
+     VK_INSERT,      IDM_EDIT_PASTEANSI,     VIRTKEY, SHIFT, CONTROL, 
+                                                     NOINVERT
+     VK_RETURN,      IDM_EDIT_AUTOINDENT,    VIRTKEY, CONTROL, NOINVERT
+     VK_RETURN,      IDM_WINDOW_CHANGESIZE,  VIRTKEY, ALT, NOINVERT
+-    VK_SPACE,       IDM_EDIT_INSERT_SPACE,  VIRTKEY, NOINVERT
+-    VK_SPACE,       IDM_EDIT_DELETE_SPACE,  VIRTKEY, SHIFT, NOINVERT
+     VK_SUBTRACT,    IDM_VIEW_FONTSIZE_DECREASE, VIRTKEY, CONTROL, NOINVERT
+     VK_TAB,         IDM_EDIT_INSERT_TAB,    VIRTKEY, NOINVERT
+     VK_TAB,         IDM_WINDOW_FRAMENEXT,   VIRTKEY, CONTROL, NOINVERT
+     VK_TAB,         IDM_EDIT_DELETE_TAB,    VIRTKEY, SHIFT, NOINVERT
+     VK_TAB,         IDM_WINDOW_FRAMEPREV,   VIRTKEY, SHIFT, CONTROL, 
+                                                     NOINVERT
+-    "W",            IDM_WINDOW_FRAMECLOSE,  VIRTKEY, CONTROL, NOINVERT
++    "W",            IDM_WINDOW_FILEEXIT,    VIRTKEY, CONTROL, NOINVERT
+     "W",            IDM_FILE_REOPENAS_ANSI, VIRTKEY, ALT, NOINVERT
+     "W",            IDM_FILE_SAVEAS_ANSI,   VIRTKEY, SHIFT, ALT, NOINVERT
+     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+-    "Y",            IDM_EDIT_DELLINE,       VIRTKEY, CONTROL, NOINVERT
++    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT
+     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+-    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, 
+-                                                    NOINVERT
+     188,            IDM_EDIT_RECENTCARETPREV, VIRTKEY, ALT, NOINVERT
+     190,            IDM_EDIT_RECENTCARETNEXT, VIRTKEY, ALT, NOINVERT
+     220,            IDM_EDIT_SELJUMPCARET,  VIRTKEY, ALT, NOINVERT
+@@ -548,11 +543,11 @@ BEGIN
+     CONTROL         "所有文件",IDC_SEARCH_ALLFILES,"Button",
+                     BS_AUTORADIOBUTTON,141,101,50,10
+     GROUPBOX        "",IDC_SEARCH_ALLFILES_GROUP,135,94,66,19
+-    DEFPUSHBUTTON   "查找下一个(&F)",IDC_SEARCH_FIND_BUTTON,206,6,58,14,
++    PUSHBUTTON      "查找下一个(&F)",IDC_SEARCH_FIND_BUTTON,206,6,58,14,
+                     BS_CENTER
+     PUSHBUTTON      "替换(&R)",IDC_SEARCH_REPLACE_BUTTON,206,23,58,14,
+                     BS_CENTER
+-    PUSHBUTTON      "全部替换(&A)",IDC_SEARCH_ALL_BUTTON,206,39,58,14,
++    DEFPUSHBUTTON   "全部替换(&A)",IDC_SEARCH_ALL_BUTTON,206,39,58,14,
+                     BS_CENTER
+     PUSHBUTTON      "取消",IDCANCEL,206,55,58,14,BS_CENTER
+     LTEXT           "查找内容:",IDC_STATIC,4,11,37,8,NOT WS_GROUP
+diff --git a/Edit.c b/Edit.c
+index fe24726..eadee13 100644
+--- a/Edit.c
++++ b/Edit.c
+@@ -1694,7 +1694,7 @@ BOOL SaveChanged(DWORD dwPrompt)
+     if (dwPrompt & PROMPT_NOTOALLBUTTON)
+       nChoice=MessageBoxCustom(hMainWnd, wszMsg, APP_MAIN_TITLEW, MB_ICONEXCLAMATION, NULL, &bmb[0]);
+     else
+-      nChoice=API_MessageBox(hMainWnd, wszMsg, APP_MAIN_TITLEW, MB_YESNOCANCEL|MB_ICONEXCLAMATION);
++      nChoice=API_MessageBox(hMainWnd, wszMsg, APP_MAIN_TITLEW, MB_YESNOCANCEL|MB_ICONEXCLAMATION|MB_DEFBUTTON2);
+ 
+     if (nChoice == IDC_MESSAGEBOX_YES || nChoice == IDYES)
+     {
+-- 
+2.42.0.windows.1
+

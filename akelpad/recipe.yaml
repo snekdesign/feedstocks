@@ -1,0 +1,30 @@
+context:
+  svn_rev: 4432
+  version: 4.9.9dev{{ svn_rev }}
+
+package:
+  name: akelpad
+  version: '{{ version }}'
+
+source:
+- svn_url: https://svn.code.sf.net/p/akelpad/codesvn
+  svn_rev: '{{ svn_rev }}'
+  svn_ignore_externals: true
+  patches:
+  - 0001-customize.patch
+- path: CMakeLists.txt
+
+build:
+  include_recipe: false
+  number: 0
+  skip:
+  - not win64
+  - build_platform != target_platform
+
+requirements:
+  build:
+  - "{{ compiler('c') }}"
+
+about:
+  license_family: BSD
+  summary: A simple notepad-like text editor with many features
