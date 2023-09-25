@@ -5,13 +5,13 @@ Subject: [PATCH] customize
 
 ---
  .../Langs/Resources/Chinese (Simplified).rc   | 25 ++++++++-----------
- Edit.c                                        |  2 +-
+ trunk/akelpad_4/Edit.c                                        |  2 +-
  2 files changed, 11 insertions(+), 16 deletions(-)
 
-diff --git a/AkelFiles/Langs/Resources/Chinese (Simplified).rc b/AkelFiles/Langs/Resources/Chinese (Simplified).rc
+diff --git a/trunk/akelpad_4/AkelFiles/Langs/Resources/Chinese (Simplified).rc b/trunk/akelpad_4/AkelFiles/Langs/Resources/Chinese (Simplified).rc
 index 20530b8..069c55d 100644
---- a/AkelFiles/Langs/Resources/Chinese (Simplified).rc	
-+++ b/AkelFiles/Langs/Resources/Chinese (Simplified).rc	
+--- a/trunk/akelpad_4/AkelFiles/Langs/Resources/Chinese (Simplified).rc	
++++ b/trunk/akelpad_4/AkelFiles/Langs/Resources/Chinese (Simplified).rc	
 @@ -66,7 +66,7 @@ BEGIN
      POPUP "编辑(&E)"
      BEGIN
@@ -106,10 +106,10 @@ index 20530b8..069c55d 100644
                      BS_CENTER
      PUSHBUTTON      "取消",IDCANCEL,206,55,58,14,BS_CENTER
      LTEXT           "查找内容:",IDC_STATIC,4,11,37,8,NOT WS_GROUP
-diff --git a/Edit.c b/Edit.c
+diff --git a/trunk/akelpad_4/Edit.c b/trunk/akelpad_4/Edit.c
 index fe24726..eadee13 100644
---- a/Edit.c
-+++ b/Edit.c
+--- a/trunk/akelpad_4/Edit.c
++++ b/trunk/akelpad_4/Edit.c
 @@ -1694,7 +1694,7 @@ BOOL SaveChanged(DWORD dwPrompt)
      if (dwPrompt & PROMPT_NOTOALLBUTTON)
        nChoice=MessageBoxCustom(hMainWnd, wszMsg, APP_MAIN_TITLEW, MB_ICONEXCLAMATION, NULL, &bmb[0]);

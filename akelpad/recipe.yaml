@@ -13,6 +13,7 @@ source:
   patches:
   - 0001-customize.patch
 - path: CMakeLists.txt
+  folder: trunk/akelpad_4
 
 build:
   include_recipe: false
