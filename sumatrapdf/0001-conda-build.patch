@@ -1,7 +1,7 @@
 From ab3bae2db100df81dec5d94ea98ec839e22556cc Mon Sep 17 00:00:00 2001
 From: snekdesign <104812819+snekdesign@users.noreply.github.com>
 Date: Sat, 23 Sep 2023 16:03:01 +0800
-Subject: [PATCH] conda build
+Subject: [PATCH 1/2] conda build
 
 ---
  src/utils/FileUtil.cpp | 2 +-

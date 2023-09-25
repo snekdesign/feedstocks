@@ -11,6 +11,7 @@ source:
   sha256: '{{ sha256 }}'
   patches:
   - 0001-conda-build.patch
+  - 0002-msvc-17.3-compat.patch
 - path: SumatraPDF-settings.txt
 
 build:
