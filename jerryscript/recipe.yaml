@@ -9,6 +9,8 @@ package:
 source:
 - url: https://github.com/jerryscript-project/jerryscript/archive/refs/tags/v{{ version }}.tar.gz
   sha256: '{{ sha256 }}'
+  patches:
+  - sel(linux64): 0001-conda-build.patch
 
 build:
   include_recipe: false
@@ -22,6 +24,8 @@ requirements:
   - "{{ compiler('c') }}"
   - sel(linux64): cmake
   - sel(linux64): make
+  host:
+  - sel(linux64): diffutils
 
 about:
   license: Apache-2.0

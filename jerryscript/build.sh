@@ -7,4 +7,4 @@ cmake \
     -DJERRY_EXT=OFF \
     ..
 cmake --build . -j`nproc`
-cmake --install .
+cmake --install . --strip
