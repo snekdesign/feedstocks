@@ -1,6 +1,6 @@
 context:
   version: '23.1'
-  version_string: '{{ version|replace(".", "0"*(5-len(version))) }}'
+  version_string: '{{ version|replace(".", "0"*(5-version|length)) }}'
   sha256_src: 356071007360e5a1824d9904993e8b2480b51b570e8c9faf7c0f58ebe4bf9f74
   sha256_linux64: 23babcab045b78016e443f862363e4ab63c77d75bc715c0b3463f6134cbcf318
 
@@ -35,6 +35,6 @@ test:
 
 about:
   license_file:
-  - sel(win64): DOC/License.txt
-  - sel(linux64): License.txt
+    sel(win64): DOC/License.txt
+    sel(linux64): License.txt
   summary: 7-Zip is a file archiver with a high compression ratio.
