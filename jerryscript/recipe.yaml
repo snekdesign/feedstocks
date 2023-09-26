@@ -10,7 +10,7 @@ source:
 - url: https://github.com/jerryscript-project/jerryscript/archive/refs/tags/v{{ version }}.tar.gz
   sha256: '{{ sha256 }}'
   patches:
-  - sel(linux64): 0001-conda-build.patch
+  - sel(linux64): 0001-missing-includes.patch
 
 build:
   include_recipe: false

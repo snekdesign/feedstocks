@@ -1,0 +1,25 @@
+From e005704c58503840ac879286e025464c82c3704b Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Wed, 27 Sep 2023 05:09:05 +0800
+Subject: [PATCH] missing includes
+
+---
+ jerry-port/default/default-module.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/jerry-port/default/default-module.c b/jerry-port/default/default-module.c
+index 542d192..8844dfc 100644
+--- a/jerry-port/default/default-module.c
++++ b/jerry-port/default/default-module.c
+@@ -15,6 +15,8 @@
+ 
+ #if !defined (_WIN32)
+ #include <libgen.h>
++#include <sys/limits.h>
++#define _POSIX_C_SOURCE 200809L
+ #endif /* !defined (_WIN32) */
+ #include <limits.h>
+ #include <stdarg.h>
+-- 
+2.42.0.windows.1
+
