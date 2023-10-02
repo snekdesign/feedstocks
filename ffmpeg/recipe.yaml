@@ -1,0 +1,45 @@
+context:
+  version: '6.0'
+  sha256: 9a1fa94608300e835bf89bdfcd7d77deceba67bff3494f609816f84bd69a459e
+
+package:
+  name: ffmpeg
+  version: '{{ version }}'
+
+source:
+- url: https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n{{ version }}.tar.gz
+  sha256: '{{ sha256 }}'
+
+build:
+  include_recipe: false
+  number: 0
+  script_env:
+    CHERE_INVOKING: '1'
+    MSYS2_PATH_TYPE: inherit
+  skip:
+  - not win64
+  - build_platform != target_platform
+
+requirements:
+  build:
+  - "{{ compiler('c') }}"
+  - nasm
+  - pkg-config
+  host:
+  - ffnvcodec-headers
+  - posix
+  - sdl2 >=2.23.1
+  run:
+  - sdl2
+
+test:
+  commands:
+  - ffmpeg -version
+  - ffplay -version
+  - ffprobe -version
+
+about:
+  license: GPL-2.0-or-later
+  license_family: GPL
+  license_file: COPYING.GPLv2
+  summary: Cross-platform solution to record, convert and stream audio and video.
