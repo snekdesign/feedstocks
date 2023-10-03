@@ -1,0 +1,209 @@
+From 82287aa3bc1f74d1bc925035023a3d321397a5a5 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Mon, 2 Oct 2023 16:47:06 +0800
+Subject: [PATCH] customize
+
+---
+ src/OptionHandlerFactory.cc | 86 ++++++++++++++++++++++++++-----------
+ 1 file changed, 62 insertions(+), 24 deletions(-)
+
+diff --git a/src/OptionHandlerFactory.cc b/src/OptionHandlerFactory.cc
+index 6bff4ca..8b0f15e 100644
+--- a/src/OptionHandlerFactory.cc
++++ b/src/OptionHandlerFactory.cc
+@@ -33,6 +33,12 @@
+  */
+ /* copyright --> */
+ #include "OptionHandlerFactory.h"
++
++#ifdef __MINGW32__
++#include <shlobj.h>
++#endif // __MINGW32__
++
++#include "SimpleRandomizer.h"
+ #include "prefs.h"
+ #include "OptionHandlerImpl.h"
+ #include "array_fun.h"
+@@ -158,7 +164,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new BooleanOptionHandler(
+-        PREF_CONTINUE, TEXT_CONTINUE, A2_V_FALSE, OptionHandler::OPT_ARG, 'c'));
++        PREF_CONTINUE, TEXT_CONTINUE, A2_V_TRUE, OptionHandler::OPT_ARG, 'c'));
+     op->addTag(TAG_BASIC);
+     op->addTag(TAG_FTP);
+     op->addTag(TAG_HTTP);
+@@ -214,17 +220,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   {
+     OptionHandler* op(new BooleanOptionHandler(PREF_DISABLE_IPV6,
+                                                TEXT_DISABLE_IPV6,
+-#if defined(__MINGW32__) && !defined(__MINGW64__)
+-                                               // Disable IPv6 by default for
+-                                               // MinGW build.  This is because
+-                                               // numerous IPv6 routines are
+-                                               // available from Vista. Checking
+-                                               // getaddrinfo failed in
+-                                               // configure.
+                                                A2_V_TRUE,
+-#else  // !defined(__MINGW32__) || defined(__MINGW64__)
+-                                               A2_V_FALSE,
+-#endif // !defined(__MINGW32__) || defined(__MINGW64__)
+                                                OptionHandler::OPT_ARG));
+     op->addTag(TAG_ADVANCED);
+     handlers.push_back(op);
+@@ -320,7 +316,12 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new ParameterOptionHandler(
+-        PREF_FILE_ALLOCATION, TEXT_FILE_ALLOCATION, V_PREALLOC,
++        PREF_FILE_ALLOCATION, TEXT_FILE_ALLOCATION,
++#ifdef __MINGW32__
++        IsUserAnAdmin() ? V_FALLOC : V_PREALLOC,
++#else // !__MINGW32__
++        V_PREALLOC,
++#endif // !__MINGW32__
+         {V_NONE, V_PREALLOC, V_TRUNC,
+ #ifdef HAVE_SOME_FALLOCATE
+          V_FALLOC
+@@ -423,7 +424,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new ParameterOptionHandler(
+-        PREF_LOG_LEVEL, TEXT_LOG_LEVEL, V_DEBUG,
++        PREF_LOG_LEVEL, TEXT_LOG_LEVEL, V_ERROR,
+         {std::begin(logLevels), std::end(logLevels)}));
+     op->addTag(TAG_ADVANCED);
+     op->setChangeGlobalOption(true);
+@@ -440,7 +441,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   {
+     OptionHandler* op(new NumberOptionHandler(PREF_MAX_CONNECTION_PER_SERVER,
+                                               TEXT_MAX_CONNECTION_PER_SERVER,
+-                                              "1", 1, 16, 'x'));
++                                              "16", 1, -1, 'x'));
+     op->addTag(TAG_BASIC);
+     op->addTag(TAG_FTP);
+     op->addTag(TAG_HTTP);
+@@ -501,7 +502,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new UnitNumberOptionHandler(
+-        PREF_MIN_SPLIT_SIZE, TEXT_MIN_SPLIT_SIZE, "20M", 1_m, 1_g, 'k'));
++        PREF_MIN_SPLIT_SIZE, TEXT_MIN_SPLIT_SIZE, "1M", 1_m, 1_g, 'k'));
+     op->addTag(TAG_BASIC);
+     op->addTag(TAG_FTP);
+     op->addTag(TAG_HTTP);
+@@ -528,7 +529,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new BooleanOptionHandler(
+-        PREF_NO_CONF, TEXT_NO_CONF, A2_V_FALSE, OptionHandler::OPT_ARG));
++        PREF_NO_CONF, TEXT_NO_CONF, A2_V_TRUE, OptionHandler::OPT_ARG));
+     op->addTag(TAG_ADVANCED);
+     handlers.push_back(op);
+   }
+@@ -740,7 +741,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new BooleanOptionHandler(
+-        PREF_RPC_ALLOW_ORIGIN_ALL, TEXT_RPC_ALLOW_ORIGIN_ALL, A2_V_FALSE,
++        PREF_RPC_ALLOW_ORIGIN_ALL, TEXT_RPC_ALLOW_ORIGIN_ALL, A2_V_TRUE,
+         OptionHandler::OPT_ARG));
+     op->addTag(TAG_RPC);
+     handlers.push_back(op);
+@@ -834,7 +835,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new NumberOptionHandler(
+-        PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "60", 1, 600));
++        PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "30", 1, 600));
+     op->addTag(TAG_FTP);
+     op->addTag(TAG_HTTP);
+     op->setInitialOption(true);
+@@ -971,7 +972,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(
+-        new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "5", 1, -1, 's'));
++        new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "256", 1, -1, 's'));
+     op->addTag(TAG_BASIC);
+     op->addTag(TAG_FTP);
+     op->addTag(TAG_HTTP);
+@@ -999,7 +1000,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(
+-        new NumberOptionHandler(PREF_TIMEOUT, TEXT_TIMEOUT, "60", 1, 600, 't'));
++        new NumberOptionHandler(PREF_TIMEOUT, TEXT_TIMEOUT, "30", 1, 600, 't'));
+     op->addTag(TAG_FTP);
+     op->addTag(TAG_HTTP);
+     op->setInitialOption(true);
+@@ -1206,9 +1207,46 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+     handlers.push_back(op);
+   }
+   {
++    constexpr const char *CHROME_VERSIONS[] = {
++        "99.0.4844.84",
++        "99.0.4844.82",
++        "99.0.4844.74",
++        "98.0.4758.102",
++        "98.0.4758.82",
++        "98.0.4758.80",
++        "97.0.4692.99",
++        "97.0.4692.71",
++        "96.0.4664.110",
++        "96.0.4664.93",
++        "96.0.4664.45",
++        "95.0.4638.69",
++        "95.0.4638.54",
++        "94.0.4606.81",
++        "94.0.4606.71",
++        "94.0.4606.61",
++        "94.0.4606.54",
++        "93.0.4577.82",
++        "93.0.4577.63",
++        "92.0.4515.159",
++        "92.0.4515.131",
++        "92.0.4515.107",
++        "91.0.4472.164",
++        "91.0.4472.124",
++        "91.0.4472.114",
++        "91.0.4472.106",
++        "91.0.4472.101",
++        "91.0.4472.77",
++        "90.0.4430.212",
++        "90.0.4430.93",
++        "90.0.4430.72"};
+     OptionHandler* op(new DefaultOptionHandler(
+-        PREF_USER_AGENT, TEXT_USER_AGENT, "aria2/" PACKAGE_VERSION, A2STR::NIL,
+-        OptionHandler::REQ_ARG, 'U'));
++        PREF_USER_AGENT, TEXT_USER_AGENT,
++        fmt("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
++            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36",
++            CHROME_VERSIONS[
++                SimpleRandomizer::getInstance()->getRandomNumber(
++                    sizeof(CHROME_VERSIONS) / sizeof(CHROME_VERSIONS[0]))]),
++        A2STR::NIL, OptionHandler::REQ_ARG, 'U'));
+     op->addTag(TAG_HTTP);
+     op->setInitialOption(true);
+     op->setChangeGlobalOption(true);
+@@ -1675,7 +1713,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   {
+     OptionHandler* op(new NumberOptionHandler(PREF_BT_TRACKER_CONNECT_TIMEOUT,
+                                               TEXT_BT_TRACKER_CONNECT_TIMEOUT,
+-                                              "60", 1, 600));
++                                              "30", 1, 600));
+     op->addTag(TAG_BITTORRENT);
+     op->setInitialOption(true);
+     op->setChangeGlobalOption(true);
+@@ -1759,7 +1797,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new BooleanOptionHandler(
+-        PREF_ENABLE_DHT, TEXT_ENABLE_DHT, A2_V_TRUE, OptionHandler::OPT_ARG));
++        PREF_ENABLE_DHT, TEXT_ENABLE_DHT, A2_V_FALSE, OptionHandler::OPT_ARG));
+     op->addTag(TAG_BASIC);
+     op->addTag(TAG_BITTORRENT);
+     handlers.push_back(op);
+-- 
+2.42.0.windows.1
+
