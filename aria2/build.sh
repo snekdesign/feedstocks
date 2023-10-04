@@ -1,10 +1,8 @@
 cd "$LIBRARY_LIB"
-mv intl.lib intl.lib.bak
-ln intl.dll.lib intl.lib
-ln libssh2.lib ssh2.lib
-cd "$PKG_CONFIG_SYSTEM_LIBRARY_PATH"
-mv libintl.a libintl.a.bak
-mv libsqlite3.a libsqlite3.a.bak
+ln intl.dll.lib libintl.a
+ln libssh2.lib libssh2.a
+ln sqlite3.lib libsqlite3.a
+ln zlib.lib libz.a
 
 cd "$SRC_DIR"
 autoreconf -i
@@ -19,9 +17,4 @@ PKG_CONFIG_PATH="$(cygpath "$LIBRARY_LIB/pkgconfig"):$PKG_CONFIG_PATH" \
 make -j`nproc`
 strip -so "$LIBRARY_BIN/aria2c.exe" src/aria2c.exe
 
-cd "$LIBRARY_LIB"
-mv -f intl.lib.bak intl.lib
-rm ssh2.lib
-cd "$PKG_CONFIG_SYSTEM_LIBRARY_PATH"
-mv libintl.a.bak libintl.a
-mv libsqlite3.a.bak libsqlite3.a
+rm "$LIBRARY_LIB"/lib*.a

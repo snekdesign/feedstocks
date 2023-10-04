@@ -37,6 +37,7 @@ requirements:
   - libsqlite
   - libssh2
   - libxml2
+  - libzlib
   - openssl
 
 test:
