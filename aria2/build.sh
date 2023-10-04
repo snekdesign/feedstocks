@@ -1,6 +1,3 @@
-#!/usr/bin/bash
-set -e
-
 cd "$LIBRARY_LIB"
 mv intl.lib intl.lib.bak
 ln intl.dll.lib intl.lib
@@ -9,7 +6,7 @@ cd "$PKG_CONFIG_SYSTEM_LIBRARY_PATH"
 mv libintl.a libintl.a.bak
 mv libsqlite3.a libsqlite3.a.bak
 
-cd "$(dirname "${BASH_SOURCE:-$0}")/../aria2"
+cd "$SRC_DIR"
 autoreconf -i
 mkdir -p build
 cd build
@@ -20,7 +17,7 @@ PKG_CONFIG_PATH="$(cygpath "$LIBRARY_LIB/pkgconfig"):$PKG_CONFIG_PATH" \
     --with-libintl-prefix="$(cygpath "$LIBRARY_PREFIX")" \
     ARIA2_STATIC=yes
 make -j`nproc`
-strip -s src/aria2c.exe
+strip -so "$LIBRARY_BIN/aria2c.exe" src/aria2c.exe
 
 cd "$LIBRARY_LIB"
 mv -f intl.lib.bak intl.lib

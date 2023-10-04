@@ -9,11 +9,8 @@ package:
 source:
 - url: https://github.com/aria2/aria2/archive/refs/tags/release-{{ version }}.tar.gz
   sha256: '{{ sha256 }}'
-  folder: aria2
   patches:
   - 0001-customize.patch
-- path: scripts
-  folder: scripts
 
 build:
   include_recipe: false
@@ -49,5 +46,5 @@ test:
 about:
   license: GPL-2.0-only
   license_family: GPL
-  license_file: aria2/COPYING
+  license_file: COPYING
   summary: aria2 is a lightweight multi-protocol & multi-source, cross platform download utility operated in command-line. It supports HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink.
