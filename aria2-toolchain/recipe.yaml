@@ -9,9 +9,6 @@ package:
 source:
 - url: https://mirrors.cernet.edu.cn/msys2/distrib/x86_64/msys2-base-x86_64-{{ version }}.tar.xz
   sha256: '{{ sha256 }}'
-  folder: msys64
-- path: scripts
-  folder: scripts
 
 build:
   include_recipe: false
@@ -21,6 +18,11 @@ build:
   skip:
   - not win64
   - build_platform != target_platform
+
+requirements:
+  run_constrained:
+  - git <0a0
+  - msys2-conda-epoch <0a0
 
 test:
   commands:
