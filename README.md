@@ -3,7 +3,7 @@
 - Windows >=10 x86_64
 - Linux glibc x86_64
 ## Dependencies
-- [boa][1] >0.15.1
+- [boa][1] >0.15.1 ([rattler-build][5] may also work)
 - MSVC 17.6.* [LTSC][2] (Windows only)
 - CMake >=3.21 (installed along with MSVC, Windows only)
 ## Usage
@@ -22,3 +22,4 @@ violated.
 [2]: https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history#evergreen-bootstrappers
 [3]: LICENSE#L1-L339
 [4]: LICENSE#L343-L388
+[5]: https://github.com/prefix-dev/rattler-build
