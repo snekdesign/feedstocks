@@ -7,12 +7,11 @@ package:
   version: '{{ version }}'
 
 source:
-- url: https://github.com/sumatrapdfreader/sumatrapdf/archive/refs/tags/{{ version }}rel.tar.gz
+  url: https://github.com/sumatrapdfreader/sumatrapdf/archive/refs/tags/{{ version }}rel.tar.gz
   sha256: '{{ sha256 }}'
   patches:
   - 0001-conda-build.patch
   - 0002-msvc-17.3-compat.patch
-- path: SumatraPDF-settings.txt
 
 build:
   include_recipe: false
