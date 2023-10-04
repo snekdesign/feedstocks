@@ -1,0 +1,105 @@
+From f653ba647352756b1851f012b025ab2853796fb6 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Wed, 4 Oct 2023 15:46:12 +0800
+Subject: [PATCH] customize
+
+---
+ fftools/ffplay.c | 35 ++++++++++-------------------------
+ 1 file changed, 10 insertions(+), 25 deletions(-)
+
+diff --git a/fftools/ffplay.c b/fftools/ffplay.c
+index d6479ae..77c2edd 100644
+--- a/fftools/ffplay.c
++++ b/fftools/ffplay.c
+@@ -3004,7 +3004,7 @@ static int read_thread(void *arg)
+             (!is->video_st || (is->viddec.finished == is->videoq.serial && frame_queue_nb_remaining(&is->pictq) == 0))) {
+             if (loop != 1 && (!loop || --loop)) {
+                 stream_seek(is, start_time != AV_NOPTS_VALUE ? start_time : 0, 0, 0);
+-            } else if (autoexit) {
++            } else {
+                 ret = AVERROR_EOF;
+                 goto fail;
+             }
+@@ -3308,12 +3308,6 @@ static void event_loop(VideoState *cur_stream)
+             case SDLK_9:
+                 update_volume(cur_stream, -1, SDL_VOLUME_STEP);
+                 break;
+-            case SDLK_s: // S: Step to next frame
+-                step_to_next_frame(cur_stream);
+-                break;
+-            case SDLK_a:
+-                stream_cycle_channel(cur_stream, AVMEDIA_TYPE_AUDIO);
+-                break;
+             case SDLK_v:
+                 stream_cycle_channel(cur_stream, AVMEDIA_TYPE_VIDEO);
+                 break;
+@@ -3325,19 +3319,6 @@ static void event_loop(VideoState *cur_stream)
+             case SDLK_t:
+                 stream_cycle_channel(cur_stream, AVMEDIA_TYPE_SUBTITLE);
+                 break;
+-            case SDLK_w:
+-#if CONFIG_AVFILTER
+-                if (cur_stream->show_mode == SHOW_MODE_VIDEO && cur_stream->vfilter_idx < nb_vfilters - 1) {
+-                    if (++cur_stream->vfilter_idx >= nb_vfilters)
+-                        cur_stream->vfilter_idx = 0;
+-                } else {
+-                    cur_stream->vfilter_idx = 0;
+-                    toggle_audio_display(cur_stream);
+-                }
+-#else
+-                toggle_audio_display(cur_stream);
+-#endif
+-                break;
+             case SDLK_PAGEUP:
+                 if (cur_stream->ic->nb_chapters <= 1) {
+                     incr = 600.0;
+@@ -3353,15 +3334,19 @@ static void event_loop(VideoState *cur_stream)
+                 seek_chapter(cur_stream, -1);
+                 break;
+             case SDLK_LEFT:
++            case SDLK_a:
+                 incr = seek_interval ? -seek_interval : -10.0;
+                 goto do_seek;
+             case SDLK_RIGHT:
++            case SDLK_d:
+                 incr = seek_interval ? seek_interval : 10.0;
+                 goto do_seek;
+             case SDLK_UP:
++            case SDLK_w:
+                 incr = 60.0;
+                 goto do_seek;
+             case SDLK_DOWN:
++            case SDLK_s:
+                 incr = -60.0;
+             do_seek:
+                     if (seek_by_bytes) {
+@@ -3646,14 +3631,11 @@ void show_help_default(const char *opt, const char *arg)
+            "m                   toggle mute\n"
+            "9, 0                decrease and increase volume respectively\n"
+            "/, *                decrease and increase volume respectively\n"
+-           "a                   cycle audio channel in the current program\n"
+            "v                   cycle video channel\n"
+            "t                   cycle subtitle channel in the current program\n"
+            "c                   cycle program\n"
+-           "w                   cycle video filters or show modes\n"
+-           "s                   activate frame-step mode\n"
+-           "left/right          seek backward/forward 10 seconds or to custom interval if -seek_interval is set\n"
+-           "down/up             seek backward/forward 1 minute\n"
++           "a, left/d, right    seek backward/forward 10 seconds or to custom interval if -seek_interval is set\n"
++           "s, down/w, up       seek backward/forward 1 minute\n"
+            "page down/page up   seek backward/forward 10 minutes\n"
+            "right mouse click   seek to percentage in file corresponding to fraction of width\n"
+            "left double-click   toggle full screen\n"
+@@ -3706,6 +3688,9 @@ int main(int argc, char **argv)
+     }
+     if (display_disable)
+         flags &= ~SDL_INIT_VIDEO;
++#ifdef _WIN32
++    SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
++#endif
+     if (SDL_Init (flags)) {
+         av_log(NULL, AV_LOG_FATAL, "Could not initialize SDL - %s\n", SDL_GetError());
+         av_log(NULL, AV_LOG_FATAL, "(Did you set the DISPLAY variable?)\n");
+-- 
+2.42.0.windows.1
+

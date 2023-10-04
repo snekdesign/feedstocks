@@ -9,6 +9,8 @@ package:
 source:
 - url: https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n{{ version }}.tar.gz
   sha256: '{{ sha256 }}'
+  patches:
+  - 0001-customize.patch
 
 build:
   include_recipe: false
