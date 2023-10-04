@@ -9,12 +9,12 @@ package:
   version: '{{ version }}'
 
 source:
-- sel(win64):
+  sel(win64):
     url: https://7-zip.org/a/7z{{ version_string }}-src.tar.xz
     sha256: '{{ sha256_src }}'
     patches:
     - 0001-always-o2.patch
-- sel(linux64):
+  sel(linux64):
     url: https://7-zip.org/a/7z{{ version_string }}-linux-x64.tar.xz
     sha256: '{{ sha256_linux64 }}'
 
@@ -34,7 +34,5 @@ test:
   - 7zz
 
 about:
-  license_file:
-    sel(win64): DOC/License.txt
-    sel(linux64): License.txt
+  license_file: License.txt
   summary: 7-Zip is a file archiver with a high compression ratio.
