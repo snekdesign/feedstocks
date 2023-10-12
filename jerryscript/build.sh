@@ -1,6 +1,7 @@
 mkdir build
 cd build
-cmake \
+CFLAGS="$CFLAGS -Wno-maybe-uninitialized" \
+    cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="$PREFIX" \
     -DENABLE_LTO=OFF \
