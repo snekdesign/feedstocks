@@ -20,7 +20,7 @@ param(
     $Layout = 'vs_BuildTools'
 )
 
-if (not $IsWindows) {
+if (-not $IsWindows) {
     exit 1
 }
 
