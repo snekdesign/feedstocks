@@ -1,25 +1,25 @@
-From ab3bae2db100df81dec5d94ea98ec839e22556cc Mon Sep 17 00:00:00 2001
+From b9a9c3be7b4fa3195b994f184c63f9e6137f940a Mon Sep 17 00:00:00 2001
 From: snekdesign <104812819+snekdesign@users.noreply.github.com>
-Date: Sat, 23 Sep 2023 16:03:01 +0800
-Subject: [PATCH 1/2] conda build
+Date: Wed, 25 Oct 2023 19:01:51 +0800
+Subject: [PATCH] conda build
 
 ---
  src/utils/FileUtil.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/utils/FileUtil.cpp b/src/utils/FileUtil.cpp
-index ab2abf6..1c1ffa0 100644
+index 16d9ed9..b94de61 100644
 --- a/src/utils/FileUtil.cpp
 +++ b/src/utils/FileUtil.cpp
-@@ -478,7 +478,7 @@ WCHAR* GetPathOfFileInAppDir(const WCHAR* fileName) {
-         return str::Dup(modulePath);
+@@ -473,7 +473,7 @@ char* GetPathOfFileInAppDir(const char* fileName) {
      }
-     AutoFreeWstr moduleDir = path::GetDir(modulePath);
--    AutoFreeWstr path = path::Join(moduleDir, fileName);
-+    AutoFreeWstr path = path::Join(moduleDir, L"..\\etc", fileName);
-     return path::Normalize(path);
- }
- } // namespace path
+     WCHAR* moduleDir = path::GetDirTemp(modulePath);
+     WCHAR* fileNameW = ToWstrTemp(fileName);
+-    WCHAR* path = path::JoinTemp(moduleDir, fileNameW);
++    WCHAR* path = path::JoinTemp(moduleDir, L"..\\etc", fileNameW);
+     path = path::Normalize(path);
+     char* res = ToUtf8(path);
+     str::Free(path);
 -- 
 2.42.0.windows.1
 

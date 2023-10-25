@@ -1,6 +1,6 @@
 context:
-  version: 3.4.6
-  sha256: cf5f0f526dcf8956241d918124d692a658e2fcdacf71647bd773e9d7151dc500
+  version: 3.5.2
+  sha256: d97e7135fa6c90d2dca9937d3234a8650391035f0a0203b670709334e5398204
 
 package:
   name: sumatrapdf
@@ -11,7 +11,6 @@ source:
   sha256: '{{ sha256 }}'
   patches:
   - 0001-conda-build.patch
-  - 0002-msvc-17.3-compat.patch
 
 build:
   include_recipe: false
