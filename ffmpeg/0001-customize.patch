@@ -1,17 +1,17 @@
-From f653ba647352756b1851f012b025ab2853796fb6 Mon Sep 17 00:00:00 2001
+From 0352c85a01fd50a78ef868ee9fd1b67706f42ff4 Mon Sep 17 00:00:00 2001
 From: snekdesign <104812819+snekdesign@users.noreply.github.com>
-Date: Wed, 4 Oct 2023 15:46:12 +0800
+Date: Sat, 11 Nov 2023 19:18:51 +0800
 Subject: [PATCH] customize
 
 ---
- fftools/ffplay.c | 35 ++++++++++-------------------------
- 1 file changed, 10 insertions(+), 25 deletions(-)
+ fftools/ffplay.c | 31 ++++++++++---------------------
+ 1 file changed, 10 insertions(+), 21 deletions(-)
 
 diff --git a/fftools/ffplay.c b/fftools/ffplay.c
-index d6479ae..77c2edd 100644
+index d8c69e1..b52574b 100644
 --- a/fftools/ffplay.c
 +++ b/fftools/ffplay.c
-@@ -3004,7 +3004,7 @@ static int read_thread(void *arg)
+@@ -2999,7 +2999,7 @@ static int read_thread(void *arg)
              (!is->video_st || (is->viddec.finished == is->videoq.serial && frame_queue_nb_remaining(&is->pictq) == 0))) {
              if (loop != 1 && (!loop || --loop)) {
                  stream_seek(is, start_time != AV_NOPTS_VALUE ? start_time : 0, 0, 0);
@@ -20,7 +20,7 @@ index d6479ae..77c2edd 100644
                  ret = AVERROR_EOF;
                  goto fail;
              }
-@@ -3308,12 +3308,6 @@ static void event_loop(VideoState *cur_stream)
+@@ -3303,12 +3303,6 @@ static void event_loop(VideoState *cur_stream)
              case SDLK_9:
                  update_volume(cur_stream, -1, SDL_VOLUME_STEP);
                  break;
@@ -33,12 +33,11 @@ index d6479ae..77c2edd 100644
              case SDLK_v:
                  stream_cycle_channel(cur_stream, AVMEDIA_TYPE_VIDEO);
                  break;
-@@ -3325,19 +3319,6 @@ static void event_loop(VideoState *cur_stream)
+@@ -3320,15 +3314,6 @@ static void event_loop(VideoState *cur_stream)
              case SDLK_t:
                  stream_cycle_channel(cur_stream, AVMEDIA_TYPE_SUBTITLE);
                  break;
 -            case SDLK_w:
--#if CONFIG_AVFILTER
 -                if (cur_stream->show_mode == SHOW_MODE_VIDEO && cur_stream->vfilter_idx < nb_vfilters - 1) {
 -                    if (++cur_stream->vfilter_idx >= nb_vfilters)
 -                        cur_stream->vfilter_idx = 0;
@@ -46,14 +45,11 @@ index d6479ae..77c2edd 100644
 -                    cur_stream->vfilter_idx = 0;
 -                    toggle_audio_display(cur_stream);
 -                }
--#else
--                toggle_audio_display(cur_stream);
--#endif
 -                break;
              case SDLK_PAGEUP:
                  if (cur_stream->ic->nb_chapters <= 1) {
                      incr = 600.0;
-@@ -3353,15 +3334,19 @@ static void event_loop(VideoState *cur_stream)
+@@ -3344,15 +3329,19 @@ static void event_loop(VideoState *cur_stream)
                  seek_chapter(cur_stream, -1);
                  break;
              case SDLK_LEFT:
@@ -73,7 +69,7 @@ index d6479ae..77c2edd 100644
                  incr = -60.0;
              do_seek:
                      if (seek_by_bytes) {
-@@ -3646,14 +3631,11 @@ void show_help_default(const char *opt, const char *arg)
+@@ -3638,14 +3627,11 @@ void show_help_default(const char *opt, const char *arg)
             "m                   toggle mute\n"
             "9, 0                decrease and increase volume respectively\n"
             "/, *                decrease and increase volume respectively\n"
@@ -90,7 +86,7 @@ index d6479ae..77c2edd 100644
             "page down/page up   seek backward/forward 10 minutes\n"
             "right mouse click   seek to percentage in file corresponding to fraction of width\n"
             "left double-click   toggle full screen\n"
-@@ -3706,6 +3688,9 @@ int main(int argc, char **argv)
+@@ -3700,6 +3686,9 @@ int main(int argc, char **argv)
      }
      if (display_disable)
          flags &= ~SDL_INIT_VIDEO;
