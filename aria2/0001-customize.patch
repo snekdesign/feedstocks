@@ -1,6 +1,6 @@
-From 82287aa3bc1f74d1bc925035023a3d321397a5a5 Mon Sep 17 00:00:00 2001
+From 249e9af75892af2eab74cefc7a097a0122394ff4 Mon Sep 17 00:00:00 2001
 From: snekdesign <104812819+snekdesign@users.noreply.github.com>
-Date: Mon, 2 Oct 2023 16:47:06 +0800
+Date: Thu, 16 Nov 2023 19:20:05 +0800
 Subject: [PATCH] customize
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] customize
  1 file changed, 62 insertions(+), 24 deletions(-)
 
 diff --git a/src/OptionHandlerFactory.cc b/src/OptionHandlerFactory.cc
-index 6bff4ca..8b0f15e 100644
+index 2cd2c43..ef6db4e 100644
 --- a/src/OptionHandlerFactory.cc
 +++ b/src/OptionHandlerFactory.cc
 @@ -33,6 +33,12 @@
@@ -137,7 +137,7 @@ index 6bff4ca..8b0f15e 100644
      op->addTag(TAG_FTP);
      op->addTag(TAG_HTTP);
      op->setInitialOption(true);
-@@ -1206,9 +1207,46 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+@@ -1216,9 +1217,46 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
      handlers.push_back(op);
    }
    {
@@ -186,7 +186,7 @@ index 6bff4ca..8b0f15e 100644
      op->addTag(TAG_HTTP);
      op->setInitialOption(true);
      op->setChangeGlobalOption(true);
-@@ -1675,7 +1713,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+@@ -1685,7 +1723,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
    {
      OptionHandler* op(new NumberOptionHandler(PREF_BT_TRACKER_CONNECT_TIMEOUT,
                                                TEXT_BT_TRACKER_CONNECT_TIMEOUT,
@@ -195,7 +195,7 @@ index 6bff4ca..8b0f15e 100644
      op->addTag(TAG_BITTORRENT);
      op->setInitialOption(true);
      op->setChangeGlobalOption(true);
-@@ -1759,7 +1797,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+@@ -1769,7 +1807,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
    }
    {
      OptionHandler* op(new BooleanOptionHandler(
