@@ -1,6 +1,6 @@
 context:
-  version: '23.1'
-  version_string: '{{ version|replace(".", "0"*(5-version|length)) }}'
+  version: 23.1.0
+  version_string: "{{ '{:>02}{:>02}'.format(*version.split('.')) }}"
   sha256_src: 356071007360e5a1824d9904993e8b2480b51b570e8c9faf7c0f58ebe4bf9f74
   sha256_linux64: 23babcab045b78016e443f862363e4ab63c77d75bc715c0b3463f6134cbcf318
 
@@ -10,12 +10,12 @@ package:
 
 source:
   sel(win64):
-    url: https://7-zip.org/a/7z{{ version_string }}-src.tar.xz
+    url: https://mirrors.cernet.edu.cn/7-zip/7z{{ version_string }}-src.tar.xz
     sha256: '{{ sha256_src }}'
     patches:
     - 0001-always-o2.patch
   sel(linux64):
-    url: https://7-zip.org/a/7z{{ version_string }}-linux-x64.tar.xz
+    url: https://mirrors.cernet.edu.cn/7-zip/7z{{ version_string }}-linux-x64.tar.xz
     sha256: '{{ sha256_linux64 }}'
 
 build:
