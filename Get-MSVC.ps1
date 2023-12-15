@@ -37,7 +37,7 @@ $Uri += "/$NAME"
 Invoke-WebRequest $Uri -OutFile $NAME
 
 Start-Process $NAME (
-    '--layout', "`"$Layout`"",
+    '--layout', "`"$(Convert-Path $Layout)`"",
     '--add', 'Microsoft.VisualStudio.Component.VC.CMake.Project',
     '--add', 'Microsoft.VisualStudio.Component.Windows11SDK.22621',
     '--lang', 'en-US'
