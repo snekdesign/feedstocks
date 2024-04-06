@@ -1,6 +1,6 @@
 context:
-  version: 6.1.1
-  sha256: 7c1ebea95d815e49c1e60c7ee816410dec73a81b8ac002b276780d2f9048e598
+  version: 7.0.0
+  sha256: a68fbc06a645cc93e5c877adbaa592cffc40e8595ba50eb716807c4a35bf0f03
 
 package:
   name: ffmpeg
