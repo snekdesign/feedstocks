@@ -1,6 +1,6 @@
 context:
-  version: 1.25.3
-  sha256: e43252bb993ec0a11715b2592435473d71a57581759d695600d55ffc752e3e33
+  version: 1.25.4
+  sha256: a4d685701fd1ba4a796184f7b6fb0c93ea7e7b237a04adbb517676cd81993680
 
 package:
   name: nginx
