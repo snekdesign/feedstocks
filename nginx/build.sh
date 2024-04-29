@@ -13,8 +13,9 @@ auto/configure \
     --with-cc=cl \
     --with-http_ssl_module \
     --with-openssl=YES \
-    --without-http_gzip_module \
-    --without-http_rewrite_module
+    --with-pcre=YES \
+    --with-stream \
+    --without-http_gzip_module
 nmake
 ln objs/nginx.exe "$LIBRARY_BIN"
 ln docs/text/LICENSE .

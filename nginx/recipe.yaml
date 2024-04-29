@@ -1,6 +1,6 @@
 context:
-  version: 1.25.5
-  sha256: a907ace01448d9bd6d9cc132afe8b159869e8e6d0a1a6f6b3e6b15c72ad88d41
+  version: 1.26.0
+  sha256: 0b4263d779b5f265342dc4060b3a9bbb7df90df3253140e2ff33dcd558c27cfb
 
 package:
   name: nginx
@@ -27,6 +27,7 @@ requirements:
   - "{{ compiler('c') }}"
   host:
   - openssl
+  - pcre2
   - posix
   run:
   - openssl

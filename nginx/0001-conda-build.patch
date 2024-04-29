@@ -4,9 +4,10 @@ Date: Wed, 30 Aug 2023 01:59:16 +0800
 Subject: [PATCH] conda build
 
 ---
- auto/cc/msvc          | 2 +-
- auto/lib/openssl/conf | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ auto/cc/msvc          |  2 +-
+ auto/lib/openssl/conf |  8 ++++----
+ auto/lib/pcre/conf    | 10 +++++-----
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/auto/cc/msvc b/auto/cc/msvc
 index 567bac7..9d04c9e 100644
@@ -22,7 +23,7 @@ index 567bac7..9d04c9e 100644
  CFLAGS="$CFLAGS $LIBC"
  
 diff --git a/auto/lib/openssl/conf b/auto/lib/openssl/conf
-index eda1c0f..f9f75e1 100644
+index fdf430d..16becac 100644
 --- a/auto/lib/openssl/conf
 +++ b/auto/lib/openssl/conf
 @@ -20,8 +20,8 @@ if [ $OPENSSL != NONE ]; then
@@ -31,8 +32,8 @@ index eda1c0f..f9f75e1 100644
  
 -            CORE_INCS="$CORE_INCS $OPENSSL/openssl/include"
 -            CORE_DEPS="$CORE_DEPS $OPENSSL/openssl/include/openssl/ssl.h"
-+            CORE_INCS="$CORE_INCS $LIBRARY_PREFIX/include"
-+            CORE_DEPS="$CORE_DEPS $LIBRARY_PREFIX/include/openssl/ssl.h"
++            CORE_INCS="$CORE_INCS $LIBRARY_INC"
++            CORE_DEPS="$CORE_DEPS $LIBRARY_INC/openssl/ssl.h"
  
              if [ -f $OPENSSL/ms/do_ms.bat ]; then
                  # before OpenSSL 1.1.0
@@ -42,11 +43,43 @@ index eda1c0f..f9f75e1 100644
                  # OpenSSL 1.1.0+
 -                CORE_LIBS="$CORE_LIBS $OPENSSL/openssl/lib/libssl.lib"
 -                CORE_LIBS="$CORE_LIBS $OPENSSL/openssl/lib/libcrypto.lib"
-+                CORE_LIBS="$CORE_LIBS $LIBRARY_PREFIX/lib/libssl.lib"
-+                CORE_LIBS="$CORE_LIBS $LIBRARY_PREFIX/lib/libcrypto.lib"
++                CORE_LIBS="$CORE_LIBS $LIBRARY_LIB/libssl.lib"
++                CORE_LIBS="$CORE_LIBS $LIBRARY_LIB/libcrypto.lib"
              fi
  
              # libeay32.lib requires gdi32.lib
+diff --git a/auto/lib/pcre/conf b/auto/lib/pcre/conf
+index cdf1809..5bd4203 100644
+--- a/auto/lib/pcre/conf
++++ b/auto/lib/pcre/conf
+@@ -5,7 +5,7 @@
+ 
+ if [ $PCRE != NONE ]; then
+ 
+-    if [ -f $PCRE/src/pcre2.h.generic ]; then
++    if [ : ]; then
+ 
+         PCRE_LIBRARY=PCRE2
+ 
+@@ -16,14 +16,14 @@ if [ $PCRE != NONE ]; then
+             have=PCRE2_STATIC . auto/have
+         fi
+ 
+-        CORE_INCS="$CORE_INCS $PCRE/src/"
+-        CORE_DEPS="$CORE_DEPS $PCRE/src/pcre2.h"
++        CORE_INCS="$CORE_INCS $LIBRARY_INC/"
++        CORE_DEPS="$CORE_DEPS $LIBRARY_INC/pcre2.h"
+ 
+         case "$NGX_CC_NAME" in
+ 
+             msvc)
+-                LINK_DEPS="$LINK_DEPS $PCRE/src/pcre2-8.lib"
+-                CORE_LIBS="$CORE_LIBS $PCRE/src/pcre2-8.lib"
++                LINK_DEPS="$LINK_DEPS $LIBRARY_LIB/pcre2-8.lib"
++                CORE_LIBS="$CORE_LIBS $LIBRARY_LIB/pcre2-8.lib"
+             ;;
+ 
+             *)
 -- 
-2.42.0.windows.1
+2.44.0.windows.1
 
