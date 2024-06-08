@@ -4,28 +4,33 @@ context:
 
 package:
   name: jerryscript
-  version: '{{ version }}'
+  version: ${{ version }}
 
 source:
-- url: https://github.com/jerryscript-project/jerryscript/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: '{{ sha256 }}'
+  url: https://github.com/jerryscript-project/jerryscript/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
   patches:
-  - sel(linux64): 0001-missing-includes.patch
+  - if: linux
+    then: 0001-missing-includes.patch
+  - 0002-enable-lto.patch
 
 build:
-  include_recipe: false
-  number: 0
+  number: 1
   skip:
-  - not (win64 or linux64)
+  - not (win or linux)
   - build_platform != target_platform
 
 requirements:
   build:
-  - "{{ compiler('c') }}"
-  - sel(linux64): cmake
-  - sel(linux64): make
+  - ${{ compiler('c') }}
+  - python
+  - if: linux
+    then: cmake
+  - if: linux
+    then: make
   host:
-  - sel(linux64): diffutils
+  - if: linux
+    then: diffutils
 
 about:
   license: Apache-2.0

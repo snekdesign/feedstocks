@@ -1,31 +1,28 @@
 context:
-  version: 20231026
-  sha256: fa75120560563a311241c05882016978bd35612692c7f0d39815a27837bff27d
+  version: 20240507
+  sha256: 4625c9aaf9850da22dafa2a0a164de9143c7b9ee22fcb338b81a9f571f472a97
 
 package:
   name: aria2-toolchain
   version: 1.0.0
 
 source:
-- url: https://mirrors.cernet.edu.cn/msys2/distrib/x86_64/msys2-base-x86_64-{{ version }}.tar.xz
-  sha256: '{{ sha256 }}'
+- url: https://mirrors.ustc.edu.cn/msys2/distrib/x86_64/msys2-base-x86_64-${{ version }}.tar.xz
+  sha256: ${{ sha256 }}
 
 build:
-  include_recipe: false
-  number: 1
-  script_env:
-    MSYSTEM: UCRT64
+  number: 2
   skip:
-  - not win64
+  - not win
   - build_platform != target_platform
 
 requirements:
-  run_constrained:
+  run_constraints:
   - git <0a0
   - msys2-conda-epoch <0a0
 
-test:
-  commands:
+tests:
+- script:
   - bash --version
 
 about:

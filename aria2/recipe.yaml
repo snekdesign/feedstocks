@@ -4,21 +4,18 @@ context:
 
 package:
   name: aria2
-  version: '{{ version }}'
+  version: ${{ version }}
 
 source:
-- url: https://github.com/aria2/aria2/archive/refs/tags/release-{{ version }}.tar.gz
-  sha256: '{{ sha256 }}'
+- url: https://github.com/aria2/aria2/archive/refs/tags/release-${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
 
 build:
-  include_recipe: false
-  number: 0
-  script_env:
-    MSYSTEM: UCRT64
+  number: 1
   skip:
-  - not win64
+  - not win
   - build_platform != target_platform
 
 requirements:
@@ -31,17 +28,9 @@ requirements:
   - libxml2
   - openssl
   - zlib
-  run:
-  - c-ares
-  - gettext
-  - libsqlite
-  - libssh2
-  - libxml2
-  - libzlib
-  - openssl
 
-test:
-  commands:
+tests:
+- script:
   - aria2c -v
 
 about:

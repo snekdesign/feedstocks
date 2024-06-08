@@ -1,3 +1,4 @@
+cd "$SRC_DIR"
 auto/configure \
     --conf-path=etc/nginx/nginx.conf \
     --error-log-path=var/log/nginx/error.log \
@@ -14,6 +15,7 @@ auto/configure \
     --with-http_ssl_module \
     --with-openssl=YES \
     --with-pcre=YES \
+    --with-pcre-jit \
     --with-stream \
     --without-http_gzip_module
 nmake

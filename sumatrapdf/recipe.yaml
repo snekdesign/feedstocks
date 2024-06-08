@@ -4,24 +4,23 @@ context:
 
 package:
   name: sumatrapdf
-  version: '{{ version }}'
+  version: ${{ version }}
 
 source:
-  url: https://github.com/sumatrapdfreader/sumatrapdf/archive/refs/tags/{{ version }}rel.tar.gz
-  sha256: '{{ sha256 }}'
+  url: https://github.com/sumatrapdfreader/sumatrapdf/archive/refs/tags/${{ version }}rel.tar.gz
+  sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch
 
 build:
-  include_recipe: false
-  number: 0
+  number: 1
   skip:
-  - not win64
+  - not win
   - build_platform != target_platform
 
 requirements:
   build:
-  - "{{ compiler('c') }}"
+  - ${{ compiler('c') }}
 
 about:
   license_file: AUTHORS

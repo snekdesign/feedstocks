@@ -14,7 +14,7 @@ PKG_CONFIG_PATH="$(cygpath "$LIBRARY_LIB/pkgconfig"):$PKG_CONFIG_PATH" \
     --with-libiconv-prefix="$(cygpath "$LIBRARY_PREFIX")" \
     --with-libintl-prefix="$(cygpath "$LIBRARY_PREFIX")" \
     ARIA2_STATIC=yes
-make -j`nproc`
+make -j$CPU_COUNT
 strip -so "$LIBRARY_BIN/aria2c.exe" src/aria2c.exe
 
 rm "$LIBRARY_LIB"/lib*.a

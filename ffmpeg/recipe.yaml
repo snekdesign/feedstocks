@@ -1,41 +1,35 @@
 context:
-  version: 7.0.0
-  sha256: a68fbc06a645cc93e5c877adbaa592cffc40e8595ba50eb716807c4a35bf0f03
+  version: 7.0.1
+  sha256: 8dab1da0c7ebccb2dce99265901f22ac40f8e0fbbe4a89a368d7645f2e79caa0
 
 package:
   name: ffmpeg
-  version: '{{ version }}'
+  version: ${{ version }}
 
 source:
-- url: https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n{{ version.removesuffix('.0') }}.tar.gz
-  sha256: '{{ sha256 }}'
+- url: https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n${{ version|trim('0')|trim('.') }}.tar.gz
+  sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
 
 build:
-  include_recipe: false
   number: 0
-  script_env:
-    CHERE_INVOKING: '1'
-    MSYS2_PATH_TYPE: inherit
   skip:
-  - not win64
+  - not win
   - build_platform != target_platform
 
 requirements:
   build:
-  - "{{ compiler('c') }}"
+  - ${{ compiler('c') }}
   - nasm
   - pkg-config
   host:
   - ffnvcodec-headers
   - posix
   - sdl2 >=2.23.1
-  run:
-  - sdl2
 
-test:
-  commands:
+tests:
+- script:
   - ffmpeg -version
   - ffplay -version
   - ffprobe -version

@@ -1,6 +1,6 @@
 for x in /etc/pacman.d/mirrorlist.*; do
     head -n 4 $x |
-        sed 's mirror\.msys2\.org mirrors.cernet.edu.cn/msys2 ' > $x.pacnew
+        sed 's mirror\.msys2\.org mirrors.ustc.edu.cn/msys2 ' > $x.pacnew
     mv -f $x.pacnew $x
 done
 

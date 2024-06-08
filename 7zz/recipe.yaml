@@ -1,36 +1,41 @@
 context:
-  version: 23.1.0
-  version_string: "{{ '{:>02}{:>02}'.format(*version.split('.')) }}"
-  sha256_src: 356071007360e5a1824d9904993e8b2480b51b570e8c9faf7c0f58ebe4bf9f74
-  sha256_linux64: 23babcab045b78016e443f862363e4ab63c77d75bc715c0b3463f6134cbcf318
+  major: 24
+  minor: 6
+  version: ${{ major }}.${{ minor }}.0
+  version_string: ${{ major }}0${{ minor }}
+  sha256_src: 2aa1660c773525b2ed84d6cd7ff0680c786ec0893b87e4db44654dcb7f5ac8b5
+  sha256_linux64: 807bd858433b13215abc915cbb9ccdc806fc7b421418a4088a194e1729a6a6b2
 
 package:
   name: 7zz
-  version: '{{ version }}'
+  version: ${{ version }}
 
 source:
-  sel(win64):
-    url: https://mirrors.cernet.edu.cn/7-zip/7z{{ version_string }}-src.tar.xz
-    sha256: '{{ sha256_src }}'
+- if: win
+  then:
+  - url: https://mirror.nju.edu.cn/7-zip/7z${{ version_string }}-src.tar.xz
+    sha256: ${{ sha256_src }}
     patches:
     - 0001-always-o2.patch
-  sel(linux64):
-    url: https://mirrors.cernet.edu.cn/7-zip/7z{{ version_string }}-linux-x64.tar.xz
-    sha256: '{{ sha256_linux64 }}'
+  else:
+  - url: https://mirror.nju.edu.cn/7-zip/7z${{ version_string }}-linux-x64.tar.xz
+    sha256: ${{ sha256_linux64 }}
 
 build:
-  include_recipe: false
   number: 0
   skip:
-  - not (win64 or linux64)
+  - not (win or linux)
   - build_platform != target_platform
 
 requirements:
   build:
-  - sel(win64): "{{ compiler('c') }}"
+  - if: win
+    then: ${{ compiler('c') }}
+  run_constraints:
+  - 7zip <0a0
 
-test:
-  commands:
+tests:
+- script:
   - 7zz
 
 about:

@@ -4,18 +4,20 @@ Date: Wed, 27 Sep 2023 05:09:05 +0800
 Subject: [PATCH] missing includes
 
 ---
- jerry-port/default/default-module.c | 1 +
- 1 file changed, 1 insertion(+)
+ jerry-port/default/default-module.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/jerry-port/default/default-module.c b/jerry-port/default/default-module.c
-index 542d192..edf3a47 100644
+index 542d192..ac2f859 100644
 --- a/jerry-port/default/default-module.c
 +++ b/jerry-port/default/default-module.c
-@@ -14,6 +14,7 @@
+@@ -14,6 +14,9 @@
   */
  
  #if !defined (_WIN32)
++#ifndef _POSIX_C_SOURCE
 +#define _POSIX_C_SOURCE 200809L
++#endif /* _POSIX_C_SOURCE */
  #include <libgen.h>
  #endif /* !defined (_WIN32) */
  #include <limits.h>

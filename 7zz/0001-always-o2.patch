@@ -8,10 +8,10 @@ Subject: [PATCH] always o2
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/CPP/Build.mak b/CPP/Build.mak
-index 6317048..b173eda 100644
+index 81992d4..3e0ba45 100644
 --- a/CPP/Build.mak
 +++ b/CPP/Build.mak
-@@ -124,7 +124,7 @@ CFLAGS = $(CFLAGS) -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE
+@@ -132,7 +132,7 @@ CFLAGS = $(CFLAGS) -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE
  !ENDIF
  
  !IF "$(PLATFORM)" == "x64"

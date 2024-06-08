@@ -1,6 +1,7 @@
 # name conflict
 SUBDIR=
 
+cd "$SRC_DIR"
 mkdir -p build
 cd build
 CFLAGS="$CFLAGS -MD" \

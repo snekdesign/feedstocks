@@ -1,39 +1,33 @@
 context:
-  version: 1.26.0
-  sha256: 0b4263d779b5f265342dc4060b3a9bbb7df90df3253140e2ff33dcd558c27cfb
+  version: 1.27.0
+  sha256: cc1eeb4385a7313a9a22e5909a2fd1ba8f2467ec608294d295397b64b03191de
 
 package:
   name: nginx
-  version: '{{ version }}'
+  version: ${{ version }}
 
 source:
-- url: https://github.com/nginx/nginx/archive/refs/tags/release-{{ version }}.tar.gz
-  sha256: '{{ sha256 }}'
+- url: https://github.com/nginx/nginx/archive/refs/tags/release-${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch
 
 build:
-  include_recipe: false
   number: 0
-  script_env:
-    CHERE_INVOKING: '1'
-    MSYS2_PATH_TYPE: inherit
   skip:
-  - not win64
+  - not win
   - build_platform != target_platform
 
 requirements:
   build:
-  - "{{ compiler('c') }}"
+  - ${{ compiler('c') }}
   host:
   - openssl
   - pcre2
   - posix
-  run:
-  - openssl
 
-test:
-  commands:
+tests:
+- script:
   - nginx -V
 
 about:

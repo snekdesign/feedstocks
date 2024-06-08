@@ -1,0 +1,89 @@
+From 37c4df826e0ed9f3c31efbbbb0736f74d57105e8 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Sat, 8 Jun 2024 09:06:58 +0800
+Subject: [PATCH 2/2] enable lto
+
+---
+ CMakeLists.txt                    | 24 ++++--------------------
+ jerry-core/CMakeLists.txt         |  2 +-
+ jerry-port/default/CMakeLists.txt |  2 +-
+ 3 files changed, 6 insertions(+), 22 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 43ac22e..09c90ff 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-cmake_minimum_required (VERSION 2.8.12)
++cmake_minimum_required (VERSION 3.9)
+ project (Jerry C)
+ 
+ # Determining version
+@@ -111,12 +111,6 @@ if(USING_MSVC)
+   set(ENABLE_STRIP_MESSAGE       " (FORCED BY COMPILER)")
+ endif()
+ 
+-if(CYGWIN OR MINGW OR MSYS)
+-  set(ENABLE_LTO         OFF)
+-
+-  set(ENABLE_LTO_MESSAGE         " (FORCED BY PLATFORM)")
+-endif()
+-
+ # Generate compile_commands.json
+ set(CMAKE_EXPORT_COMPILE_COMMANDS ${ENABLE_COMPILE_COMMANDS})
+ 
+@@ -181,19 +175,9 @@ jerry_add_flags(CMAKE_EXE_LINKER_FLAGS ${FLAGS_COMMON_ARCH})
+ 
+ # LTO
+ if(ENABLE_LTO)
+-  if(USING_GCC OR USING_CLANG)
+-    jerry_add_compile_flags(-flto)
+-    jerry_add_link_flags(-flto)
+-  endif()
+-  if(USING_GCC)
+-    jerry_add_compile_flags(-fno-fat-lto-objects)
+-    # Use gcc-ar and gcc-ranlib to support LTO
+-    set(CMAKE_AR "gcc-ar")
+-    set(CMAKE_RANLIB "gcc-ranlib")
+-  endif()
+-  if(USING_TI)
+-    jerry_add_link_flags(-lto)
+-  endif()
++  include(CheckIPOSupported)
++  check_ipo_supported()
++  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+ endif()
+ 
+ # Compiler / Linker flags
+diff --git a/jerry-core/CMakeLists.txt b/jerry-core/CMakeLists.txt
+index 46a2b89..8d8e9c9 100644
+--- a/jerry-core/CMakeLists.txt
++++ b/jerry-core/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-cmake_minimum_required (VERSION 2.8.12)
++cmake_minimum_required (VERSION 3.9)
+ set(JERRY_CORE_NAME jerry-core)
+ project (${JERRY_CORE_NAME} C)
+ 
+diff --git a/jerry-port/default/CMakeLists.txt b/jerry-port/default/CMakeLists.txt
+index 3560b07..18737a3 100644
+--- a/jerry-port/default/CMakeLists.txt
++++ b/jerry-port/default/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-cmake_minimum_required (VERSION 2.8.12)
++cmake_minimum_required (VERSION 3.9)
+ set(JERRY_PORT_DEFAULT_NAME jerry-port-default)
+ project (${JERRY_PORT_DEFAULT_NAME} C)
+ 
+-- 
+2.45.0.windows.1
+

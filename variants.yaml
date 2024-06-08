@@ -1,0 +1,16 @@
+c_compiler:
+- if: win
+  then: vs2022
+  else: gcc
+c_compiler_version:
+- if: win
+  then: '19.40'
+cxx_compiler:
+- if: win
+  then: vs2022
+  else: gxx
+cxx_compiler_version:
+- if: win
+  then: '19.40'
+cdt_name:
+- cos7
