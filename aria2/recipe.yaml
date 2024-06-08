@@ -22,7 +22,7 @@ requirements:
   host:
   - aria2-toolchain
   - c-ares
-  - gettext
+  - libintl-devel
   - libsqlite
   - libssh2
   - libxml2
