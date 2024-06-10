@@ -30,7 +30,7 @@ build:
 requirements:
   build:
   - if: win
-    then: ${{ compiler('c') }}
+    then: ${{ compiler('cxx') }}
   run_constraints:
   - 7zip <0a0
 
