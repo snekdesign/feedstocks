@@ -1,0 +1,53 @@
+From ca54a316cd98724460b9cfce53707546a96faac3 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Mon, 10 Jun 2024 17:30:13 +0800
+Subject: [PATCH] conda build
+
+---
+ Config.vcxproj     | 2 +-
+ source/defines.h   | 2 +-
+ source/script2.cpp | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Config.vcxproj b/Config.vcxproj
+index d1c66a7..225a54e 100644
+--- a/Config.vcxproj
++++ b/Config.vcxproj
+@@ -38,7 +38,7 @@
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       
+       <!-- default -->
+-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+       
+     </ClCompile>
+   </ItemDefinitionGroup>
+diff --git a/source/defines.h b/source/defines.h
+index ad63620..53fea86 100644
+--- a/source/defines.h
++++ b/source/defines.h
+@@ -55,7 +55,7 @@ GNU General Public License for more details.
+ #define WINDOW_CLASS_GUI _T("AutoHotkeyGUI") // There's a section in Script::Edit() that relies on these all starting with "AutoHotkey".
+ 
+ #define EXT_AUTOHOTKEY _T(".ahk")
+-#define AHK_HELP_FILE _T("AutoHotkey.chm")
++#define AHK_HELP_FILE _T("..\\etc\\AutoHotkey.chm")
+ 
+ // AutoIt2 supports lines up to 16384 characters long, and we want to be able to do so too
+ // so that really long lines from aut2 scripts, such as a chain of IF commands, can be
+diff --git a/source/script2.cpp b/source/script2.cpp
+index 0cdab2e..669107e 100644
+--- a/source/script2.cpp
++++ b/source/script2.cpp
+@@ -569,7 +569,7 @@ void LaunchAutoHotkeyUtil(LPTSTR aFile, bool aIsScript)
+ 
+ void LaunchWindowSpy()
+ {
+-	LaunchAutoHotkeyUtil(_T("WindowSpy.ahk"), true);
++	LaunchAutoHotkeyUtil(_T("..\\etc\\WindowSpy.ahk"), true);
+ }
+ 
+ void LaunchAutoHotkeyHelp()
+-- 
+2.45.0.windows.1
+

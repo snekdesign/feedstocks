@@ -1,0 +1,33 @@
+context:
+  version: 2.0.17
+  sha256_src: 4e0d770f2069e3faa28d7a92f2ad840a3b8cafd2baaa2c0006e82c102b912271
+  sha256_bin: 2e980bd99add2b0859b0bd6586dddcd688e1f8588ef6c9bf5922674e947a6dc6
+
+package:
+  name: autohotkey
+  version: ${{ version }}
+
+source:
+- url: https://github.com/AutoHotkey/AutoHotkey/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: ${{ sha256_src }}
+  patches:
+  - 0001-conda-build.patch
+- url: https://github.com/AutoHotkey/AutoHotkey/releases/download/v${{ version }}/AutoHotkey_${{ version }}.zip
+  sha256: ${{ sha256_bin }}
+  target_directory: bin
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+
+requirements:
+  build:
+  - ${{ compiler('cxx') }}
+
+about:
+  license: GPL-2.0-only
+  license_family: GPL
+  license_file: license.txt
+  summary: macro-creation and automation-oriented scripting utility for Windows
