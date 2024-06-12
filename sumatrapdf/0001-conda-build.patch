@@ -4,9 +4,60 @@ Date: Wed, 25 Oct 2023 19:01:51 +0800
 Subject: [PATCH] conda build
 
 ---
- src/utils/FileUtil.cpp | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/MemLeakDetect.cpp         | 18 -------
+ src/utils/FileUtil.cpp        |  2 +-
+ vs2022/PdfFilter.vcxproj      |  3 --
+ vs2022/PdfPreview.vcxproj     |  3 --
+ vs2022/SumatraPDF-dll.vcxproj |  3 --
+ vs2022/SumatraPDF.vcxproj     | 19 +-------
+ vs2022/enginedump.vcxproj     |  9 ----
+ vs2022/libmupdf.vcxproj       | 12 -----
+ vs2022/mupdf-libs.vcxproj     | 91 -----------------------------------
+ 9 files changed, 3 insertions(+), 157 deletions(-)
 
+diff --git a/src/MemLeakDetect.cpp b/src/MemLeakDetect.cpp
+index 5970814..5aee03c 100644
+--- a/src/MemLeakDetect.cpp
++++ b/src/MemLeakDetect.cpp
+@@ -387,7 +387,6 @@ decltype(_malloc_base)* g_malloc_base_orig = nullptr;
+ decltype(_calloc_base)* g_calloc_base_orig = nullptr;
+ decltype(_free_base)* g_free_base_orig = nullptr;
+ decltype(_realloc_base)* g_realloc_base_orig = nullptr;
+-decltype(_recalloc_base)* g_recalloc_base_orig = nullptr;
+ 
+ void* __cdecl _malloc_base_hook(size_t _Size) {
+     Lock();
+@@ -447,22 +446,6 @@ void* __cdecl _realloc_base_hook(void* _Block, size_t _Size) {
+     return res;
+ }
+ 
+-void* __cdecl _recalloc_base_hook(void* _Block, size_t _Count, size_t _Size) {
+-    Lock();
+-    gRecurCount++;
+-
+-    void* res = g_recalloc_base_orig(_Block, _Count, _Size);
+-    if (gRecurCount == 1) {
+-        RecordAllocOrFree(TYPE_FREE, nullptr, _Block, 0);
+-        if (res != nullptr) {
+-            size_t size = _Count * _Size;
+-            RecordAllocOrFree(TYPE_ALLOC, nullptr, res, size);
+-        }
+-    }
+-    gRecurCount--;
+-    Unlock();
+-    return res;
+-}
+ 
+ // TODO: optimize callstacks by de-duplicating them
+ //       (calc hash and bisect + linear search to find the callstack)
+@@ -550,7 +533,6 @@ bool MemLeakInit() {
+     AddFunc(_calloc_base, _calloc_base_hook, (void**)&g_calloc_base_orig);
+     AddFunc(_free_base, _free_base_hook, (void**)&g_free_base_orig);
+     AddFunc(_realloc_base, _realloc_base_hook, (void**)&g_realloc_base_orig);
+-    AddFunc(_recalloc_base, _recalloc_base_hook, (void**)&g_recalloc_base_orig);
+ 
+     status = MH_CreateHooks(gHooks, gHooksCount);
+     CrashIf(status != MH_OK);
 diff --git a/src/utils/FileUtil.cpp b/src/utils/FileUtil.cpp
 index 16d9ed9..b94de61 100644
 --- a/src/utils/FileUtil.cpp
@@ -20,6 +71,268 @@ index 16d9ed9..b94de61 100644
      path = path::Normalize(path);
      char* res = ToUtf8(path);
      str::Free(path);
+diff --git a/vs2022/PdfFilter.vcxproj b/vs2022/PdfFilter.vcxproj
+index 33ce5d8..0d61717 100644
+--- a/vs2022/PdfFilter.vcxproj
++++ b/vs2022/PdfFilter.vcxproj
+@@ -730,9 +730,6 @@
+     <ProjectReference Include="utils.vcxproj">
+       <Project>{169C8510-82B0-ADC1-4B32-5121B705AAF2}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="unrar.vcxproj">
+-      <Project>{AD768210-198B-AAC1-E20C-4E214EE0A6F2}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="libmupdf.vcxproj">
+       <Project>{B812ACA6-A4DF-06B2-CDF8-F459B9243C40}</Project>
+     </ProjectReference>
+diff --git a/vs2022/PdfPreview.vcxproj b/vs2022/PdfPreview.vcxproj
+index 376d0b1..50e23c5 100644
+--- a/vs2022/PdfPreview.vcxproj
++++ b/vs2022/PdfPreview.vcxproj
+@@ -726,9 +726,6 @@
+     <ProjectReference Include="utils.vcxproj">
+       <Project>{169C8510-82B0-ADC1-4B32-5121B705AAF2}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="unrar.vcxproj">
+-      <Project>{AD768210-198B-AAC1-E20C-4E214EE0A6F2}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="libmupdf.vcxproj">
+       <Project>{B812ACA6-A4DF-06B2-CDF8-F459B9243C40}</Project>
+     </ProjectReference>
+diff --git a/vs2022/SumatraPDF-dll.vcxproj b/vs2022/SumatraPDF-dll.vcxproj
+index 3595aeb..2762c02 100644
+--- a/vs2022/SumatraPDF-dll.vcxproj
++++ b/vs2022/SumatraPDF-dll.vcxproj
+@@ -1153,9 +1153,6 @@
+     <ProjectReference Include="libmupdf.vcxproj">
+       <Project>{B812ACA6-A4DF-06B2-CDF8-F459B9243C40}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="unrar.vcxproj">
+-      <Project>{AD768210-198B-AAC1-E20C-4E214EE0A6F2}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="unarrlib.vcxproj">
+       <Project>{C45AE373-B027-3E7F-D940-2C27C56C730D}</Project>
+     </ProjectReference>
+diff --git a/vs2022/SumatraPDF.vcxproj b/vs2022/SumatraPDF.vcxproj
+index 52c1ca1..d9aacbd 100644
+--- a/vs2022/SumatraPDF.vcxproj
++++ b/vs2022/SumatraPDF.vcxproj
+@@ -490,8 +490,8 @@
+       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+       <OptimizeReferences>true</OptimizeReferences>
+-      <AdditionalDependencies>WebView2LoaderStatic.lib;comctl32.lib;delayimp.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;urlmon.lib;version.lib;windowscodecs.lib;wininet.lib;uiautomationcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalLibraryDirectories>..\packages\Microsoft.Web.WebView2.1.0.992.28\build\native\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
++      <AdditionalDependencies>WebView2LoaderStatic.lib;comctl32.lib;delayimp.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;urlmon.lib;version.lib;windowscodecs.lib;wininet.lib;uiautomationcore.lib;gumbo.lib;harfbuzz.lib;heif.lib;libwebp.lib;openjp2.lib;unrar.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalLibraryDirectories>..\packages\Microsoft.Web.WebView2.1.0.992.28\build\native\x64;$(LIBRARY_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <EntryPointSymbol>WinMainCRTStartup</EntryPointSymbol>
+       <GenerateMapFile>true</GenerateMapFile>
+       <AdditionalOptions>/DELAYLOAD:gdiplus.dll /DELAYLOAD:msimg32.dll /DELAYLOAD:shlwapi.dll /DELAYLOAD:urlmon.dll /DELAYLOAD:wininet.dll /DELAYLOAD:uiautomationcore.dll %(AdditionalOptions)</AdditionalOptions>
+@@ -1113,24 +1113,12 @@
+     <ResourceCompile Include="..\src\SumatraPDF.rc" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ProjectReference Include="zlib.vcxproj">
+-      <Project>{16CFA17C-0206-A30D-ABF2-881097081F0F}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="engines.vcxproj">
+       <Project>{CE5B946A-3A3B-1306-4353-9EDCAFB17967}</Project>
+     </ProjectReference>
+     <ProjectReference Include="libdjvu.vcxproj">
+       <Project>{B5F26479-21D2-E314-2AEA-6EEB96484A76}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="libwebp.vcxproj">
+-      <Project>{0A466F79-7625-EE14-7F3D-79EBEB9B5476}</Project>
+-    </ProjectReference>
+-    <ProjectReference Include="dav1d.vcxproj">
+-      <Project>{F5BF470F-61D4-6FC0-2A56-132096296CF1}</Project>
+-    </ProjectReference>
+-    <ProjectReference Include="libheif.vcxproj">
+-      <Project>{380D6779-A4EC-E514-AD04-71EB19634C76}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="mupdf.vcxproj">
+       <Project>{2181F50F-8D95-1DC1-5617-C120C2EA19F2}</Project>
+     </ProjectReference>
+@@ -1140,9 +1128,6 @@
+     <ProjectReference Include="utils.vcxproj">
+       <Project>{169C8510-82B0-ADC1-4B32-5121B705AAF2}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="unrar.vcxproj">
+-      <Project>{AD768210-198B-AAC1-E20C-4E214EE0A6F2}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+diff --git a/vs2022/enginedump.vcxproj b/vs2022/enginedump.vcxproj
+index ea31152..d04fd57 100644
+--- a/vs2022/enginedump.vcxproj
++++ b/vs2022/enginedump.vcxproj
+@@ -633,27 +633,18 @@
+     <ClCompile Include="..\src\mui\TextRender.cpp" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ProjectReference Include="zlib.vcxproj">
+-      <Project>{16CFA17C-0206-A30D-ABF2-881097081F0F}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="engines.vcxproj">
+       <Project>{CE5B946A-3A3B-1306-4353-9EDCAFB17967}</Project>
+     </ProjectReference>
+     <ProjectReference Include="utils.vcxproj">
+       <Project>{169C8510-82B0-ADC1-4B32-5121B705AAF2}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="unrar.vcxproj">
+-      <Project>{AD768210-198B-AAC1-E20C-4E214EE0A6F2}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="mupdf.vcxproj">
+       <Project>{2181F50F-8D95-1DC1-5617-C120C2EA19F2}</Project>
+     </ProjectReference>
+     <ProjectReference Include="unarrlib.vcxproj">
+       <Project>{C45AE373-B027-3E7F-D940-2C27C56C730D}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="libwebp.vcxproj">
+-      <Project>{0A466F79-7625-EE14-7F3D-79EBEB9B5476}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="libdjvu.vcxproj">
+       <Project>{B5F26479-21D2-E314-2AEA-6EEB96484A76}</Project>
+     </ProjectReference>
+diff --git a/vs2022/libmupdf.vcxproj b/vs2022/libmupdf.vcxproj
+index 0de3883..ac37b2e 100644
+--- a/vs2022/libmupdf.vcxproj
++++ b/vs2022/libmupdf.vcxproj
+@@ -709,24 +709,12 @@
+     <ResourceCompile Include="..\src\libmupdf.rc" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ProjectReference Include="zlib.vcxproj">
+-      <Project>{16CFA17C-0206-A30D-ABF2-881097081F0F}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="mupdf.vcxproj">
+       <Project>{2181F50F-8D95-1DC1-5617-C120C2EA19F2}</Project>
+     </ProjectReference>
+     <ProjectReference Include="libdjvu.vcxproj">
+       <Project>{B5F26479-21D2-E314-2AEA-6EEB96484A76}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="libwebp.vcxproj">
+-      <Project>{0A466F79-7625-EE14-7F3D-79EBEB9B5476}</Project>
+-    </ProjectReference>
+-    <ProjectReference Include="dav1d.vcxproj">
+-      <Project>{F5BF470F-61D4-6FC0-2A56-132096296CF1}</Project>
+-    </ProjectReference>
+-    <ProjectReference Include="libheif.vcxproj">
+-      <Project>{380D6779-A4EC-E514-AD04-71EB19634C76}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="unarrlib.vcxproj">
+       <Project>{C45AE373-B027-3E7F-D940-2C27C56C730D}</Project>
+     </ProjectReference>
+diff --git a/vs2022/mupdf-libs.vcxproj b/vs2022/mupdf-libs.vcxproj
+index 0fe88e5..a9ef37a 100644
+--- a/vs2022/mupdf-libs.vcxproj
++++ b/vs2022/mupdf-libs.vcxproj
+@@ -721,71 +721,6 @@
+     <ClCompile Include="..\ext\freetype\src\smooth\smooth.c" />
+     <ClCompile Include="..\ext\freetype\src\truetype\truetype.c" />
+     <ClCompile Include="..\ext\freetype\src\type1\type1.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\attribute.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\char_ref.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\error.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\parser.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\string_buffer.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\string_piece.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\tag.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\tokenizer.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\utf8.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\util.c" />
+-    <ClCompile Include="..\ext\gumbo-parser\src\vector.c" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-aat-layout.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-aat-map.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-blob.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-buffer-serialize.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-buffer-verify.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-buffer.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-common.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-face.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-fallback-shape.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-font.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ft.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-map.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-number.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-cff1-table.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-cff2-table.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-color.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-face.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-font.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-layout.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-map.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-math.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-meta.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-metrics.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-name.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shape-fallback.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shape-normalize.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shape.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-arabic.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-default.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-hangul.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-hebrew.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-indic-table.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-indic.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-khmer.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-myanmar.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-syllabic.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-thai.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-use.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-shaper-vowel-constraints.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-tag.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ot-var.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-set.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-shape-plan.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-shape.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-shaper.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-static.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-subset-cff-common.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-subset-cff1.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-subset-cff2.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-subset-input.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-subset-plan.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-subset.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-ucd.cc" />
+-    <ClCompile Include="..\ext\harfbuzz\src\hb-unicode.cc" />
+     <ClCompile Include="..\ext\jbig2dec\jbig2.c" />
+     <ClCompile Include="..\ext\jbig2dec\jbig2_arith.c" />
+     <ClCompile Include="..\ext\jbig2dec\jbig2_arith_iaid.c" />
+@@ -906,32 +841,6 @@
+       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseAnalyze|ARM64'">true</ExcludedFromBuild>
+     </ClCompile>
+     <ClCompile Include="..\ext\mujs\one.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\bio.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\cidx_manager.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\cio.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\dwt.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\event.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\function_list.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\ht_dec.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\image.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\invert.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\j2k.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\jp2.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\mct.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\mqc.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\openjpeg.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\opj_clock.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\phix_manager.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\pi.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\ppix_manager.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\sparse_array.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\t1.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\t2.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\tcd.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\tgt.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\thix_manager.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\thread.c" />
+-    <ClCompile Include="..\ext\openjpeg\src\lib\openjp2\tpix_manager.c" />
+   </ItemGroup>
+   <ItemGroup>
+     <None Include="..\ext\extract\src\memento.py" />
 -- 
 2.42.0.windows.1
 

@@ -21,6 +21,15 @@ build:
 requirements:
   build:
   - ${{ compiler('cxx') }}
+  host:
+  - harfbuzz
+  - libgumbo
+  - libheif
+  - libunrar
+  - libwebp-base
+  - m2-sed
+  - openjpeg
+  - zlib
 
 about:
   license_file: AUTHORS
