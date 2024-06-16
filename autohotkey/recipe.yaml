@@ -25,6 +25,8 @@ build:
 requirements:
   build:
   - ${{ compiler('cxx') }}
+  host:
+  - libmamba 1.*
 
 about:
   license: GPL-2.0-only
