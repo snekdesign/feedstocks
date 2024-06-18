@@ -1,4 +1,5 @@
 /.pixi
+/localVSlayout
 /pixi.lock
 /output
-/vs_BuildTools
+/vs_BuildTools.exe

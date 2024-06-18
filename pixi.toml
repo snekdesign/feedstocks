@@ -20,10 +20,34 @@ cmd = [
     '--recipe-dir',
 ]
 
-[target.win-64.tasks.msvc]
-# Assume there is a global installation
+[target.win-64.tasks.install]
+cmd = 'localVSlayout/vs_BuildTools.exe --noweb'
+depends-on = ['layout']
+
+[target.win-64.tasks.layout]
 cmd = [
-    'pwsh',
-    '-NoProfile',
-    'Get-MSVC.ps1',
+    './vs_BuildTools.exe',
+    '--layout', 'localVSlayout',
+    '--add', 'Microsoft.VisualStudio.Component.VC.CLI.Support',
+    '--add', 'Microsoft.VisualStudio.Component.Windows11SDK.22621',
+    '--lang', 'en-US',
 ]
+depends-on = ['bootstrapper']
+inputs = ['vs_BuildTools.exe']
+outputs = ['localVSlayout/vs_BuildTools.exe']
+
+[environments.bootstrapper]
+features = ['bootstrapper']
+no-default-feature = true
+
+[feature.bootstrapper]
+platforms = ['win-64']
+
+[feature.bootstrapper.dependencies]
+python = '>=3.10.0'
+pyyaml = '*'
+
+[feature.bootstrapper.tasks.bootstrapper]
+cmd = 'rm -rf vs_BuildTools.exe; python -I get_msvc.py'
+inputs = ['get_msvc.py', 'variants.yaml']
+outputs = ['vs_BuildTools.exe']
