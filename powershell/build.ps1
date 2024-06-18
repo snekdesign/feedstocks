@@ -1,7 +1,6 @@
 #Requires -Version 7.4
-$ErrorActionPreference = 'Stop'
-$PSNativeCommandUseErrorActionPreference = $true
 Set-StrictMode -Version Latest
+Set-Variable ErrorActionPreference, PSNativeCommandUseErrorActionPreference 1
 
 $v = [Environment]::Version
 $r = ".store\powershell\$Env:PKG_VERSION\powershell\$Env:PKG_VERSION\tools\net$($v.Major).$($v.Minor)\any"
