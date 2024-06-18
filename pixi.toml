@@ -8,8 +8,8 @@ readme = 'README.md'
 repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
-git = '>=2.45.1'
-rattler-build = '>=0.16.2'
+git = '>=2.45.2'
+rattler-build = '>=0.17.1'
 
 [tasks.build]
 cmd = [
