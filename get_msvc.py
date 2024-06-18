@@ -7,13 +7,23 @@ def main():
     with open('variants.yaml', encoding='ascii') as f:
         match yaml.safe_load(f):
             case {
+                'c_compiler': [
+                    {'if': 'win', 'then': str(c_compiler)},
+                ],
                 'c_compiler_version': [
                     {'if': 'win', 'then': str(c_compiler_version)},
+                ],
+                'cxx_compiler': [
+                    {'if': 'win', 'then': str(cxx_compiler)},
                 ],
                 'cxx_compiler_version': [
                     {'if': 'win', 'then': str(cxx_compiler_version)},
                 ],
-            } if c_compiler_version == cxx_compiler_version:
+            } if (
+                c_compiler == cxx_compiler
+                and c_compiler.startswith('vs20')
+                and c_compiler_version == cxx_compiler_version
+            ):
                 pass
             case _:
                 raise ValueError('Cannot decide MSVC version')
