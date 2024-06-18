@@ -1,0 +1,36 @@
+context:
+  version: 7.4.2
+  sha256: 69ad389bcc425ed3d50b22ffcff308cd87bae24e303585b2def9d6d4e9d99631
+  dotnet_version: '8.0'
+
+package:
+  name: powershell
+  version: ${{ version }}
+
+source:
+  url: https://mirrors.sdu.edu.cn/github-release/PowerShell_PowerShell/v${{ version }}/PowerShell-${{ version }}-win-fxdependentWinDesktop.zip
+  sha256: ${{ sha256 }}
+
+build:
+  script: pwsh -NoProfile "%RECIPE_DIR%\build.ps1"
+  number: 0
+  skip:
+  - not win
+
+requirements:
+  build:
+  - python
+  host:
+  - dotnet-desktop ${{ dotnet_version }}.*
+  - m2-coreutils
+  run:
+  - dotnet-desktop ${{ dotnet_version }}.*
+
+tests:
+- script:
+  - pwsh -v
+
+about:
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE.txt
