@@ -1,0 +1,32 @@
+context:
+  major: 24
+  minor: 1
+  version: ${{ major }}.${{ minor }}.0
+  version_string: ${{ major }}0${{ minor }}
+  sha256: 587b593a9987c92ae01bdf8909d2b8101c41ae08546887f74ed08150cddaef0b
+
+package:
+  name: 7max
+  version: ${{ version }}
+
+source:
+  url: https://master.dl.sourceforge.net/project/sevenmax/7-max/${{ major }}.0${{ minor }}/7max${{ version_string }}-src.7z?viasf=1
+  sha256: ${{ sha256 }}
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+
+requirements:
+  build:
+  - 7zz
+  - ${{ compiler('cxx') }}
+
+tests:
+- script:
+  - 7maxc
+
+about:
+  license_file: copying.txt
