@@ -1,0 +1,28 @@
+context:
+  version: 9.0.2753
+  sha256: 47817dbcd9dd42baf5d6d4416ebc4f3176a710f38d51f6b27444acc73a2138c6
+
+package:
+  name: nsudodm
+  version: ${{ version }}
+
+source:
+  url: https://github.com/M2TeamArchived/NSudo/archive/refs/heads/master.tar.gz
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-conda-build.patch
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+
+requirements:
+  build:
+  - ${{ compiler('cxx') }}
+  host:
+  - mingw-w64-ucrt-x86_64-crt-git
+
+about:
+  license_file: License.md
