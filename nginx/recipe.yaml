@@ -14,9 +14,13 @@ source:
 
 build:
   number: 0
+  script:
+    env:
+      MSYS2_PATH_TYPE: inherit
   skip:
   - not win
   - build_platform != target_platform
+  - compiler('c')[:3] == 'gcc'
 
 requirements:
   build:

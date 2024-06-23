@@ -19,6 +19,7 @@ build:
   skip:
   - not win
   - build_platform != target_platform
+  - compiler('c')[:3] == 'gcc'
 
 requirements:
   build:
