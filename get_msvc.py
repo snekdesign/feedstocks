@@ -8,15 +8,19 @@ def main():
         match yaml.safe_load(f):
             case {
                 'c_compiler': [
+                    _,
                     {'if': 'win', 'then': str(c_compiler)},
                 ],
                 'c_compiler_version': [
+                    _,
                     {'if': 'win', 'then': str(c_compiler_version)},
                 ],
                 'cxx_compiler': [
+                    _,
                     {'if': 'win', 'then': str(cxx_compiler)},
                 ],
                 'cxx_compiler_version': [
+                    _,
                     {'if': 'win', 'then': str(cxx_compiler_version)},
                 ],
             } if (
