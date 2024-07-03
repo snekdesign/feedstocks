@@ -24,9 +24,8 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
+  - cmake >=3.9.0
   - python
-  - if: linux
-    then: cmake
   - if: linux
     then: make
   host:
