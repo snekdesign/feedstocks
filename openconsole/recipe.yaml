@@ -1,0 +1,36 @@
+context:
+  version: 1.20.11781
+  version_gsl: 0f6dbc9e2915ef5c16830f3fa3565738de2a9230
+  version_wil: 1.0.240122.1
+  sha256: 0be0699b29ab6ee21fd4ab2e6de872074bca0ea086c1381d0a0213e1e3417490
+  sha256_gsl: c6dc53a876c2f079b711e33be5ff7809525872c3f6a086af91d061dae5665686
+  sha256_wil: 2762643e7865c42ac60d809fe951a813ae10960141e56bb74ad28843f2d6b5c1
+
+package:
+  name: openconsole
+  version: ${{ version }}
+
+source:
+- url: https://github.com/microsoft/terminal/archive/refs/tags/v${{ version }}.0.tar.gz
+  sha256: ${{ sha256 }}
+- url: https://github.com/microsoft/GSL/archive/${{ version_gsl }}.tar.gz
+  sha256: ${{ sha256_gsl }}
+  target_directory: dep/gsl
+- url: https://globalcdn.nuget.org/packages/microsoft.windows.implementationlibrary.${{ version_wil }}.nupkg
+  sha256: ${{ sha256_wil }}
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+  - compiler('cxx')[:4] != 'vs20'
+
+requirements:
+  build:
+  - ${{ compiler('cxx') }}
+  host:
+  - 7zip
+
+about:
+  license_file: LICENSE
