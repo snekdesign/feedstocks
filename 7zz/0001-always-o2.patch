@@ -1,7 +1,7 @@
 From 6da2f085d26dc18474aa358c7360da7d4b57ef52 Mon Sep 17 00:00:00 2001
 From: snekdesign <104812819+snekdesign@users.noreply.github.com>
 Date: Sat, 23 Sep 2023 14:40:20 +0800
-Subject: [PATCH] always o2
+Subject: [PATCH 1/2] always o2
 
 ---
  CPP/Build.mak | 2 +-
@@ -21,5 +21,5 @@ index 81992d4..3e0ba45 100644
  CFLAGS_O1 = $(CFLAGS) -O1
  !ENDIF
 -- 
-2.42.0.windows.1
+2.45.2.windows.1
 

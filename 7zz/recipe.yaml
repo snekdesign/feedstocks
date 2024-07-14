@@ -17,12 +17,13 @@ source:
     sha256: ${{ sha256_src }}
     patches:
     - 0001-always-o2.patch
+    - 0002-7max.patch
   else:
   - url: https://mirror.nju.edu.cn/7-zip/7z${{ version_string }}-linux-x64.tar.xz
     sha256: ${{ sha256_linux64 }}
 
 build:
-  number: 0
+  number: 1
   skip:
   - not (win or linux)
   - build_platform != target_platform
