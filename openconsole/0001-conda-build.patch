@@ -1,0 +1,35 @@
+From a30aa2efde2d136cac514c0e0000917f309d2cec Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Sun, 14 Jul 2024 22:12:43 +0800
+Subject: [PATCH] conda build
+
+---
+ src/common.build.post.props | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/common.build.post.props b/src/common.build.post.props
+index 1326e06..2753445 100644
+--- a/src/common.build.post.props
++++ b/src/common.build.post.props
+@@ -28,7 +28,7 @@
+   <ItemDefinitionGroup Condition="'$(EnableHybridCRT)'=='true' and ('$(Configuration)'=='Release' or '$(Configuration)'=='AuditMode')">
+     <ClCompile>
+       <!-- We use MultiThreaded, rather than MultiThreadedDLL, to avoid DLL dependencies on VCRUNTIME140.dll and MSVCP140.dll. -->
+-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <!-- Link statically against the runtime and STL, but link dynamically against the CRT by ignoring the static CRT
+@@ -49,7 +49,8 @@
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>onecoreuap_apiset.lib;d3dcompiler.lib;dwmapi.lib;uxtheme.lib;shlwapi.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>bcrypt.lib;d2d1.lib;d3d11.lib;dwrite.lib;dxgi.lib;icu.lib;pathcch.lib;propsys.lib;rpcrt4.lib;runtimeobject.lib;libshcore.a;synchronization.lib;uiautomationcore.lib;version.lib;d3dcompiler.lib;dwmapi.lib;uxtheme.lib;shlwapi.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalLibraryDirectories>$(LIBRARY_PREFIX)\x86_64-w64-mingw32\sysroot\usr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+     </Link>
+   </ItemDefinitionGroup>
+ 
+-- 
+2.45.2.windows.1
+

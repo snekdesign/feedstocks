@@ -13,6 +13,8 @@ package:
 source:
 - url: https://github.com/microsoft/terminal/archive/refs/tags/v${{ version }}.0.tar.gz
   sha256: ${{ sha256 }}
+  patches:
+  - 0001-conda-build.patch
 - url: https://github.com/microsoft/GSL/archive/${{ version_gsl }}.tar.gz
   sha256: ${{ sha256_gsl }}
   target_directory: dep/gsl
@@ -31,6 +33,7 @@ requirements:
   - ${{ compiler('cxx') }}
   host:
   - 7zip
+  - mingw-w64-ucrt-x86_64-crt-git
 
 about:
   license_file: LICENSE
