@@ -9,7 +9,7 @@ repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
 git = '>=2.45.2'
-rattler-build = '>=0.18.0'
+rattler-build = '>=0.18.1'
 
 [tasks.build]
 cmd = [
@@ -29,7 +29,8 @@ cmd = [
     './vs_BuildTools.exe',
     '--layout', 'localVSlayout',
     '--add', 'Microsoft.VisualStudio.Component.VC.CLI.Support',
-    '--add', 'Microsoft.VisualStudio.Component.Windows11SDK.22621',
+    '--add', 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64',
+    '--add', 'Microsoft.VisualStudio.Component.Windows11SDK.26100',
     '--lang', 'en-US',
 ]
 depends-on = ['bootstrapper']
