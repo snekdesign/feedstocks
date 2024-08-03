@@ -25,7 +25,7 @@ build:
   - cargo build --all-features --release
   - if: win
     then:
-    - mklink /H "%LIBRARY_BIN%\rattler.exe" ..\..\target\release\deps\rattler.exe
+    - mklink /H "%LIBRARY_BIN%\rattler.exe" ..\..\target\release\rattler.exe
   skip:
   - not win
   - build_platform != target_platform
