@@ -1,0 +1,41 @@
+# TO BUILD THIS RECIPE:
+# - rattler-build must be run as administrator
+# - on windows, long paths must(?) be enabled, see
+#   https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry
+
+context:
+  version: 0.27.2
+  sha256: 7cd3c46ac9f805224be286d6befc455cb9752c438a2def72b3cfa2f473e01f1a
+
+package:
+  name: rattler-cli
+  version: ${{ version }}
+
+source:
+- url: https://github.com/mamba-org/rattler/archive/refs/tags/rattler-v${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+- url: https://github.com/baszalmstra/libsolv/archive/refs/heads/master.tar.gz
+  sha256: 74ec1fd3f701d2f06be7f79d7513830dd94f32426c34f774951dd4bd82ccdcca
+  target_directory: crates/rattler_libsolv_c/libsolv
+
+build:
+  number: 0
+  script:
+  - cd crates/rattler-bin
+  - cargo build --all-features --release
+  - if: win
+    then:
+    - mklink /H "%LIBRARY_BIN%\rattler.exe" ..\..\target\release\deps\rattler.exe
+  skip:
+  - not win
+  - build_platform != target_platform
+  - compiler('c')[:4] != 'vs20'
+
+requirements:
+  build:
+  - cmake
+  - ${{ compiler('c') }}
+  - rust 1.75.0
+
+about:
+  license_file: LICENSE
