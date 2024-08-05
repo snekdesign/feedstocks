@@ -1,13 +1,13 @@
 context:
-  version: 7.0.1
-  sha256: 8dab1da0c7ebccb2dce99265901f22ac40f8e0fbbe4a89a368d7645f2e79caa0
+  version: 7.0.2
+  sha256: 8646515b638a3ad303e23af6a3587734447cb8fc0a0c064ecdb8e95c4fd8b389
 
 package:
   name: ffmpeg
   version: ${{ version }}
 
 source:
-- url: https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n${{ version|trim('0')|trim('.') }}.tar.gz
+- url: https://ffmpeg.org/releases/ffmpeg-${{ version|trim('0')|trim('.') }}.tar.xz
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
