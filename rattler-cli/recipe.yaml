@@ -4,15 +4,15 @@
 #   https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry
 
 context:
-  version: 0.27.2
-  sha256: 7cd3c46ac9f805224be286d6befc455cb9752c438a2def72b3cfa2f473e01f1a
+  version: 0.27.6
+  sha256: f9e5ce5994b3b6a87be4204b9aa64db37d0ffc721b048ce4b8126e9f9a76dd2d
 
 package:
   name: rattler-cli
   version: ${{ version }}
 
 source:
-- url: https://github.com/mamba-org/rattler/archive/refs/tags/rattler-v${{ version }}.tar.gz
+- url: https://github.com/conda-incubator/rattler/archive/refs/tags/rattler-v${{ version }}.tar.gz
   sha256: ${{ sha256 }}
 - url: https://github.com/baszalmstra/libsolv/archive/refs/heads/master.tar.gz
   sha256: 74ec1fd3f701d2f06be7f79d7513830dd94f32426c34f774951dd4bd82ccdcca
@@ -37,5 +37,11 @@ requirements:
   - ${{ compiler('c') }}
   - rust 1.75.0
 
+tests:
+- script:
+  - rattler -V
+
 about:
+  license: BSD-3-Clause
+  license_family: BSD
   license_file: LICENSE
