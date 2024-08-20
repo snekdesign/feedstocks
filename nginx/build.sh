@@ -1,5 +1,5 @@
 cd "$SRC_DIR"
-auto/configure \
+./configure \
     --conf-path=etc/nginx/nginx.conf \
     --error-log-path=var/log/nginx/error.log \
     --http-client-body-temp-path=var/tmp/nginx/client \
@@ -18,6 +18,5 @@ auto/configure \
     --with-pcre-jit \
     --with-stream \
     --without-http_gzip_module
-nmake
+CL='/DFD_SETSIZE#1024' nmake
 ln objs/nginx.exe "$LIBRARY_BIN"
-ln docs/text/LICENSE .
