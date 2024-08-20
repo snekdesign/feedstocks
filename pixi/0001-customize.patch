@@ -1,0 +1,168 @@
+From 6915516b939358e952b5bfbe10e178eff6359da9 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Tue, 20 Aug 2024 20:44:27 +0800
+Subject: [PATCH] customize
+
+---
+ Cargo.toml                                    | 42 +++++++++----------
+ crates/pypi_mapping/Cargo.toml                |  1 +
+ .../pypi_mapping/src/custom_pypi_mapping.rs   | 19 +++++++++
+ .../src/prefix_pypi_name_mapping.rs           |  2 +-
+ 4 files changed, 42 insertions(+), 22 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 8479790..6090ef4 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -26,8 +26,8 @@ csv = "1.3.0"
+ deno_task_shell = "0.16.0"
+ dialoguer = "0.11.0"
+ dirs = "5.0.1"
+-distribution-filename = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-distribution-types = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
++distribution-filename = { path = "../uv/crates/distribution-filename" }
++distribution-types = { path = "../uv/crates/distribution-types" }
+ dunce = "1.0.4"
+ fd-lock = "4.0.2"
+ file_url = "0.1.3"
+@@ -41,7 +41,7 @@ ignore = "0.4.22"
+ indexmap = "2.2.6"
+ indicatif = "0.17.8"
+ insta = "1.38.0"
+-install-wheel-rs = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
++install-wheel-rs = { path = "../uv/crates/install-wheel-rs" }
+ is_executable = "1.0.1"
+ itertools = "0.13.0"
+ lazy_static = "1.4.0"
+@@ -54,8 +54,8 @@ parking_lot = "0.12.2"
+ pep440_rs = "0.6.0"
+ pep508_rs = "0.6.0"
+ percent-encoding = "2.3.1"
+-platform-tags = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-pypi-types = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
++platform-tags = { path = "../uv/crates/platform-tags" }
++pypi-types = { path = "../uv/crates/pypi-types" }
+ pyproject-toml = "0.11.0"
+ rattler = { version = "0.27.4", default-features = false }
+ rattler_conda_types = { version = "0.27.1", default-features = false }
+@@ -67,7 +67,7 @@ rattler_shell = { version = "0.21.5", default-features = false }
+ rattler_solve = { version = "1.0.2", default-features = false }
+ rattler_virtual_packages = { version = "1.0.2", default-features = false }
+ regex = "1.10.4"
+-requirements-txt = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
++requirements-txt = { path = "../uv/crates/requirements-txt" }
+ reqwest = { version = "0.12.4", default-features = false }
+ reqwest-middleware = "0.3.0"
+ reqwest-retry = "0.5.0"
+@@ -97,19 +97,19 @@ typed-path = "0.9.1"
+ 
+ # Bumping this to a higher version breaks the Windows path handling.
+ url = "2.5.0"
+-uv-auth = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-cache = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-client = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-configuration = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-dispatch = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-distribution = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-git = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-installer = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-normalize = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-requirements = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-resolver = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-toolchain = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-uv-types = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
++uv-auth = { path = "../uv/crates/uv-auth" }
++uv-cache = { path = "../uv/crates/uv-cache" }
++uv-client = { path = "../uv/crates/uv-client" }
++uv-configuration = { path = "../uv/crates/uv-configuration" }
++uv-dispatch = { path = "../uv/crates/uv-dispatch" }
++uv-distribution = { path = "../uv/crates/uv-distribution" }
++uv-git = { path = "../uv/crates/uv-git" }
++uv-installer = { path = "../uv/crates/uv-installer" }
++uv-normalize = { path = "../uv/crates/uv-normalize" }
++uv-requirements = { path = "../uv/crates/uv-requirements" }
++uv-resolver = { path = "../uv/crates/uv-resolver" }
++uv-toolchain = { path = "../uv/crates/uv-toolchain" }
++uv-types = { path = "../uv/crates/uv-types" }
+ winapi = { version = "0.3.9", default-features = false }
+ xxhash-rust = "0.8.10"
+ zip = { version = "0.6.6", default-features = false }
+@@ -307,8 +307,8 @@ tokio = { workspace = true, features = ["rt"] }
+ # For pyproject-toml
+ # pyproject-toml = { git = "https://github.com/tdejager/pyproject-toml-rs", branch = "feat/bump-508-440" }
+ # If you change this also change the versions in the the patch section for uv
+-pep440_rs = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
+-pep508_rs = { git = "https://github.com/astral-sh/uv", tag = "0.2.18" }
++pep440_rs = { path = "../uv/crates/pep440-rs" }
++pep508_rs = { path = "../uv/crates/pep508-rs" }
+ # deno_task_shell = { path = "../deno_task_shell" }
+ #rattler = { git = "https://github.com/mamba-org/rattler", branch = "main" }
+ #rattler_conda_types = { git = "https://github.com/mamba-org/rattler", branch = "main" }
+diff --git a/crates/pypi_mapping/Cargo.toml b/crates/pypi_mapping/Cargo.toml
+index 5541bfd..2800b5d 100644
+--- a/crates/pypi_mapping/Cargo.toml
++++ b/crates/pypi_mapping/Cargo.toml
+@@ -18,6 +18,7 @@ miette = { workspace = true }
+ pep440_rs = { workspace = true }
+ pep508_rs = { workspace = true }
+ pixi_config = { workspace = true }
++pixi_consts = { workspace = true }
+ rattler_conda_types = { workspace = true }
+ rattler_digest = { workspace = true }
+ reqwest = { workspace = true, features = ["json"] }
+diff --git a/crates/pypi_mapping/src/custom_pypi_mapping.rs b/crates/pypi_mapping/src/custom_pypi_mapping.rs
+index b5b090d..2f6d118 100644
+--- a/crates/pypi_mapping/src/custom_pypi_mapping.rs
++++ b/crates/pypi_mapping/src/custom_pypi_mapping.rs
+@@ -4,7 +4,9 @@ use std::{
+ };
+ 
+ use miette::{Context, IntoDiagnostic};
++use pixi_consts::consts;
+ use rattler_conda_types::{PackageUrl, RepoDataRecord};
++use reqwest::header::{ACCEPT, HeaderMap, HeaderName, HeaderValue, USER_AGENT};
+ use reqwest_middleware::ClientWithMiddleware;
+ use url::Url;
+ 
+@@ -20,8 +22,25 @@ pub async fn fetch_mapping_from_url<T>(
+ where
+     T: serde::de::DeserializeOwned,
+ {
++    let mut headers = HeaderMap::new();
++    if url.as_str().starts_with("https://api.github.com/repos/") {
++        let user_agent = format!("pixi/{}", consts::PIXI_VERSION);
++        headers.insert(
++            ACCEPT,
++            HeaderValue::from_static("application/vnd.github.raw+json"),
++        );
++        headers.insert(
++            USER_AGENT,
++            HeaderValue::from_str(&user_agent).unwrap(),
++        );
++        headers.insert(
++            HeaderName::from_static("x-github-api-version"),
++            HeaderValue::from_static("2022-11-28"),
++        );
++    }
+     let response = client
+         .get(url.clone())
++        .headers(headers)
+         .send()
+         .await
+         .into_diagnostic()
+diff --git a/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs b/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
+index 91fd8ca..31da85c 100644
+--- a/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
++++ b/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
+@@ -22,7 +22,7 @@ use super::{
+ const STORAGE_URL: &str = "https://conda-mapping.prefix.dev";
+ const HASH_DIR: &str = "hash-v0";
+ const COMPRESSED_MAPPING: &str =
+-    "https://raw.githubusercontent.com/prefix-dev/parselmouth/main/files/compressed_mapping.json";
++    "https://api.github.com/repos/prefix-dev/parselmouth/contents/files/compressed_mapping.json";
+ 
+ #[derive(Debug, Deserialize, Serialize, Clone)]
+ pub struct Package {
+-- 
+2.46.0.windows.1
+

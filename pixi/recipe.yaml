@@ -1,0 +1,53 @@
+context:
+  version: 0.27.1
+  sha256: 1a64f7b61126c3e69c63fd390ac4de2fa42a79970e04f756b0c2e5b8fc76ef59
+
+package:
+  name: pixi
+  version: ${{ version }}
+
+source:
+- url: https://github.com/prefix-dev/pixi/archive/refs/tags/v0.27.1.tar.gz
+  sha256: ${{ sha256 }}
+  target_directory: pixi
+  patches:
+  - 0001-customize.patch
+- url: https://github.com/astral-sh/uv/archive/refs/tags/0.2.18.tar.gz
+  sha256: a595f8abeac971c011fe0d803fcd97b075dbf2453adc0f766adabba6a63cef13
+  target_directory: uv
+  patches:
+  - 0001-conda-build.patch
+- url: https://github.com/charliermarsh/rs-async-zip/archive/1dcb40cfe1bf5325a6fd4bfcf9894db40241f585.tar.gz
+  sha256: b7012ce0becccf5829b0e22514ac038eba5835d8468ed0e41a024377cb3ce38d
+  target_directory: uv/rs-async-zip
+- url: https://github.com/astral-sh/pubgrub/archive/b4435e2f3af10dab2336a0345b35dcd622699d06.tar.gz
+  sha256: 16a5e97ce0bdfbebd29129795dc192de68c2b07f747b4c15e2496bf786b993b1
+  target_directory: uv/pubgrub
+
+build:
+  number: 0
+  script:
+  - cd pixi
+  - cargo build --release
+  - if: win
+    then:
+    - mklink /H "%LIBRARY_BIN%\pixi.exe" target\release\pixi.exe
+  skip:
+  - not win
+  - build_platform != target_platform
+  - compiler('c')[:4] != 'vs20'
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - rust 1.77.2
+
+tests:
+- script:
+  - pixi -V
+
+about:
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: pixi/LICENSE
+  summary: pixi is a cross-platform, multi-language package manager and workflow tool build on the shoulders of the conda ecosystem.
