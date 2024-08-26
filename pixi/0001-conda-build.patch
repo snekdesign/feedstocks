@@ -4,31 +4,51 @@ Date: Tue, 20 Aug 2024 19:33:38 +0800
 Subject: [PATCH] conda build
 
 ---
- Cargo.toml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Cargo.toml | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index a8fbb24..45b3fd1 100644
+index 94a65c8..e02049a 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -58,7 +58,7 @@ async-channel = { version = "2.2.0" }
+@@ -63,7 +63,7 @@ async-channel = { version = "2.2.0" }
  async-compression = { version = "0.4.6" }
  async-trait = { version = "0.1.78" }
  async_http_range_reader = { version = "0.8.0" }
--async_zip = { git = "https://github.com/charliermarsh/rs-async-zip", rev = "1dcb40cfe1bf5325a6fd4bfcf9894db40241f585", features = ["deflate"] }
+-async_zip = { git = "https://github.com/charliermarsh/rs-async-zip", rev = "011b24604fa7bc223daaad7712c0694bac8f0a87", features = ["deflate"] }
 +async_zip = { path = "rs-async-zip", features = ["deflate"] }
- axoupdater = { version = "0.6.0", default-features = false }
+ axoupdater = { version = "0.7.0", default-features = false }
  backoff = { version = "0.4.0" }
  base64 = { version = "0.22.0" }
-@@ -103,7 +103,7 @@ path-slash = { version = "0.2.1" }
- pathdiff = { version = "0.2.1" }
+@@ -112,7 +112,7 @@ pathdiff = { version = "0.2.1" }
  petgraph = { version = "0.6.4" }
  platform-info = { version = "2.0.2" }
--pubgrub = { git = "https://github.com/astral-sh/pubgrub", rev = "b4435e2f3af10dab2336a0345b35dcd622699d06" }
+ proc-macro2 = { version = "1.0.86" }
+-pubgrub = { git = "https://github.com/astral-sh/pubgrub", rev = "aaef464c1b0d8eea4ff9ffaee4f3458c236d10da" }
 +pubgrub = { path = "pubgrub" }
  pyo3 = { version = "0.21.0" }
  pyo3-log = { version = "0.10.0" }
  quote = { version = "1.0.36" }
+@@ -120,8 +120,8 @@ rayon = { version = "1.8.0" }
+ reflink-copy = { version = "0.1.15" }
+ regex = { version = "1.10.2" }
+ reqwest = { version = "0.12.3", default-features = false, features = ["json", "gzip", "brotli", "stream", "rustls-tls", "rustls-tls-native-roots"] }
+-reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "5e3eaf254b5bd481c75d2710eed055f95b756913" }
+-reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "5e3eaf254b5bd481c75d2710eed055f95b756913" }
++reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware" }
++reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
+ rkyv = { version = "0.7.43", features = ["strict", "validation"] }
+ rmp-serde = { version = "1.1.2" }
+ rust-netrc = { version = "0.1.1" }
+@@ -171,7 +171,7 @@ ignored = ["flate2", "xz2"]
+ # For pyproject-toml
+ pep440_rs = { path = "crates/pep440-rs" }
+ pep508_rs = { path = "crates/pep508-rs" }
+-reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "5e3eaf254b5bd481c75d2710eed055f95b756913" }
++reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware" }
+ 
+ [workspace.lints.rust]
+ unsafe_code = "warn"
 -- 
 2.46.0.windows.1
 
