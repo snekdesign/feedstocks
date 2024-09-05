@@ -1,9 +1,6 @@
-# TO BUILD THIS RECIPE:
-# - rattler-build must be run as administrator
-
 context:
-  version: 0.28.1
-  sha256: 373aaa1130be73d3196e7de3fa1f99c438b3052a3990b83a87e4bfcfd9b8b45f
+  version: 0.29.0
+  sha256: f478b78b26708748455a843623fe5bd134508395dfa3d540de83fd8c05d43dc6
 
 package:
   name: pixi
@@ -15,20 +12,23 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://github.com/astral-sh/uv/archive/refs/tags/0.3.2.tar.gz
-  sha256: f81ecd38dbaad3664084549a7f2152b6042a1984e2cee3b0d5f90751a8dc9ad3
+- url: https://github.com/astral-sh/uv/archive/refs/tags/0.4.0.tar.gz
+  sha256: d4a734b4179ac56aeb23b986eb5e2324360eab45080d4d6fca1afa18b20828f8
   target_directory: uv
   patches:
   - 0001-conda-build.patch
 - url: https://github.com/charliermarsh/rs-async-zip/archive/011b24604fa7bc223daaad7712c0694bac8f0a87.tar.gz
   sha256: 68494b68d07df2a36d85e7e5e3cf39ccd4caa49876f874e0171610aac2e62730
   target_directory: uv/rs-async-zip
-- url: https://github.com/astral-sh/pubgrub/archive/aaef464c1b0d8eea4ff9ffaee4f3458c236d10da.tar.gz
-  sha256: bc54902fe8ac171ffaae54ca8dbb837e04252916a915f26f3e82dbba24145204
+- url: https://github.com/astral-sh/pubgrub/archive/388685a8711092971930986644cfed152d1a1f6c.tar.gz
+  sha256: 5383f8d836053a7b62408fb09d29ffaf862dea46d7045184a86c0cd9a5d5ee46
   target_directory: uv/pubgrub
 - url: https://github.com/astral-sh/reqwest-middleware/archive/5e3eaf254b5bd481c75d2710eed055f95b756913.tar.gz
   sha256: 4370f28fd0baa6231c50de27ee130488e85ab54136d740b7a13375246119c580
   target_directory: reqwest-middleware
+- url: https://github.com/charliermarsh/tl/archive/6e25b2ee2513d75385101a8ff9f591ef51f314ec.tar.gz
+  sha256: e838bca7cb205e373cd801ce19476a808534a6090fc261aa2ea74dfd9cea68b0
+  target_directory: uv/tl
 
 build:
   number: 0
