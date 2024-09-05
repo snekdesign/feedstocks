@@ -1,18 +1,17 @@
 # TO BUILD THIS RECIPE:
-# - rattler-build must be run as administrator
 # - on windows, long paths must(?) be enabled, see
 #   https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry
 
 context:
-  version: 0.27.6
-  sha256: f9e5ce5994b3b6a87be4204b9aa64db37d0ffc721b048ce4b8126e9f9a76dd2d
+  version: 0.27.7  # rattler>=0.27.8 requires rust>=1.80.0
+  sha256: 480509dc680865b5185a231131a6fb35041a23403e3956637e047d92130f2119
 
 package:
   name: rattler-cli
   version: ${{ version }}
 
 source:
-- url: https://github.com/conda-incubator/rattler/archive/refs/tags/rattler-v${{ version }}.tar.gz
+- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v${{ version }}.tar.gz
   sha256: ${{ sha256 }}
 - url: https://github.com/baszalmstra/libsolv/archive/refs/heads/master.tar.gz
   sha256: 74ec1fd3f701d2f06be7f79d7513830dd94f32426c34f774951dd4bd82ccdcca
