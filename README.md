@@ -4,7 +4,7 @@
 - MSVC 17.10.* [LTSC][2] (Windows only)
 ## Usage
 ```
-pixi run build <package-name>
+[sudo] pixi run build <package-name>
 ```
 ## License
 Recipes in this repo are published under [GPL-2.0-only][3] and [Anti-996][4]
