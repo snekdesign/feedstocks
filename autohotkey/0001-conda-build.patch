@@ -6,11 +6,11 @@ Subject: [PATCH] conda build
 ---
  AutoHotkeyx.vcxproj   |  7 +++++--
  Config.vcxproj        |  2 +-
- source/AutoHotkey.cpp | 21 +++++++++++++++++++++
+ source/AutoHotkey.cpp | 27 +++++++++++++++++++++++++++
  source/lib/pixel.cpp  |  2 +-
  source/script2.cpp    |  5 +++++
  source/util.cpp       | 16 ++++++++--------
- 6 files changed, 41 insertions(+), 12 deletions(-)
+ 6 files changed, 47 insertions(+), 12 deletions(-)
 
 diff --git a/AutoHotkeyx.vcxproj b/AutoHotkeyx.vcxproj
 index 98b5f41..bc0a40a 100644
@@ -51,18 +51,23 @@ index d1c66a7..225a54e 100644
      </ClCompile>
    </ItemDefinitionGroup>
 diff --git a/source/AutoHotkey.cpp b/source/AutoHotkey.cpp
-index 82aa5ea..8db5f14 100644
+index 82aa5ea..589935e 100644
 --- a/source/AutoHotkey.cpp
 +++ b/source/AutoHotkey.cpp
-@@ -15,6 +15,7 @@ GNU General Public License for more details.
+@@ -15,6 +15,12 @@ GNU General Public License for more details.
  */
  
  #include "stdafx.h" // pre-compiled headers
++#undef max
++#pragma warning(push)
++#pragma warning(disable : 4099)
 +#include <mamba/core/activation.hpp>
++#include <mamba/core/context.hpp>
++#pragma warning(pop)
  #include "globaldata.h" // for access to many global vars
  #include "application.h" // for MsgSleep()
  #include "window.h" // For MsgBox()
-@@ -88,6 +89,26 @@ int WINAPI _tWinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
+@@ -88,6 +94,27 @@ int WINAPI _tWinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
  	if (!InitForExecution())
  		return CRITICAL_ERROR;
  
@@ -70,14 +75,15 @@ index 82aa5ea..8db5f14 100644
 +	if (n >= 29) {
 +		n -= 27;
 +		if (!_tcsicmp(g_script.mOurEXE+n, _T("\\Library\\bin\\AutoHotkey.exe"))) {
-+			mamba::PowerShellActivator activator;
++            mamba::Context ctx;
++			mamba::PowerShellActivator activator { ctx };
 +#ifdef UNICODE
 +			std::wstring_view
 +#else
 +			std::string_view
 +#endif
-+			conda_prefix {g_script.mOurEXE, n};
-+			fs::u8path prefix;
++			conda_prefix { g_script.mOurEXE, n };
++			mamba::fs::u8path prefix;
 +			prefix /= conda_prefix;
 +			auto new_path = activator.add_prefix_to_path(prefix, 1);
 +			if (!SetEnvironmentVariableA("PATH", new_path.c_str())) {

@@ -17,7 +17,7 @@ source:
   target_directory: bin
 
 build:
-  number: 0
+  number: 1
   skip:
   - not win
   - build_platform != target_platform
@@ -27,7 +27,7 @@ requirements:
   build:
   - ${{ compiler('cxx') }}
   host:
-  - libmamba 1.*
+  - libmamba 2.*
 
 about:
   license: GPL-2.0-only
