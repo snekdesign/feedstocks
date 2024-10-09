@@ -1,6 +1,6 @@
 context:
-  version: 0.31.0
-  sha256: 11354fb4ec55498d3138b3280d1b64f8fb170f916ea6368657f60e6e73dccd05
+  version: 0.32.1
+  sha256: b4a109c219775b7a011f0960d88120b2593923181888c50fe1b76f927dd7201c
 
 package:
   name: pixi
@@ -46,7 +46,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust 1.80.0
+  - rust 1.81.0
 
 tests:
 - script:
