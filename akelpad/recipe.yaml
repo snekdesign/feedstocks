@@ -1,14 +1,13 @@
 context:
-  svn_rev: 4453
-  version: 4.9.9dev${{ svn_rev }}
-  sha256: 3015437d1a6a3b7facd21d098dfb1f6b6b64eee9bceb9c915e728423cb9df4b3
+  version: 4.9.9
+  sha256: 40ab1d49d822f7abe67ceeb8c37bdb357b7f068827faddf871c4771dccdfa746
 
 package:
   name: akelpad
   version: ${{ version }}
 
 source:
-- url: https://sourceforge.net/code-snapshots/svn/a/ak/akelpad/codesvn/akelpad-codesvn-r${{ svn_rev }}-trunk-akelpad_4.zip
+- url: https://jaist.dl.sourceforge.net/project/akelpad/AkelPad%204/${{ version }}/AkelPad-${{ version }}-src.zip
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
