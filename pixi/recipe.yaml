@@ -1,6 +1,6 @@
 context:
-  version: 0.32.1
-  sha256: b4a109c219775b7a011f0960d88120b2593923181888c50fe1b76f927dd7201c
+  version: 0.33.0
+  sha256: f52246e493203c4069c6390a705043f92c9859d323a27530145bdb19f6f461c6
 
 package:
   name: pixi
@@ -34,10 +34,10 @@ build:
   number: 0
   script:
   - cd pixi
-  - cargo build --release
+  - cargo build --profile dist
   - if: win
     then:
-    - mklink /H "%LIBRARY_BIN%\pixi.exe" target\release\pixi.exe
+    - mklink /H "%LIBRARY_BIN%\pixi.exe" target\dist\pixi.exe
   skip:
   - not win
   - build_platform != target_platform
