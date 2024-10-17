@@ -5,6 +5,7 @@
 ## Usage
 ```
 [sudo] pixi run build <package-name>
+pixi run boa-build akelpad
 ```
 ## License
 Recipes in this repo are published under [GPL-2.0-only][3] and [Anti-996][4]

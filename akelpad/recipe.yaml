@@ -4,26 +4,26 @@ context:
 
 package:
   name: akelpad
-  version: ${{ version }}
+  version: '{{ version }}'
 
 source:
-- url: https://jaist.dl.sourceforge.net/project/akelpad/AkelPad%204/${{ version }}/AkelPad-${{ version }}-src.zip
-  sha256: ${{ sha256 }}
+- url: https://jaist.dl.sourceforge.net/project/akelpad/AkelPad%204/{{ version }}/AkelPad-{{ version }}-src.zip
+  sha256: '{{ sha256 }}'
   patches:
   - 0001-customize.patch
 - path: CMakeLists.txt
 
 build:
-  number: 0
+  include_recipe: false
+  number: 1
   skip:
   - not win
   - build_platform != target_platform
-  - compiler('c')[:3] == 'gcc'
 
 requirements:
   build:
   - cmake >=3.21.0
-  - ${{ compiler('c') }}
+  - "{{ compiler('c') }}"
 
 about:
   license_family: BSD

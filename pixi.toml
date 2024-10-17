@@ -37,6 +37,19 @@ depends-on = ['bootstrapper']
 inputs = ['vs_BuildTools.exe']
 outputs = ['localVSlayout/vs_BuildTools.exe']
 
+[environments.boa-build]
+features = ['boa-build']
+no-default-feature = true
+
+[feature.boa-build]
+platforms = ['win-64']
+
+[feature.boa-build.dependencies]
+boa = '>=0.17.0'
+
+[feature.boa-build.tasks.boa-build]
+cmd = ['boa', 'build', '--pkg-format=2']
+
 [environments.bootstrapper]
 features = ['bootstrapper']
 no-default-feature = true

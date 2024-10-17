@@ -9,7 +9,7 @@ Subject: [PATCH] customize
  2 files changed, 11 insertions(+), 16 deletions(-)
 
 diff --git a/AkelFiles/Langs/Resources/Chinese (Simplified).rc b/AkelFiles/Langs/Resources/Chinese (Simplified).rc
-index 20530b8..069c55d 100644
+index 20530b8..e13209f 100644
 --- a/AkelFiles/Langs/Resources/Chinese (Simplified).rc	
 +++ b/AkelFiles/Langs/Resources/Chinese (Simplified).rc	
 @@ -66,7 +66,7 @@ BEGIN
@@ -92,12 +92,16 @@ index 20530b8..069c55d 100644
      188,            IDM_EDIT_RECENTCARETPREV, VIRTKEY, ALT, NOINVERT
      190,            IDM_EDIT_RECENTCARETNEXT, VIRTKEY, ALT, NOINVERT
      220,            IDM_EDIT_SELJUMPCARET,  VIRTKEY, ALT, NOINVERT
-@@ -548,11 +543,11 @@ BEGIN
+@@ -507,7 +502,7 @@ BEGIN
      CONTROL         "所有文件",IDC_SEARCH_ALLFILES,"Button",
-                     BS_AUTORADIOBUTTON,141,101,50,10
-     GROUPBOX        "",IDC_SEARCH_ALLFILES_GROUP,135,94,66,19
+                     BS_AUTORADIOBUTTON,141,87,50,10
+     GROUPBOX        "",IDC_SEARCH_ALLFILES_GROUP,135,80,66,19
 -    DEFPUSHBUTTON   "查找下一个(&F)",IDC_SEARCH_FIND_BUTTON,206,6,58,14,
 +    PUSHBUTTON      "查找下一个(&F)",IDC_SEARCH_FIND_BUTTON,206,6,58,14,
+                     BS_CENTER
+     PUSHBUTTON      "取消",IDCANCEL,206,23,58,14,BS_CENTER
+     LTEXT           "查找内容:",IDC_STATIC,4,11,37,8,NOT WS_GROUP
+@@ -552,7 +547,7 @@ BEGIN
                      BS_CENTER
      PUSHBUTTON      "替换(&R)",IDC_SEARCH_REPLACE_BUTTON,206,23,58,14,
                      BS_CENTER
@@ -107,10 +111,10 @@ index 20530b8..069c55d 100644
      PUSHBUTTON      "取消",IDCANCEL,206,55,58,14,BS_CENTER
      LTEXT           "查找内容:",IDC_STATIC,4,11,37,8,NOT WS_GROUP
 diff --git a/Edit.c b/Edit.c
-index f919cb4..65038f0 100644
+index fadb5d7..ff161f5 100644
 --- a/Edit.c
 +++ b/Edit.c
-@@ -1697,7 +1697,7 @@ BOOL SaveChanged(DWORD dwPrompt)
+@@ -1700,7 +1700,7 @@ BOOL SaveChanged(DWORD dwPrompt)
      if (dwPrompt & PROMPT_NOTOALLBUTTON)
        nChoice=MessageBoxCustom(hMainWnd, wszMsg, APP_MAIN_TITLEW, MB_ICONEXCLAMATION, NULL, &bmb[0]);
      else
