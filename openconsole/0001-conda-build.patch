@@ -5,7 +5,8 @@ Subject: [PATCH] conda build
 
 ---
  src/common.build.post.props | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ src/common.build.pre.props  | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/src/common.build.post.props b/src/common.build.post.props
 index 1326e06..2753445 100644
@@ -29,6 +30,19 @@ index 1326e06..2753445 100644
 +      <AdditionalLibraryDirectories>$(LIBRARY_PREFIX)\x86_64-w64-mingw32\sysroot\usr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
    </ItemDefinitionGroup>
+ 
+diff --git a/src/common.build.pre.props b/src/common.build.pre.props
+index 702df64..99e6c16 100644
+--- a/src/common.build.pre.props
++++ b/src/common.build.pre.props
+@@ -75,7 +75,7 @@
+   </ItemGroup>
+ 
+   <PropertyGroup Label="Globals">
+-    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)' == ''">10.0.22621.0</WindowsTargetPlatformVersion>
++    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)' == ''">10.0.26100.0</WindowsTargetPlatformVersion>
+     <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)' == ''">10.0.18362.0</WindowsTargetPlatformMinVersion>
+   </PropertyGroup>
  
 -- 
 2.45.2.windows.1
