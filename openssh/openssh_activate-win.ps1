@@ -1,0 +1,2 @@
+$Env:_CONDA_BACKUP_GIT_SSH_COMMAND = $Env:GIT_SSH_COMMAND
+$Env:GIT_SSH_COMMAND = "`"$Env:CONDA_PREFIX\Library\bin\ssh.exe`" -T"
