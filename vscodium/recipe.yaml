@@ -1,0 +1,30 @@
+context:
+  version: 1.95.1
+  version_full: ${{ version }}.24307
+  sha256: 1bce87fd5718727ff5978f9faec6155ee3838e49d2b32bb81792d3e81993650f
+
+package:
+  name: vscodium
+  version: ${{ version }}
+
+source:
+  url: https://mirrors.cernet.edu.cn/github-release/VSCodium/vscodium/${{ version_full }}/VSCodium-win32-x64-${{ version_full }}.zip
+  sha256: ${{ sha256 }}
+
+build:
+  number: 0
+  skip:
+  - not win
+
+requirements:
+  host:
+  - m2-coreutils
+
+tests:
+- script:
+  - codium --version
+
+about:
+  license: MIT
+  license_family: MIT
+  summary: binary releases of VS Code without MS branding/telemetry/licensing
