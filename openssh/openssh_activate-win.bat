@@ -1,3 +1,5 @@
 @echo off
+set _CONDA_BACKUP_GIT_SSH=%GIT_SSH%
 set _CONDA_BACKUP_GIT_SSH_COMMAND=%GIT_SSH_COMMAND%
-set GIT_SSH_COMMAND="%CONDA_PREFIX%\Library\bin\ssh.exe" -T
+set GIT_SSH="%CONDA_PREFIX%\Library\bin\ssh.exe" -T
+set GIT_SSH_COMMAND=%GIT_SSH%
