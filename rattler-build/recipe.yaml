@@ -1,0 +1,41 @@
+context:
+  version: 0.29.0
+  sha256: 972ee25d38b111cbe9db1f6b80dc674c2835d1b6498020ac72b43dbe64a2dca7
+
+package:
+  name: rattler-build
+  version: ${{ version }}
+
+source:
+- url: https://github.com/prefix-dev/rattler-build/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-customize.patch
+- url: https://github.com/wolfv/zip2/archive/refs/heads/patched.tar.gz
+  sha256: bc27df114506c779792371705507fa3b4258a014821b830ec4dfc56ce80bc42c
+  target_directory: zip2
+
+build:
+  number: 0
+  script:
+  - cargo build --release
+  - if: win
+    then:
+    - mklink /H "%LIBRARY_BIN%\rattler-build.exe" target\release\rattler-build.exe
+  skip:
+  - not win
+  - build_platform != target_platform
+  - compiler('c')[:4] != 'vs20'
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - rust 1.80.0
+
+tests:
+- script:
+  - rattler-build -V
+
+about:
+  license_file: LICENSE
+  summary: rattler-build is the universal conda package builder for Windows, macOS and Linux
