@@ -19,10 +19,10 @@ build:
 
 requirements:
   build:
+  - m2-coreutils
   - python
   host:
   - dotnet-desktop ${{ dotnet_version }}.*
-  - m2-coreutils
   run:
   - dotnet-desktop ${{ dotnet_version }}.*
 

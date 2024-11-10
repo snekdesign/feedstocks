@@ -25,10 +25,10 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
+  - m2-base
   host:
   - openssl
   - pcre2
-  - posix
 
 tests:
 - script:

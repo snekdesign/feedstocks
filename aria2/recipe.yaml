@@ -31,13 +31,11 @@ requirements:
   - ${{ compiler('cxx') }}
   - m2-autoconf
   - m2-automake-wrapper
-  - m2-findutils
+  - m2-base
   - m2-gettext
-  - m2-grep
   - m2-libtool
   - m2-make
   - m2-pkg-config
-  - m2-which
   host:
   - c-ares
   - libintl-devel

@@ -25,11 +25,11 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
+  - m2-base
   - nasm
   - pkg-config
   host:
   - ffnvcodec-headers
-  - posix
   - sdl2 >=2.23.1
 
 tests:
