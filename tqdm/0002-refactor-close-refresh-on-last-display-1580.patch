@@ -1,0 +1,46 @@
+From 83e6b50fdaf2acefa7021741a1fe80198dba2539 Mon Sep 17 00:00:00 2001
+From: "Klamkin, Michael" <mklamkin3@gatech.edu>
+Date: Sun, 14 Jul 2024 06:25:02 -0400
+Subject: [PATCH 2/4] refactor close, refresh on last display (#1580)
+
+---
+ tqdm/rich.py | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/tqdm/rich.py b/tqdm/rich.py
+index 8179603..5845eb5 100644
+--- a/tqdm/rich.py
++++ b/tqdm/rich.py
+@@ -260,19 +260,19 @@ class tqdm_rich(std_tqdm):  # pragma: no cover
+     def close(self):
+         if self.disable:
+             return
+-
+         cls = self.__class__
+-        if not self._task.finished:
+-            self.display()  # print 100%, vis #1306
+-            if not self.leave:
+-                self._task.visible = False
+-            cls._progress.stop_task(self._task.id)
+-            self._task.finished_time = self._task.stop_time
+ 
++        if cls._progress is None or self._task is None:
++            return
+         with cls._progress._lock:
+-            if cls._progress is not None and all(
+-                t.finished for t in cls._progress.tasks
+-            ):
++            if not self._task.finished:
++                self.display()
++                if not self.leave:
++                    self._task.visible = False
++                cls._progress.stop_task(self._task.id)
++                self._task.finished_time = self._task.stop_time
++            if all(t.finished for t in cls._progress.tasks):
++                self.display(refresh=True)   # print 100%, vis #1306
+                 cls._progress.__exit__(None, None, None)
+                 cls._progress = None
+ 
+-- 
+2.47.0.windows.1
+

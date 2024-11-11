@@ -1,0 +1,25 @@
+From b172ab9515943f8e02daf6b0f89f432bfc94447b Mon Sep 17 00:00:00 2001
+From: "Klamkin, Michael" <mklamkin3@gatech.edu>
+Date: Sun, 14 Jul 2024 14:04:49 -0400
+Subject: [PATCH 3/4] only force refresh on close if jupyter (#1579)
+
+---
+ tqdm/rich.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tqdm/rich.py b/tqdm/rich.py
+index 5845eb5..933ae8d 100644
+--- a/tqdm/rich.py
++++ b/tqdm/rich.py
+@@ -272,7 +272,7 @@ class tqdm_rich(std_tqdm):  # pragma: no cover
+                 cls._progress.stop_task(self._task.id)
+                 self._task.finished_time = self._task.stop_time
+             if all(t.finished for t in cls._progress.tasks):
+-                self.display(refresh=True)   # print 100%, vis #1306
++                self.display(refresh=cls._progress.console.is_jupyter)   # print 100%, vis #1306
+                 cls._progress.__exit__(None, None, None)
+                 cls._progress = None
+ 
+-- 
+2.47.0.windows.1
+

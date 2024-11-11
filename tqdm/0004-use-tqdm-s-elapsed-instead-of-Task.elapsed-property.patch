@@ -1,0 +1,36 @@
+From 73e8ab56fec9a8d1dbcc72d3344160b3491f88dd Mon Sep 17 00:00:00 2001
+From: "Klamkin, Michael" <mklamkin3@gatech.edu>
+Date: Sun, 14 Jul 2024 14:05:27 -0400
+Subject: [PATCH 4/4] use tqdm's elapsed instead of Task.elapsed property
+
+---
+ tqdm/rich.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tqdm/rich.py b/tqdm/rich.py
+index 933ae8d..563def7 100644
+--- a/tqdm/rich.py
++++ b/tqdm/rich.py
+@@ -55,8 +55,8 @@ class RateColumn(UnitScaleColumn):
+     def render(self, task: Task):
+         """Show data transfer speed."""
+         speed = task.fields["rate"]
+-        if task.elapsed and speed is None:
+-            speed = task.completed / task.elapsed
++        if task.fields["elapsed"] and speed is None:
++            speed = task.completed / task.fields["elapsed"]
+         if speed is not None:
+             inv_speed = 1 / speed if speed != 0 else None
+             if inv_speed and inv_speed > 1:
+@@ -85,7 +85,7 @@ class UnitCompletedColumn(UnitScaleColumn):
+ 
+ class CompactTimeElapsedColumn(ProgressColumn):
+     def render(self, task: Task) -> Text:
+-        elapsed = task.finished_time if task.finished else task.elapsed
++        elapsed = task.fields["elapsed"]
+         formatted = std_tqdm.format_interval(int(elapsed)) if elapsed else "--:--"
+         return Text(formatted, style="progress.elapsed")
+ 
+-- 
+2.47.0.windows.1
+

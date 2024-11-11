@@ -1,0 +1,40 @@
+package:
+  name: tqdm
+  version: 4.67.0
+
+source:
+  url: https://files.pythonhosted.org/packages/e8/4f/0153c21dc5779a49a0598c445b1978126b1344bab9ee71e53e44877e14e0/tqdm-4.67.0.tar.gz
+  sha256: fe5a6f95e6fe0b9755e9469b77b9c3cf850048224ecaa8293d7d2d31f97d869a
+  patches:
+  - 0001-update-tqdm.rich-to-better-match-tqdm.std.patch
+  - 0002-refactor-close-refresh-on-last-display-1580.patch
+  - 0003-only-force-refresh-on-close-if-jupyter-1579.patch
+  - 0004-use-tqdm-s-elapsed-instead-of-Task.elapsed-property.patch
+
+build:
+  noarch: python
+  number: 0
+  python:
+    entry_points:
+    - tqdm = tqdm.cli:main
+  script: pip install .
+
+requirements:
+  host:
+  - pip
+  - python >=3.7.0
+  - setuptools >=42.0.0
+  - setuptools-scm >=3.4.0
+  - toml
+  - wheel
+  run:
+  - colorama
+  - python >=3.7.0
+
+tests:
+- script:
+  - tqdm -v
+
+about:
+  license_file: LICENCE
+  summary: A Fast, Extensible Progress Meter
