@@ -1,14 +1,14 @@
 context:
-  version: 1.95.1
-  version_full: ${{ version }}.24307
-  sha256: 1bce87fd5718727ff5978f9faec6155ee3838e49d2b32bb81792d3e81993650f
+  version: 1.95.2
+  version_full: ${{ version }}.24313
+  sha256: bdeab62d166d1acf9a510db63795e292d435809cd099389de949ebd4e42f1a75
 
 package:
   name: vscodium
   version: ${{ version }}
 
 source:
-  url: https://mirrors.cernet.edu.cn/github-release/VSCodium/vscodium/${{ version_full }}/VSCodium-win32-x64-${{ version_full }}.zip
+  url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ version_full }}/VSCodium-win32-x64-${{ version_full }}.zip
   sha256: ${{ sha256 }}
 
 build:
@@ -17,12 +17,12 @@ build:
   - not win
 
 requirements:
-  build:
+  host:
   - m2-coreutils
 
 tests:
 - script:
-  - codium --version
+  - code --version
 
 about:
   license: MIT

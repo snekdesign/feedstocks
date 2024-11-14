@@ -1,4 +1,4 @@
 @echo off
-md "%LIBRARY_PREFIX%\opt\vscodium" "%PREFIX%\etc\conda\activate.d" && ^
+md "%LIBRARY_BIN%" "%LIBRARY_PREFIX%\opt\vscodium" && ^
 cp -al . "%LIBRARY_PREFIX%\opt\vscodium" && ^
-copy "%RECIPE_DIR%\vscodium_activate-win.*" "%PREFIX%\etc\conda\activate.d"
+copy "%RECIPE_DIR%\code.cmd" "%LIBRARY_BIN%"
