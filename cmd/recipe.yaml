@@ -1,0 +1,30 @@
+context:
+  version: 0.4.15
+  sha256: 8033251eb8b9693c4a3105db37ca922f064b27ea43d4552e58626d6826ebc5e4
+
+package:
+  name: cmd
+  version: ${{ version }}
+
+source:
+  url: https://github.com/reactos/reactos/archive/refs/tags/${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+  - compiler('cxx')[:4] != 'vs20'
+
+requirements:
+  build:
+  - cmake
+  - ${{ compiler('cxx') }}
+  - ninja
+  - winflexbison
+
+about:
+  license_file:
+  - COPYING
+  - base/shell/cmd/license.txt
