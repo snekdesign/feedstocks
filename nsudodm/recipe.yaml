@@ -9,11 +9,9 @@ package:
 source:
   url: https://github.com/M2TeamArchived/NSudo/archive/refs/heads/master.tar.gz
   sha256: ${{ sha256 }}
-  patches:
-  - 0001-conda-build.patch
 
 build:
-  number: 0
+  number: 1
   skip:
   - not win
   - build_platform != target_platform
