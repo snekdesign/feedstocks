@@ -1,0 +1,51 @@
+context:
+  version: 0.4.15
+  sha256: 8033251eb8b9693c4a3105db37ca922f064b27ea43d4552e58626d6826ebc5e4
+
+recipe:
+  name: libcmd
+  version: ${{ version }}
+
+source:
+  url: https://github.com/reactos/reactos/archive/refs/tags/${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-cmd.dll.patch
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+  - compiler('cxx')[:4] != 'vs20'
+
+cache:
+  requirements:
+    build:
+    - cmake
+    - ${{ compiler('cxx') }}
+    - ninja
+    - winflexbison
+
+outputs:
+- package:
+    name: libcmd
+  build:
+    files:
+    - Library/bin/cmd.dll
+- package:
+    name: libcmd-devel
+  requirements:
+    run:
+    - ${{ pin_subpackage('libcmd', exact=True) }}
+    run_exports:
+    - ${{ pin_subpackage('libcmd', exact=True) }}
+  build:
+    files:
+    - Library/include/cmd.h
+    - Library/lib/cmd.lib
+
+about:
+  license_file:
+  - COPYING
+  - base/shell/cmd/license.txt

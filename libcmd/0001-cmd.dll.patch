@@ -1,0 +1,138 @@
+From 8b697347932b16aee73acd998cbf621f3564b184 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Mon, 18 Nov 2024 13:41:59 +0800
+Subject: [PATCH] cmd.dll
+
+---
+ CMakeLists.txt                 |  4 ++++
+ base/shell/cmd/CMakeLists.txt  |  5 +++--
+ base/shell/cmd/cmd.c           | 12 ++++++------
+ base/shell/cmd/libcmd.def      | 20 ++++++++++++++++++++
+ sdk/include/asm/CMakeLists.txt |  1 +
+ 5 files changed, 34 insertions(+), 8 deletions(-)
+ create mode 100644 base/shell/cmd/libcmd.def
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3583b78b..db08b7ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,6 +16,10 @@ endif()
+ 
+ project(REACTOS)
+ 
++include(CheckIPOSupported)
++check_ipo_supported()
++
++set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+ set(CMAKE_INCLUDE_CURRENT_DIR ON)
+ set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
+ set(CMAKE_SHARED_LIBRARY_PREFIX "")
+diff --git a/base/shell/cmd/CMakeLists.txt b/base/shell/cmd/CMakeLists.txt
+index c911bd33..0d33ed39 100644
+--- a/base/shell/cmd/CMakeLists.txt
++++ b/base/shell/cmd/CMakeLists.txt
+@@ -63,9 +63,10 @@ list(APPEND SOURCE
+     precomp.h)
+ 
+ add_rc_deps(cmd.rc ${CMAKE_CURRENT_SOURCE_DIR}/res/terminal.ico)
+-add_executable(cmd ${SOURCE} cmd.rc)
++# BUG: cmd.rc doesn't work in DLL
++add_library(cmd SHARED ${SOURCE} libcmd.def)
+ add_pch(cmd precomp.h SOURCE)
+-set_module_type(cmd win32cui UNICODE)
++set_module_type(cmd win32dll UNICODE)
+ target_link_libraries(cmd wine)
+ target_link_libraries(cmd conutils ${PSEH_LIB})
+ add_importlibs(cmd advapi32 user32 msvcrt kernel32 ntdll)
+diff --git a/base/shell/cmd/cmd.c b/base/shell/cmd/cmd.c
+index afb67cb7..9601d9d9 100644
+--- a/base/shell/cmd/cmd.c
++++ b/base/shell/cmd/cmd.c
+@@ -153,8 +153,8 @@ BOOL bExit = FALSE;       /* Indicates EXIT was typed */
+ BOOL bCanExit = TRUE;     /* Indicates if this shell is exitable */
+ BOOL bCtrlBreak = FALSE;  /* Ctrl-Break or Ctrl-C hit */
+ BOOL bIgnoreEcho = FALSE; /* Set this to TRUE to prevent a newline, when executing a command */
+-static BOOL fSingleCommand = 0; /* When we are executing something passed on the command line after /C or /K */
+-static BOOL bAlwaysStrip = FALSE;
++DECLSPEC_EXPORT BOOL fSingleCommand = 0; /* When we are executing something passed on the command line after /C or /K */
++DECLSPEC_EXPORT BOOL bAlwaysStrip = FALSE;
+ INT  nErrorLevel = 0;     /* Errorlevel of last launched external program */
+ CRITICAL_SECTION ChildProcessRunningLock;
+ BOOL bDisableBatchEcho = FALSE;
+@@ -1768,7 +1768,7 @@ ReadLine(TCHAR *commandline, BOOL bMore)
+     return SubstituteVars(ip, commandline, _T('%'));
+ }
+ 
+-static INT
++DECLSPEC_EXPORT INT
+ ProcessInput(VOID)
+ {
+     INT Ret = 0;
+@@ -2069,7 +2069,7 @@ ExecuteAutoRunFile(HKEY hKeyRoot)
+ }
+ 
+ /* Get the command that comes after a /C or /K switch */
+-static VOID
++DECLSPEC_EXPORT VOID
+ GetCmdLineCommand(
+     OUT LPTSTR commandline,
+     IN LPCTSTR ptr,
+@@ -2129,7 +2129,7 @@ GetCmdLineCommand(
+  * Set up global initializations and process parameters.
+  * Return a pointer to the command line if present.
+  */
+-static LPCTSTR
++DECLSPEC_EXPORT LPCTSTR
+ Initialize(VOID)
+ {
+     HMODULE NtDllModule;
+@@ -2337,7 +2337,7 @@ Initialize(VOID)
+ }
+ 
+ 
+-static VOID Cleanup(VOID)
++DECLSPEC_EXPORT VOID Cleanup(VOID)
+ {
+     /* Run cmdexit.bat */
+     if (IsExistingFile(_T("cmdexit.bat")))
+diff --git a/base/shell/cmd/libcmd.def b/base/shell/cmd/libcmd.def
+new file mode 100644
+index 00000000..8f071704
+--- /dev/null
++++ b/base/shell/cmd/libcmd.def
+@@ -0,0 +1,20 @@
++LIBRARY cmd.dll
++EXPORTS
++    CMD_ModuleHandle
++    ChildProcessRunningLock
++    ConSetThreadUILanguage
++    ConStreamGetOSHandle
++    ConStreamInit
++    DuplicateEnvironment
++    InputCodePage
++    IsConsoleHandle
++    OutputCodePage
++    OutputStreamMode
++    ParseCommandLine
++    bExit
++    cmd_free=free
++    csStdErr
++    csStdIn
++    csStdOut
++    lpOriginalEnvironment
++    nErrorLevel
+diff --git a/sdk/include/asm/CMakeLists.txt b/sdk/include/asm/CMakeLists.txt
+index 9daa2f77..6364c78f 100644
+--- a/sdk/include/asm/CMakeLists.txt
++++ b/sdk/include/asm/CMakeLists.txt
+@@ -3,6 +3,7 @@ add_library(genincdata MODULE genincdata.c)
+ 
+ set_entrypoint(genincdata 0)
+ add_dependencies(genincdata bugcodes psdk xdk)
++set_target_properties(genincdata PROPERTIES INTERPROCEDURAL_OPTIMIZATION OFF)
+ 
+ if(MSVC)
+     set(OPT_MS "-ms")
+-- 
+2.47.0.windows.1
+
