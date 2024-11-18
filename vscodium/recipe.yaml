@@ -1,7 +1,7 @@
 context:
-  version: 1.95.2
-  version_full: ${{ version }}.24313
-  sha256: bdeab62d166d1acf9a510db63795e292d435809cd099389de949ebd4e42f1a75
+  version: 1.95.3
+  version_full: ${{ version }}.24321
+  sha256: ac1dac2996b9079f6d53fce56953159ae86447d0cffc74faaa30d8a867811388
 
 package:
   name: vscodium
