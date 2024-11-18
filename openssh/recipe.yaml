@@ -11,6 +11,7 @@ source:
   sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch
+  - 0002-customize.patch
 - url: https://github.com/PowerShell/libfido2/releases/download/1.15.0/libfido2.zip
   sha256: 2d9bf95672d7324f970c7c8810a9abcfd6e803e2aa1c6d63aef9a51e1bc901ea
   target_directory: contrib/win32/openssh/libfido2
@@ -22,7 +23,7 @@ source:
   target_directory: contrib/win32/openssh/zlib
 
 build:
-  number: 0
+  number: 1
   skip:
   - not win
   - build_platform != target_platform
