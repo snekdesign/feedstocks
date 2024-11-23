@@ -1,0 +1,29 @@
+From 4b60a28dbb79dba6eeba9bcc4f5cb7f2b2737be6 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Sat, 23 Nov 2024 18:57:35 +0800
+Subject: [PATCH] strip dquotes
+
+---
+ crates/rattler_shell/src/shell/mod.rs | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/crates/rattler_shell/src/shell/mod.rs b/crates/rattler_shell/src/shell/mod.rs
+index 99c316a..a959580 100644
+--- a/crates/rattler_shell/src/shell/mod.rs
++++ b/crates/rattler_shell/src/shell/mod.rs
+@@ -153,7 +153,11 @@ pub trait Shell {
+             .filter_map(|line| {
+                 line.split_once('=')
+                     // Trim " as CmdExe could add this to its variables.
+-                    .map(|(key, value)| (key, value.trim_matches('"')))
++                    .map(|(key, value)| if value.starts_with('"') && value.ends_with('"') && value != "\"" {
++                        unsafe { (key, value.get_unchecked(1..value.len()-1)) }
++                    } else {
++                        (key, value)
++                    })
+             })
+             .collect()
+     }
+-- 
+2.47.0.windows.1
+
