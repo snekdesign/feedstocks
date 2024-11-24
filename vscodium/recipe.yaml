@@ -10,9 +10,10 @@ package:
 source:
   url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ version_full }}/VSCodium-win32-x64-${{ version_full }}.zip
   sha256: ${{ sha256 }}
+  target_directory: vscodium
 
 build:
-  number: 0
+  number: 1
   skip:
   - not win
 
