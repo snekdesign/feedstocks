@@ -1,0 +1,31 @@
+context:
+  version: 1.95.3
+  version_full: ${{ version }}.24321
+  sha256: daf0939e282355ef146bbde5e7cee6d0c91f746226303f7a6aaebfb06539e13c
+
+package:
+  name: vscodium-server
+  version: ${{ version }}
+
+source:
+  url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ version_full }}/vscodium-reh-web-win32-x64-${{ version_full }}.tar.gz
+  sha256: ${{ sha256 }}
+  target_directory: vscodium-server
+
+build:
+  number: 0
+  skip:
+  - not win
+
+requirements:
+  host:
+  - m2-coreutils
+
+tests:
+- script:
+  - codium-server --version
+
+about:
+  license: MIT
+  license_family: MIT
+  summary: binary releases of VS Code without MS branding/telemetry/licensing
