@@ -7,14 +7,15 @@ Subject: [PATCH] customize
  Cargo.toml                                    | 66 +++++++++----------
  .../pypi_mapping/src/custom_pypi_mapping.rs   | 19 ++++++
  .../src/prefix_pypi_name_mapping.rs           |  2 +-
+ src/global/install.rs                         |  2 +-
  src/global/project/parsed_manifest.rs         |  6 +-
- 4 files changed, 54 insertions(+), 39 deletions(-)
+ 5 files changed, 55 insertions(+), 40 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 6bcdc51..8879cac 100644
+index 6001f8a..2837297 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -85,45 +85,45 @@ toml_edit = "0.22.11"
+@@ -86,45 +86,45 @@ toml_edit = "0.22.11"
  tracing = "0.1.40"
  tracing-subscriber = "0.3.18"
  typed-path = "0.9.1"
@@ -91,7 +92,7 @@ index 6bcdc51..8879cac 100644
  winapi = { version = "0.3.9", default-features = false }
  xxhash-rust = "0.8.10"
  zip = { version = "2.2.0", default-features = false }
-@@ -325,8 +325,8 @@ tokio = { workspace = true, features = ["rt"] }
+@@ -326,8 +326,8 @@ tokio = { workspace = true, features = ["rt"] }
  
  
  [patch.crates-io]
@@ -155,6 +156,19 @@ index b36ecc3..c65de12 100644
  
  #[derive(Debug, Deserialize, Serialize, Clone)]
  pub struct Package {
+diff --git a/src/global/install.rs b/src/global/install.rs
+index 799d36d..070b400 100644
+--- a/src/global/install.rs
++++ b/src/global/install.rs
+@@ -53,7 +53,7 @@ pub(crate) fn script_exec_mapping<'a>(
+             } else {
+                 false
+             }
+-        })
++        }).or_else(|| matching_executables.first())
+     } else {
+         matching_executables.first()
+     };
 diff --git a/src/global/project/parsed_manifest.rs b/src/global/project/parsed_manifest.rs
 index 23b26eb..cc1ecc2 100644
 --- a/src/global/project/parsed_manifest.rs
