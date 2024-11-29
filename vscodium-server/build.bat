@@ -1,4 +1,5 @@
 @echo off
-md "%LIBRARY_PREFIX%\opt" "%PREFIX%\etc\conda\activate.d" && ^
+md "%LIBRARY_BIN%" "%LIBRARY_PREFIX%\opt" && ^
 cp -al vscodium-server "%LIBRARY_PREFIX%\opt" && ^
-copy "%RECIPE_DIR%\*_activate-win.*" "%PREFIX%\etc\conda\activate.d"
+del "%LIBRARY_PREFIX%\opt\vscodium-server\node.exe" && ^
+copy "%RECIPE_DIR%\code-server.cmd" "%LIBRARY_BIN%"

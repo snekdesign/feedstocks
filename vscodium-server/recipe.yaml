@@ -2,6 +2,7 @@ context:
   version: 1.95.3
   version_full: ${{ version }}.24321
   sha256: daf0939e282355ef146bbde5e7cee6d0c91f746226303f7a6aaebfb06539e13c
+  node_version: 20.18
 
 package:
   name: vscodium-server
@@ -13,17 +14,19 @@ source:
   target_directory: vscodium-server
 
 build:
-  number: 0
+  number: 1
   skip:
   - not win
 
 requirements:
   host:
   - m2-coreutils
+  run:
+  - nodejs ${{ node_version }}.*
 
 tests:
 - script:
-  - codium-server --version
+  - code-server --version
 
 about:
   license: MIT
