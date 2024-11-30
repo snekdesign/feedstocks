@@ -1,0 +1,21 @@
+context:
+  version: 3.0.1
+
+package:
+  name: klaus-full
+  version: ${{ version }}
+
+build:
+  number: 0
+  skip:
+  - not win
+
+requirements:
+  run:
+  - fastwsgi
+  - git
+  - klaus ${{ version }}
+
+tests:
+- script:
+  - klaus --version
