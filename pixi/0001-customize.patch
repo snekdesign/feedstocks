@@ -4,21 +4,21 @@ Date: Tue, 20 Aug 2024 20:44:27 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                                    | 66 +++++++++----------
- .../pypi_mapping/src/custom_pypi_mapping.rs   | 19 ++++++
+ Cargo.toml                                    | 80 ++++++++-----------
+ .../pypi_mapping/src/custom_pypi_mapping.rs   | 19 +++++
  .../src/prefix_pypi_name_mapping.rs           |  2 +-
  src/global/install.rs                         |  2 +-
  src/global/project/parsed_manifest.rs         |  6 +-
- 5 files changed, 55 insertions(+), 40 deletions(-)
+ 5 files changed, 56 insertions(+), 53 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 6001f8a..2837297 100644
+index 684c558..36392d7 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -86,45 +86,45 @@ toml_edit = "0.22.11"
+@@ -91,48 +91,48 @@ toml_edit = "0.22.11"
  tracing = "0.1.40"
  tracing-subscriber = "0.3.18"
- typed-path = "0.9.1"
+ typed-path = "0.9.2"
 -uv-distribution-filename = { git = "https://github.com/astral-sh/uv", tag = "0.4.30" }
 -uv-distribution-types = { git = "https://github.com/astral-sh/uv", tag = "0.4.30" }
 -uv-install-wheel = { git = "https://github.com/astral-sh/uv", tag = "0.4.30" }
@@ -35,15 +35,18 @@ index 6001f8a..2837297 100644
 +uv-platform-tags = { path = "../uv/crates/uv-platform-tags" }
 +uv-pypi-types = { path = "../uv/crates/uv-pypi-types" }
 +uv-requirements-txt = { path = "../uv/crates/uv-requirements-txt" }
+ wax = "0.6.0"
+ which = "6.0.3"
  
  # Rattler crates
- file_url = "0.1.4"
+-file_url = "0.1.4"
 -rattler = { version = "0.28.1", default-features = false }
 -rattler_cache = { version = "0.2.9", default-features = false }
 -rattler_conda_types = { version = "0.29.1", default-features = false }
 -rattler_digest = { version = "1.0.3", default-features = false }
 -rattler_lock = { version = "0.22.30", default-features = false }
 -rattler_networking = { version = "0.21.5", default-features = false, features = [
++file_url = { path = "../rattler/crates/file_url" }
 +rattler = { path = "../rattler/crates/rattler", default-features = false }
 +rattler_cache = { path = "../rattler/crates/rattler_cache", default-features = false }
 +rattler_conda_types = { path = "../rattler/crates/rattler_conda_types", default-features = false }
@@ -60,6 +63,7 @@ index 6001f8a..2837297 100644
 +rattler_shell = { path = "../rattler/crates/rattler_shell", default-features = false }
 +rattler_solve = { path = "../rattler/crates/rattler_solve", default-features = false }
 +rattler_virtual_packages = { path = "../rattler/crates/rattler_virtual_packages", default-features = false }
+ 
  
  # Bumping this to a higher version breaks the Windows path handling.
  url = "2.5.2"
@@ -92,7 +96,7 @@ index 6001f8a..2837297 100644
  winapi = { version = "0.3.9", default-features = false }
  xxhash-rust = "0.8.10"
  zip = { version = "2.2.0", default-features = false }
-@@ -326,8 +326,8 @@ tokio = { workspace = true, features = ["rt"] }
+@@ -345,8 +345,8 @@ tokio = { workspace = true, features = ["rt"] }
  
  
  [patch.crates-io]
@@ -103,8 +107,27 @@ index 6001f8a..2837297 100644
  # For pyproject-toml
  # pyproject-toml = { git = "https://github.com/tdejager/pyproject-toml-rs", branch = "feat/bump-508-440" }
  # If you change this also change the versions in the the patch section for uv
+@@ -354,18 +354,6 @@ reqwest-retry = { git = "https://github.com/TrueLayer/reqwest-middleware", rev =
+ # pep508_rs = { git = "https://github.com/astral-sh/uv", tag = "0.4.30" }
+ # deno_task_shell = { path = "../deno_task_shell" }
+ 
+-file_url = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_conda_types = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_digest = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_lock = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_networking = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_package_streaming = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_repodata_gateway = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_shell = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_solve = { git = "https://github.com/conda/rattler", branch = "main" }
+-rattler_virtual_packages = { git = "https://github.com/conda/rattler", branch = "main" }
+-
+ #file_url = { path = "../rattler/crates/file_url" }
+ #rattler = { path = "../rattler/crates/rattler" }
+ #rattler_cache = { path = "../rattler/crates/rattler_cache" }
 diff --git a/crates/pypi_mapping/src/custom_pypi_mapping.rs b/crates/pypi_mapping/src/custom_pypi_mapping.rs
-index 84f4cd0..f85756f 100644
+index 522ce87..9fb2be4 100644
 --- a/crates/pypi_mapping/src/custom_pypi_mapping.rs
 +++ b/crates/pypi_mapping/src/custom_pypi_mapping.rs
 @@ -5,7 +5,9 @@ use std::{
@@ -144,7 +167,7 @@ index 84f4cd0..f85756f 100644
          .await
          .into_diagnostic()
 diff --git a/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs b/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
-index b36ecc3..c65de12 100644
+index 7a31c44..b9edb83 100644
 --- a/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
 +++ b/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
 @@ -22,7 +22,7 @@ use super::{
@@ -157,7 +180,7 @@ index b36ecc3..c65de12 100644
  #[derive(Debug, Deserialize, Serialize, Clone)]
  pub struct Package {
 diff --git a/src/global/install.rs b/src/global/install.rs
-index 799d36d..070b400 100644
+index d8897dc..b9de616 100644
 --- a/src/global/install.rs
 +++ b/src/global/install.rs
 @@ -53,7 +53,7 @@ pub(crate) fn script_exec_mapping<'a>(
@@ -170,7 +193,7 @@ index 799d36d..070b400 100644
          matching_executables.first()
      };
 diff --git a/src/global/project/parsed_manifest.rs b/src/global/project/parsed_manifest.rs
-index 23b26eb..cc1ecc2 100644
+index c535edb..560fc5a 100644
 --- a/src/global/project/parsed_manifest.rs
 +++ b/src/global/project/parsed_manifest.rs
 @@ -320,11 +320,7 @@ impl FromStr for ExposedName {
