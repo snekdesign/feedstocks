@@ -1,10 +1,10 @@
 package:
   name: tqdm
-  version: 4.67.0
+  version: 4.67.1
 
 source:
-  url: https://files.pythonhosted.org/packages/e8/4f/0153c21dc5779a49a0598c445b1978126b1344bab9ee71e53e44877e14e0/tqdm-4.67.0.tar.gz
-  sha256: fe5a6f95e6fe0b9755e9469b77b9c3cf850048224ecaa8293d7d2d31f97d869a
+  url: https://files.pythonhosted.org/packages/a8/4b/29b4ef32e036bb34e4ab51796dd745cdba7ed47ad142a9f4a1eb8e0c744d/tqdm-4.67.1.tar.gz
+  sha256: f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2
   patches:
   - 0001-update-tqdm.rich-to-better-match-tqdm.std.patch
   - 0002-refactor-close-refresh-on-last-display-1580.patch
