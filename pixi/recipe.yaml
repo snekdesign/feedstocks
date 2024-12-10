@@ -1,6 +1,6 @@
 context:
-  version: 0.39.0
-  sha256: e388330db1cb932371b84a6d3d2f09f22bd323a1a8def7d08df30217f49eb63d
+  version: 0.39.1
+  sha256: a27bcc2cad16132124696b9ea16b918424af1c79f52e159a9f2d588bb0cbd0cb
 
 package:
   name: pixi
@@ -12,26 +12,23 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.28.4.tar.gz
-  sha256: 750a94b5b34fabd52b639f36c0d7c77b01b00a41045b049afde9ac7c03c583ea
+- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.28.5.tar.gz
+  sha256: ef65d08c41f741f0abd2ede9a8b687b3ca2c1db479fade9f7bdc6e45a8622300
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
-- url: https://github.com/astral-sh/uv/archive/refs/tags/0.4.30.tar.gz
-  sha256: 0f74a570e52affd82ff7987ade2553e144a326e7ff58de24ab4242999a3dc931
+- url: https://github.com/astral-sh/uv/archive/refs/tags/0.5.6.tar.gz
+  sha256: 7be2246b0f8f54f3746aff1da35bb3bb995974714d7bc625300a0f91d6f5dae4
   target_directory: uv
   patches:
   - 0001-conda-build.patch
-- url: https://github.com/charliermarsh/rs-async-zip/archive/011b24604fa7bc223daaad7712c0694bac8f0a87.tar.gz
-  sha256: 68494b68d07df2a36d85e7e5e3cf39ccd4caa49876f874e0171610aac2e62730
+- url: https://github.com/charliermarsh/rs-async-zip/archive/c909fda63fcafe4af496a07bfda28a5aae97e58d.tar.gz
+  sha256: 8fc71e219a505af64d9c616f7940d24c1b38dc1f54c03d32cb34ba84930f3e1d
   target_directory: uv/rs-async-zip
-- url: https://github.com/astral-sh/pubgrub/archive/95e1390399cdddee986b658be19587eb1fdb2d79.tar.gz
-  sha256: 96f308d260d015065de2746906f10b242473380e0a3acd457015759c034b5e5c
+- url: https://github.com/astral-sh/pubgrub/archive/57832d0588fbb7aab824813481104761dc1c7740.tar.gz
+  sha256: d6bcd72961f50efeb32358365470de44a3fee0fa8221ca31ea7420395ff5d055
   target_directory: uv/pubgrub
-- url: https://github.com/TrueLayer/reqwest-middleware/archive/d95ec5a99fcc9a4339e1850d40378bbfe55ab121.tar.gz
-  sha256: 9ea16dba8853cfecd1d1e3b8727eb2e904488e745c7f5efa813e7dac34c893f2
-  target_directory: reqwest-middleware
-- url: https://github.com/charliermarsh/tl/archive/6e25b2ee2513d75385101a8ff9f591ef51f314ec.tar.gz
+- url: https://github.com/astral-sh/tl/archive/6e25b2ee2513d75385101a8ff9f591ef51f314ec.tar.gz
   sha256: e838bca7cb205e373cd801ce19476a808534a6090fc261aa2ea74dfd9cea68b0
   target_directory: uv/tl
 

@@ -4,25 +4,9 @@ Date: Sat, 23 Nov 2024 18:57:35 +0800
 Subject: [PATCH] strip dquotes
 
 ---
- Cargo.toml                            | 4 ++--
  crates/rattler_shell/src/shell/mod.rs | 6 +++++-
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Cargo.toml b/Cargo.toml
-index a64de0d..8c0966a 100644
---- a/Cargo.toml
-+++ b/Cargo.toml
-@@ -110,8 +110,8 @@ rand = "0.8.5"
- reflink-copy = "0.1.19"
- regex = "1.11.1"
- reqwest = { version = "0.12.9", default-features = false }
--reqwest-middleware = "0.4.0"
--reqwest-retry = "0.7.0"
-+reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware" }
-+reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
- resolvo = { version = "0.8.4" }
- retry-policies = { version = "0.4.0", default-features = false }
- rmp-serde = { version = "1.3.0" }
 diff --git a/crates/rattler_shell/src/shell/mod.rs b/crates/rattler_shell/src/shell/mod.rs
 index 99c316a..a959580 100644
 --- a/crates/rattler_shell/src/shell/mod.rs
