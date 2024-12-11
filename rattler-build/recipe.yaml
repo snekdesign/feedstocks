@@ -1,6 +1,6 @@
 context:
-  version: 0.31.1
-  sha256: 844a399e4c1625456dd6900d49d0115c8da11c117f06d26d75cb104cc1edadce
+  version: 0.32.0
+  sha256: 58cf11c43a70915fd312fd3095a191c36df4156c1bd539a306c3c247f0eb4b35
 
 package:
   name: rattler-build
@@ -12,7 +12,7 @@ source:
   patches:
   - 0001-customize.patch
 - url: https://github.com/wolfv/zip2/archive/refs/heads/patched.tar.gz
-  sha256: bc27df114506c779792371705507fa3b4258a014821b830ec4dfc56ce80bc42c
+  sha256: 9aab57147a594646f1dbdbc8f70f5b51b1ea09170419660fdb6e79f80488dd70
   target_directory: zip2
 
 build:
