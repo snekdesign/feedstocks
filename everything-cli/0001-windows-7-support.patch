@@ -1,0 +1,32 @@
+From 7f9c315b78da0876124946b507e073de79c6aa8f Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Thu, 12 Dec 2024 19:26:17 +0800
+Subject: [PATCH] windows 7 suppport
+
+---
+ cli.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/cli.c b/cli.c
+index 51f1c0a..9711252 100644
+--- a/cli.c
++++ b/cli.c
+@@ -259,6 +259,7 @@ const DWORD es_sort_names_to_ids[] =
+ 	EVERYTHING_IPC_SORT_DATE_RUN_DESCENDING,
+ };
+ 
++#ifndef MSGFLT_ALLOW /* <winuser.h> at WINVER >= 0x0601 already has this */
+ #define MSGFLT_ALLOW		1
+ 
+ typedef struct tagCHANGEFILTERSTRUCT 
+@@ -266,6 +267,7 @@ typedef struct tagCHANGEFILTERSTRUCT
+ 	DWORD cbSize;
+ 	DWORD ExtStatus;
+ }CHANGEFILTERSTRUCT, *PCHANGEFILTERSTRUCT;
++#endif
+ 
+ typedef unsigned __int64 QWORD;
+ 
+-- 
+2.47.0.windows.1
+

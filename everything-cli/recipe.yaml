@@ -1,0 +1,36 @@
+context:
+  version: 1.1.0.27
+  sha256: 16058ccaa225d2b40bf2fc67acf64fd2d928a4ba485def7277885d66b6dc8a6a
+
+package:
+  name: everything-cli
+  version: ${{ version }}
+
+source:
+- url: https://www.voidtools.com/Everything-SDK.zip
+  sha256: 545c3565c7531318fbd8e0b0d00ba3b4f747f0caa612a35df5b9e99f7323f794
+  target_directory: sdk
+- url: https://www.voidtools.com/ES-${{ version }}.x64.zip
+  sha256: ${{ sha256 }}
+  target_directory: sdk/src
+  patches:
+  # https://www.voidtools.com/forum/viewtopic.php?t=6220
+  - 0001-windows-7-support.patch
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+  - compiler('c')[:4] != 'vs20'
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+
+tests:
+- script:
+  - es -version
+
+about:
+  license: MIT
