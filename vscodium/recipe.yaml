@@ -1,19 +1,53 @@
 context:
-  version: 1.95.3
-  version_full: ${{ version }}.24321
-  sha256: ac1dac2996b9079f6d53fce56953159ae86447d0cffc74faaa30d8a867811388
+  version: 1.96.0
+  release: ${{ version }}.24347
+  sha256: 596aa62f4e9d132955c394289335d9c44373199a74ad09836682aabfab0551e3
+  # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
+  cmake_version: 0.3.0
+  # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
+  cmake_sha256: 5f12565756f7a9ec47c12148dac473fb2f50159a60846167bb103bbb5ab4d049
+  # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/versions?size=1
+  clangd_version: 0.1.33
+  # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
+  clangd_sha256: 3cb5c8a0319d74900b1b703a5821691cb97c722da12065dfb99859078dcded05
+  # https://open-vsx.org/api/detachhead/basedpyright/versions?size=1
+  pyright_version: 1.22.1
+  # https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
+  pyright_sha256: a37cf747e4605c795914360ecf1b3ef368902dc0e83a8a4d8b7ff30e20b2e4a1
+  # https://open-vsx.org/api/ms-python/python/versions?size=1
+  python_version: 2024.22.0
+  # https://open-vsx.org/api/ms-python/python/latest/file/sha256
+  python_sha256: c89492abdc9fae23bce10195d81712ebeec6072ba7cccfd2aeafb2bac3fde0ba
+  # https://api.github.com/repos/ktnrg45/vs-code-cython/releases/latest
+  cython_version: 1.0.3
+  cython_sha256: 68ad4e17045ce6c90ba24b8416266419582a688db63d35c6175135e9cc741034
 
 package:
   name: vscodium
   version: ${{ version }}
 
 source:
-  url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ version_full }}/VSCodium-win32-x64-${{ version_full }}.zip
+- url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ release }}/VSCodium-win32-x64-${{ release }}.zip
   sha256: ${{ sha256 }}
   target_directory: vscodium
+- url: https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/${{ cmake_version }}/file/KylinIdeTeam.cmake-intellisence-${{ cmake_version }}.vsix
+  sha256: ${{ cmake_sha256 }}
+  target_directory: vscodium/bootstrap/extensions
+- url: https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/${{ clangd_version }}/file/llvm-vs-code-extensions.vscode-clangd-${{ clangd_version }}.vsix
+  sha256: ${{ clangd_sha256 }}
+  target_directory: vscodium/bootstrap/extensions
+- url: https://open-vsx.org/api/detachhead/basedpyright/${{ pyright_version }}/file/detachhead.basedpyright-${{ pyright_version }}.vsix
+  sha256: ${{ pyright_sha256 }}
+  target_directory: vscodium/bootstrap/extensions
+- url: https://open-vsx.org/api/ms-python/python/${{ python_version }}/file/ms-python.python-${{ python_version }}.vsix
+  sha256: ${{ python_sha256 }}
+  target_directory: vscodium/bootstrap/extensions
+- url: https://github.com/ktnrg45/vs-code-cython/releases/download/${{ cython_version }}/vscode-cython.vsix
+  sha256: ${{ cython_sha256 }}
+  target_directory: vscodium/bootstrap/extensions
 
 build:
-  number: 1
+  number: 0
   skip:
   - not win
 
