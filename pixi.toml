@@ -9,7 +9,7 @@ repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
 git = '>=2.47.1'
-rattler-build = '>=0.32.0'
+rattler-build = '>=0.32.1'
 
 [tasks.build]
 cmd = [
