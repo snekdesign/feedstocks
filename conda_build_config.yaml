@@ -2,7 +2,7 @@ zip_keys:
 - [c_compiler, c_compiler_version]
 
 c_compiler:
-- vs2022  # [win]
+- vs  # [win]
 
 c_compiler_version:
-- '19.40'  # [win]
+- '2022.12'  # [win]

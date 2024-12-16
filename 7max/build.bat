@@ -1,5 +1,5 @@
 @echo off
-7zz x *.7z && ^
+7z x *.7z && ^
 mklink /H copying.txt DOC\copying.txt && ^
 cd CPP\Utils\7max\Console && ^
 nmake MY_DYNAMIC_LINK=1 PLATFORM=x64 && ^

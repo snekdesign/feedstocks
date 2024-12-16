@@ -15,7 +15,7 @@ build:
   skip:
   - not win
   - build_platform != target_platform
-  - compiler('cxx')[:4] != 'vs20'
+  - compiler('cxx')[:2] != 'vs'
 
 requirements:
   build:

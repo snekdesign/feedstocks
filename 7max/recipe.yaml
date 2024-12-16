@@ -18,11 +18,11 @@ build:
   skip:
   - not win
   - build_platform != target_platform
-  - compiler('cxx')[:3] == 'gxx'
+  - compiler('cxx')[:2] != 'vs'
 
 requirements:
   build:
-  - 7zz
+  - 7zip
   - ${{ compiler('cxx') }}
 
 tests:

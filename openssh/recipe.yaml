@@ -27,7 +27,7 @@ build:
   skip:
   - not win
   - build_platform != target_platform
-  - compiler('c')[:3] == 'gcc'
+  - compiler('c')[:2] != 'vs'
 
 requirements:
   build:

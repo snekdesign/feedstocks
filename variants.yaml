@@ -5,22 +5,22 @@ zip_keys:
 c_compiler:
 - gcc
 - if: win
-  then: vs2022
+  then: vs
 
 c_compiler_version:
-- '14.1'
+- '14.2'
 - if: win
-  then: '19.40'
+  then: '2022.12'
 
 cxx_compiler:
 - gxx
 - if: win
-  then: vs2022
+  then: vs
 
 cxx_compiler_version:
-- '14.1'
+- '14.2'
 - if: win
-  then: '19.40'
+  then: '2022.12'
 
 cdt_name:
 - cos7
