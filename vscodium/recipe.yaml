@@ -1,7 +1,7 @@
 context:
-  version: 1.96.0
-  release: ${{ version }}.24347
-  sha256: 596aa62f4e9d132955c394289335d9c44373199a74ad09836682aabfab0551e3
+  version: 1.96.1
+  release: ${{ version }}.24353
+  sha256: 01b58eb32782273a80fc77a2730f2fafcf18d85f58c7f42429a17e4e7473475f
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.0
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -11,9 +11,9 @@ context:
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
   clangd_sha256: 3cb5c8a0319d74900b1b703a5821691cb97c722da12065dfb99859078dcded05
   # https://open-vsx.org/api/detachhead/basedpyright/versions?size=1
-  pyright_version: 1.22.1
+  pyright_version: 1.23.1
   # https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
-  pyright_sha256: a37cf747e4605c795914360ecf1b3ef368902dc0e83a8a4d8b7ff30e20b2e4a1
+  pyright_sha256: 33f6916a76429133081e328ea17fee8fa5c0a4b91fd7a90bcace1f76113c79d5
   # https://open-vsx.org/api/ms-python/python/versions?size=1
   python_version: 2024.22.0
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
@@ -27,7 +27,7 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ release }}/VSCodium-win32-x64-${{ release }}.zip
+- url: https://mirrors.cqupt.edu.cn/github-release/VSCodium/vscodium/${{ release }}/VSCodium-win32-x64-${{ release }}.zip
   sha256: ${{ sha256 }}
   target_directory: vscodium
 - url: https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/${{ cmake_version }}/file/KylinIdeTeam.cmake-intellisence-${{ cmake_version }}.vsix
