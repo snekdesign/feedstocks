@@ -4,25 +4,14 @@ Date: Sat, 8 Jun 2024 09:06:58 +0800
 Subject: [PATCH 2/2] enable lto
 
 ---
- CMakeLists.txt                    | 24 ++++--------------------
- jerry-core/CMakeLists.txt         |  2 +-
- jerry-port/default/CMakeLists.txt |  2 +-
- 3 files changed, 6 insertions(+), 22 deletions(-)
+ CMakeLists.txt | 22 +++-------------------
+ 1 file changed, 3 insertions(+), 19 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 43ac22e..09c90ff 100644
+index 314d5ad..3bb09b2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -12,7 +12,7 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
- 
--cmake_minimum_required (VERSION 2.8.12)
-+cmake_minimum_required (VERSION 3.9)
- project (Jerry C)
- 
- # Determining version
-@@ -111,12 +111,6 @@ if(USING_MSVC)
+@@ -119,12 +119,6 @@ if(USING_MSVC)
    set(ENABLE_STRIP_MESSAGE       " (FORCED BY COMPILER)")
  endif()
  
@@ -35,7 +24,7 @@ index 43ac22e..09c90ff 100644
  # Generate compile_commands.json
  set(CMAKE_EXPORT_COMPILE_COMMANDS ${ENABLE_COMPILE_COMMANDS})
  
-@@ -181,19 +175,9 @@ jerry_add_flags(CMAKE_EXE_LINKER_FLAGS ${FLAGS_COMMON_ARCH})
+@@ -190,19 +184,9 @@ jerry_add_flags(CMAKE_EXE_LINKER_FLAGS ${FLAGS_COMMON_ARCH})
  
  # LTO
  if(ENABLE_LTO)
@@ -58,32 +47,6 @@ index 43ac22e..09c90ff 100644
  endif()
  
  # Compiler / Linker flags
-diff --git a/jerry-core/CMakeLists.txt b/jerry-core/CMakeLists.txt
-index 46a2b89..8d8e9c9 100644
---- a/jerry-core/CMakeLists.txt
-+++ b/jerry-core/CMakeLists.txt
-@@ -12,7 +12,7 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
- 
--cmake_minimum_required (VERSION 2.8.12)
-+cmake_minimum_required (VERSION 3.9)
- set(JERRY_CORE_NAME jerry-core)
- project (${JERRY_CORE_NAME} C)
- 
-diff --git a/jerry-port/default/CMakeLists.txt b/jerry-port/default/CMakeLists.txt
-index 3560b07..18737a3 100644
---- a/jerry-port/default/CMakeLists.txt
-+++ b/jerry-port/default/CMakeLists.txt
-@@ -12,7 +12,7 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
- 
--cmake_minimum_required (VERSION 2.8.12)
-+cmake_minimum_required (VERSION 3.9)
- set(JERRY_PORT_DEFAULT_NAME jerry-port-default)
- project (${JERRY_PORT_DEFAULT_NAME} C)
- 
 -- 
 2.45.0.windows.1
 
