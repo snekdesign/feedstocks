@@ -1,6 +1,6 @@
 context:
-  version: 0.33.0
-  sha256: 197b35613a32b9b2a0885b7c501b65cd4e9e8b6c7a8ce7bb861dbfcf513af83d
+  version: 0.33.1
+  sha256: 08f61d0e3998872881129913ac821914cfb9b470e571c5645409eaf7493cdf12
 
 package:
   name: rattler-build
@@ -30,7 +30,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust 1.81.0
+  - rust ==1.81.0
 
 tests:
 - script:
