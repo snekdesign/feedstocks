@@ -1,7 +1,7 @@
 context:
   version: 1.37.0
   sha256: 60a420ad7085eb616cb6e2bdf0a7206d68ff3d37fb5a956dc44242eb2f79b66b
-  sqlite_version: 3.46.0
+  sqlite_version: 3.47.2
 
 package:
   name: aria2
@@ -12,11 +12,11 @@ source:
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
-- url: https://mirrors.cernet.edu.cn/msys2/mingw/ucrt64/mingw-w64-ucrt-x86_64-gettext-tools-0.22.5-2-any.pkg.tar.zst
-  sha256: d46fccf7423bc4df9d89f3d4a14d11347c79f8058c10f2d1f5bfd9a11ba74f89
+- url: https://mirrors.cernet.edu.cn/msys2/mingw/ucrt64/mingw-w64-ucrt-x86_64-gettext-tools-0.23.1-1-any.pkg.tar.zst
+  sha256: 10e452440b4e30cfcd0840bb51e0e034f0ab71927f0abecb5364f668a5c5a4a6
 
 build:
-  number: 1
+  number: 2
   script:
     env:
       MSYS2_PATH_TYPE: inherit
@@ -32,22 +32,18 @@ requirements:
   - m2-autoconf
   - m2-automake-wrapper
   - m2-base
-  - m2-gettext
   - m2-libtool
   - m2-make
   - m2-pkg-config
   host:
   - c-ares
   - libintl-devel
-  - libsqlite ${{ sqlite_version }}
+  - libsqlite ==${{ sqlite_version }}
   - libssh2
   - libxml2
   - openssl
-  - xz
+  - xz-tools
   - zlib
-  ignore_run_exports:
-    from_package:
-    - xz
 
 tests:
 - script:

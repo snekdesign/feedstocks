@@ -29,8 +29,8 @@ PKG_CONFIG_PATH="$(cygpath "$LIBRARY_LIB/pkgconfig"):$PKG_CONFIG_PATH" \
     --without-wintls \
     --with-libiconv-prefix="$(cygpath "$LIBRARY_PREFIX")" \
     --with-libintl-prefix="$(cygpath "$LIBRARY_PREFIX")"
-until make -j$CPU_COUNT; do :; done  # Link fails randomly
+make -j$CPU_COUNT
 "$STRIP" -so "$LIBRARY_BIN/aria2c.exe" src/.libs/aria2c.exe
 
 cd "$LIBRARY_LIB"
-rm lib*.dll.a pkgconfig/sqlite3.pc /usr/share/gettext/archive.dir.tar.xz
+rm lib*.dll.a pkgconfig/sqlite3.pc
