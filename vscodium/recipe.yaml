@@ -1,23 +1,23 @@
 context:
-  version: 1.96.2
-  release: ${{ version }}.24355
-  sha256: ef17c7b089285a2e0ab934e1c7c94841ac64960eb523f6e933deceb526c5d6c2
+  version: 1.96.3
+  release: ${{ version }}.25013
+  sha256: c64b97d0bfe3a8f8124f9758c734512091bf309fa0524e334043deccfb7112b3
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
-  cmake_version: 0.3.0
+  cmake_version: 0.3.3
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
-  cmake_sha256: 5f12565756f7a9ec47c12148dac473fb2f50159a60846167bb103bbb5ab4d049
+  cmake_sha256: 8b331d346d4dfc88a25f5a23fcc1c545162bffea3104caf09aab8dc5a4e26c4e
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/versions?size=1
   clangd_version: 0.1.33
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
   clangd_sha256: 3cb5c8a0319d74900b1b703a5821691cb97c722da12065dfb99859078dcded05
   # https://open-vsx.org/api/detachhead/basedpyright/versions?size=1
-  pyright_version: 1.23.1
+  pyright_version: 1.23.2
   # https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
-  pyright_sha256: 33f6916a76429133081e328ea17fee8fa5c0a4b91fd7a90bcace1f76113c79d5
+  pyright_sha256: 85f5c70e4ec2c8019cbbc916e113a2333b3e756dba89a4d966207dfc95cf4a30
   # https://open-vsx.org/api/ms-python/python/versions?size=1
-  python_version: 2024.22.0
+  python_version: 2024.23.0-dev
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
-  python_sha256: c89492abdc9fae23bce10195d81712ebeec6072ba7cccfd2aeafb2bac3fde0ba
+  python_sha256: 65d8855e7785c03c88ca81dfd02470598351bffa44e26678c7266774dfe7859a
   # https://api.github.com/repos/ktnrg45/vs-code-cython/releases/latest
   cython_version: 1.0.3
   cython_sha256: 68ad4e17045ce6c90ba24b8416266419582a688db63d35c6175135e9cc741034
@@ -27,7 +27,7 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://mirrors.cqupt.edu.cn/github-release/VSCodium/vscodium/${{ release }}/VSCodium-win32-x64-${{ release }}.zip
+- url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ release }}/VSCodium-win32-x64-${{ release }}.zip
   sha256: ${{ sha256 }}
   target_directory: vscodium
 - url: https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/${{ cmake_version }}/file/KylinIdeTeam.cmake-intellisence-${{ cmake_version }}.vsix
