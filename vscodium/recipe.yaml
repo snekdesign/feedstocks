@@ -1,7 +1,7 @@
 context:
-  version: 1.96.3
-  release: ${{ version }}.25013
-  sha256: c64b97d0bfe3a8f8124f9758c734512091bf309fa0524e334043deccfb7112b3
+  version: 1.96.4
+  release: ${{ version }}.25017
+  sha256: 17c409afb4ad0de5a7a6bfa2d99c80bfafc84ad434f195e4e3622128d833a9d1
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.3
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -11,9 +11,9 @@ context:
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
   clangd_sha256: 3cb5c8a0319d74900b1b703a5821691cb97c722da12065dfb99859078dcded05
   # https://open-vsx.org/api/detachhead/basedpyright/versions?size=1
-  pyright_version: 1.23.2
+  pyright_version: 1.24.0
   # https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
-  pyright_sha256: 85f5c70e4ec2c8019cbbc916e113a2333b3e756dba89a4d966207dfc95cf4a30
+  pyright_sha256: 1bbf910a6b2e0619de5ec0ee8765297cf217b2b474f25f0f3fa967f4c91e2e0c
   # https://open-vsx.org/api/ms-python/python/versions?size=1
   python_version: 2024.23.0-dev
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
