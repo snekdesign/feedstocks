@@ -1,10 +1,15 @@
-package:
+context:
   name: tqdm
   version: 4.67.1
+  sha256: f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
 
 source:
-  url: https://files.pythonhosted.org/packages/a8/4b/29b4ef32e036bb34e4ab51796dd745cdba7ed47ad142a9f4a1eb8e0c744d/tqdm-4.67.1.tar.gz
-  sha256: f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2
+  url: https://pypi.io/packages/source/${{ name[:1] }}/${{ name }}/${{ name }}-${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
   patches:
   - 0001-update-tqdm.rich-to-better-match-tqdm.std.patch
   - 0002-refactor-close-refresh-on-last-display-1580.patch
