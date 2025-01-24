@@ -1,6 +1,6 @@
 context:
-  version: 7.4.6
-  sha256: 2150594eaa27f87d76238c73149d224b3c3958c76fb0ac45a89ee54142b05cca
+  version: 7.4.7
+  sha256: 5a362bb42146673a57c193d424e1a84c449e204eab1a8dbcdc699f9da3fc690d
   dotnet_version: '8.0'
 
 package:
@@ -8,7 +8,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://mirrors.sdu.edu.cn/github-release/PowerShell_PowerShell/v${{ version }}/PowerShell-${{ version }}-win-fxdependentWinDesktop.zip
+  url: https://github.com/PowerShell/PowerShell/releases/download/v${{ version }}/PowerShell-${{ version }}-win-fxdependentWinDesktop.zip
   sha256: ${{ sha256 }}
 
 build:
