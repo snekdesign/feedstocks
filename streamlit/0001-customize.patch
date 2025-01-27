@@ -1,0 +1,49 @@
+From da8ef0ca9ace770372c2f0ba90da5179c80e1306 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Mon, 27 Jan 2025 18:57:40 +0800
+Subject: [PATCH] customize
+
+---
+ streamlit/elements/write.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/streamlit/elements/write.py b/streamlit/elements/write.py
+index 1fdb3dd..f67ee96 100644
+--- a/streamlit/elements/write.py
++++ b/streamlit/elements/write.py
+@@ -71,6 +71,7 @@ class WriteMixin:
+         | Generator[Any, Any, Any]
+         | Iterable[Any]
+         | AsyncGenerator[Any, Any],
++        unsafe_allow_html: bool = False,
+     ) -> list[Any] | str:
+         """Stream a generator, iterable, or stream-like sequence to the app.
+ 
+@@ -161,7 +162,7 @@ class WriteMixin:
+ 
+             if streamed_response and stream_container:
+                 # Replace the stream_container element the full response
+-                stream_container.markdown(streamed_response)
++                stream_container.markdown(streamed_response, unsafe_allow_html)
+                 written_content.append(streamed_response)
+                 stream_container = None
+                 streamed_response = ""
+@@ -229,13 +230,14 @@ class WriteMixin:
+                 # Only add the streaming symbol on the second text chunk
+                 stream_container.markdown(
+                     streamed_response + ("" if first_text else _TEXT_CURSOR),
++                    unsafe_allow_html,
+                 )
+             elif callable(chunk):
+                 flush_stream_response()
+                 chunk()
+             else:
+                 flush_stream_response()
+-                self.write(chunk)
++                self.write(chunk, unsafe_allow_html=unsafe_allow_html)
+                 written_content.append(chunk)
+ 
+         flush_stream_response()
+-- 
+2.47.1.windows.1
+
