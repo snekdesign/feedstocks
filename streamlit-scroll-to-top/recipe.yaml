@@ -1,0 +1,30 @@
+context:
+  name: streamlit-scroll-to-top
+  version: 0.0.4
+  sha256: 148bbaa31ca91444a94d4b1f846bcdc0de5f6b2eccaf9e815805754892a9d7f6
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.io/packages/source/${{ name[:1] }}/${{ name }}/${{ name|replace('-', '_') }}-${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+
+build:
+  noarch: python
+  number: 0
+  script: pip install .
+
+requirements:
+  host:
+  - pip
+  - python >=3.6.0
+  - setuptools
+  - wheel
+  run:
+  - python >=3.6.0
+  - streamlit >=0.63.0
+
+about:
+  license: MIT
