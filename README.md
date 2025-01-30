@@ -1,7 +1,7 @@
 # feedstocks
 ## Dependencies
-- [pixi][1] >=0.23.0
-- MSVC 17.10.* [LTSC][2] (Windows only)
+- [pixi][1] >=0.39.0
+- MSVC 17.12.* [LTSC][2] (Windows only)
 ## Usage
 ```
 [sudo] pixi run build <package-name>
