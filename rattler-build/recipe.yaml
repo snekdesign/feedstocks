@@ -1,6 +1,6 @@
 context:
-  version: 0.35.6
-  sha256: c978c372d25fc29c922e7af82deb15337bc3961721ca3fb5da3804f460a4b02e
+  version: 0.35.9
+  sha256: 9b64c34f08426156d81c472a7d2f4fe15b8658d6c61f8e293b1f0682d18c6bfc
 
 package:
   name: rattler-build
@@ -25,11 +25,12 @@ build:
   skip:
   - not win
   - build_platform != target_platform
-  - compiler('c')[:2] != 'vs'
 
 requirements:
   build:
-  - ${{ compiler('c') }}
+  - if: win
+    then:
+    - vs_win-64 2022.12.*
   - rust ==1.83.0
 
 tests:
