@@ -25,12 +25,11 @@ build:
   skip:
   - not win
   - build_platform != target_platform
+  - compiler('c')[:2] != 'vs'
 
 requirements:
   build:
-  - if: win
-    then:
-    - vs_win-64 2022.12.*
+  - ${{ compiler('c') }}
   - rust ==1.83.0
 
 tests:

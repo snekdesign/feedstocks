@@ -1,8 +1,7 @@
-[workspace]
+[project]
 name = 'feedstocks'
 channels = ['conda-forge']
 platforms = ['win-64']
-preview = ['pixi-build']
 
 authors = ['snekdesign']
 license-file = 'LICENSE'
@@ -11,7 +10,7 @@ repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
 git = '>=2.47.1'
-rattler-build = { path = 'rattler-build' }
+rattler-build = '>=0.32.1'
 
 [tasks.build]
 cmd = [
