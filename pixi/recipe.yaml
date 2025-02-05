@@ -1,6 +1,6 @@
 context:
-  version: 0.40.3
-  sha256: b7cff3f4dd3a1e164f1088d07fe4d20b5830855d481b0811d979074ab0d3bc08
+  version: 0.41.0
+  sha256: 8904caca64da9b3197fc2c6db31bbdd0fc1fe0ddd30a6af342618bd61ab291c9
 
 package:
   name: pixi
@@ -12,13 +12,13 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.28.11.tar.gz
-  sha256: e8fcedd1775d9f1656e75ed4ecefab0820617711f96e64c5373415f5cc1e983b
+- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.29.0.tar.gz
+  sha256: eea7da818ec0846cf9464f87b8de79400fe07bc8aaaa4781f8e8787d7fd19dff
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
-- url: https://github.com/wolfv/uv/archive/refs/heads/ignore-rayon-init.tar.gz
-  sha256: 3653b29fe76492f87ef0459975f8972d2fc7ad254280bfd2ada040a0aa207bcb
+- url: https://github.com/astral-sh/uv/archive/refs/tags/0.5.6.tar.gz
+  sha256: 7be2246b0f8f54f3746aff1da35bb3bb995974714d7bc625300a0f91d6f5dae4
   target_directory: uv
   patches:
   - 0001-conda-build.patch
@@ -48,7 +48,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust ==1.81.0
+  - rust ==1.84.0
 
 tests:
 - script:
