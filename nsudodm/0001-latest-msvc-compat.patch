@@ -1,0 +1,70 @@
+From 2d61eded8c50ffbab7504912f5f99e267fcf7350 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Wed, 5 Feb 2025 21:27:30 +0800
+Subject: [PATCH] latest msvc compat
+
+---
+ Source/Native/MINT/MINT.h | 38 --------------------------------------
+ 1 file changed, 38 deletions(-)
+
+diff --git a/Source/Native/MINT/MINT.h b/Source/Native/MINT/MINT.h
+index f94fe95..92cf38a 100644
+--- a/Source/Native/MINT/MINT.h
++++ b/Source/Native/MINT/MINT.h
+@@ -13772,20 +13772,6 @@ typedef struct _FILE_ID_EXTD_BOTH_DIR_INFORMATION
+ } FILE_ID_EXTD_BOTH_DIR_INFORMATION, *PFILE_ID_EXTD_BOTH_DIR_INFORMATION;
+ 
+ // private
+-typedef struct _FILE_STAT_INFORMATION
+-{
+-    LARGE_INTEGER FileId;
+-    LARGE_INTEGER CreationTime;
+-    LARGE_INTEGER LastAccessTime;
+-    LARGE_INTEGER LastWriteTime;
+-    LARGE_INTEGER ChangeTime;
+-    LARGE_INTEGER AllocationSize;
+-    LARGE_INTEGER EndOfFile;
+-    ULONG FileAttributes;
+-    ULONG ReparseTag;
+-    ULONG NumberOfLinks;
+-    ULONG EffectiveAccess;
+-} FILE_STAT_INFORMATION, *PFILE_STAT_INFORMATION;
+ 
+ // private
+ typedef struct _FILE_MEMORY_PARTITION_INFORMATION
+@@ -13803,32 +13789,8 @@ typedef struct _FILE_MEMORY_PARTITION_INFORMATION
+ } FILE_MEMORY_PARTITION_INFORMATION, *PFILE_MEMORY_PARTITION_INFORMATION;
+ 
+ // private
+-typedef struct _FILE_STAT_LX_INFORMATION
+-{
+-    LARGE_INTEGER FileId;
+-    LARGE_INTEGER CreationTime;
+-    LARGE_INTEGER LastAccessTime;
+-    LARGE_INTEGER LastWriteTime;
+-    LARGE_INTEGER ChangeTime;
+-    LARGE_INTEGER AllocationSize;
+-    LARGE_INTEGER EndOfFile;
+-    ULONG FileAttributes;
+-    ULONG ReparseTag;
+-    ULONG NumberOfLinks;
+-    ULONG EffectiveAccess;
+-    ULONG LxFlags;
+-    ULONG LxUid;
+-    ULONG LxGid;
+-    ULONG LxMode;
+-    ULONG LxDeviceIdMajor;
+-    ULONG LxDeviceIdMinor;
+-} FILE_STAT_LX_INFORMATION, *PFILE_STAT_LX_INFORMATION;
+ 
+ // private
+-typedef struct _FILE_CASE_SENSITIVE_INFORMATION
+-{
+-    ULONG Flags;
+-} FILE_CASE_SENSITIVE_INFORMATION, *PFILE_CASE_SENSITIVE_INFORMATION;
+ 
+ // NtQueryDirectoryFile types
+ 
+-- 
+2.47.1.windows.1
+
