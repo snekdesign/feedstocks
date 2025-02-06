@@ -4,12 +4,13 @@ Date: Sun, 14 Jul 2024 22:12:43 +0800
 Subject: [PATCH] conda build
 
 ---
- src/common.build.post.props | 5 +++--
- src/common.build.pre.props  | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ src/common.build.post.props      | 6 +++---
+ src/common.build.pre.props       | 5 ++---
+ src/common.nugetversions.targets | 1 -
+ 3 files changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/src/common.build.post.props b/src/common.build.post.props
-index 1326e06..2753445 100644
+index ec14337..230e971 100644
 --- a/src/common.build.post.props
 +++ b/src/common.build.post.props
 @@ -28,7 +28,7 @@
@@ -26,13 +27,19 @@ index 1326e06..2753445 100644
      </ClCompile>
      <Link>
 -      <AdditionalDependencies>onecoreuap_apiset.lib;d3dcompiler.lib;dwmapi.lib;uxtheme.lib;shlwapi.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>bcrypt.lib;d2d1.lib;d3d11.lib;dwrite.lib;dxgi.lib;icu.lib;pathcch.lib;propsys.lib;rpcrt4.lib;runtimeobject.lib;libshcore.a;synchronization.lib;uiautomationcore.lib;version.lib;d3dcompiler.lib;dwmapi.lib;uxtheme.lib;shlwapi.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalLibraryDirectories>$(LIBRARY_PREFIX)\x86_64-w64-mingw32\sysroot\usr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
++      <AdditionalDependencies>bcrypt.lib;d2d1.lib;d3d11.lib;dwrite.lib;dxgi.lib;fmt.lib;icu.lib;pathcch.lib;propsys.lib;rpcrt4.lib;runtimeobject.lib;libshcore.a;synchronization.lib;uiautomationcore.lib;version.lib;d3dcompiler.lib;dwmapi.lib;uxtheme.lib;shlwapi.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalLibraryDirectories>$(LIBRARY_LIB);$(LIBRARY_PREFIX)\x86_64-w64-mingw32\sysroot\usr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
    </ItemDefinitionGroup>
  
+@@ -115,5 +116,4 @@
+   </ItemDefinitionGroup>
+ 
+   <!-- For C++ projects, bring in the vcpkg targets at the end -->
+-  <Import Project="$(VcpkgRoot)/scripts/buildsystems/msbuild/vcpkg.targets" Condition="'$(MSBuildProjectExtension)'=='.vcxproj'" />
+ </Project>
 diff --git a/src/common.build.pre.props b/src/common.build.pre.props
-index 702df64..99e6c16 100644
+index 968c8fe..e7507df 100644
 --- a/src/common.build.pre.props
 +++ b/src/common.build.pre.props
 @@ -75,7 +75,7 @@
@@ -43,6 +50,33 @@ index 702df64..99e6c16 100644
 +    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)' == ''">10.0.26100.0</WindowsTargetPlatformVersion>
      <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)' == ''">10.0.18362.0</WindowsTargetPlatformMinVersion>
    </PropertyGroup>
+ 
+@@ -141,7 +141,7 @@
+       <SDLCheck>true</SDLCheck>
+       <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+-      <AdditionalIncludeDirectories>$(SolutionDir)\src\inc;$(SolutionDir)\dep;$(SolutionDir)\dep\Console;$(SolutionDir)\dep\Win32K;$(SolutionDir)\oss\chromium;$(SolutionDir)\oss\interval_tree;$(SolutionDir)\oss\pcg\include;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir)\src\inc;$(SolutionDir)\dep;$(SolutionDir)\dep\Console;$(SolutionDir)\dep\gsl\include;$(SolutionDir)\dep\Win32K;$(SolutionDir)\oss\chromium;$(SolutionDir)\oss\interval_tree;$(SolutionDir)\oss\pcg\include;$(LIBRARY_INC);%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <MinimalRebuild>false</MinimalRebuild>
+       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+@@ -286,5 +286,4 @@
+     <VCPkgLocalAppDataDisabled>true</VCPkgLocalAppDataDisabled>
+   </PropertyGroup>
+ 
+-  <Import Project="$(VcpkgRoot)/scripts/buildsystems/msbuild/vcpkg.props" Condition="'$(MSBuildProjectExtension)'=='.vcxproj'" />
+ </Project>
+diff --git a/src/common.nugetversions.targets b/src/common.nugetversions.targets
+index 837c575..d59a29d 100644
+--- a/src/common.nugetversions.targets
++++ b/src/common.nugetversions.targets
+@@ -95,7 +95,6 @@
+     <Error Condition="'$(TerminalMUX)' == 'true' AND !Exists('$(MSBuildThisFileDirectory)..\packages\Microsoft.Web.WebView2.1.0.1661.34\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)..\packages\Microsoft.Web.WebView2.1.0.1661.34\build\native\Microsoft.Web.WebView2.targets'))" />
+ 
+     <!-- WIL (so widely used that this one does not have a TerminalWIL opt-in property; it is automatic) -->
+-    <Error Condition="!Exists('$(MSBuildThisFileDirectory)..\packages\Microsoft.Windows.ImplementationLibrary.1.0.240122.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)..\packages\Microsoft.Windows.ImplementationLibrary.1.0.240122.1\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
+ 
+   </Target>
  
 -- 
 2.45.2.windows.1

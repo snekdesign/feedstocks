@@ -1,10 +1,6 @@
 context:
-  version: 1.21.2911
-  version_gsl: 0f6dbc9e2915ef5c16830f3fa3565738de2a9230
-  version_wil: 1.0.240122.1
-  sha256: 97b5295186156fdfe849539eb63142b13fde561e24eebfecac33100cde1af254
-  sha256_gsl: c6dc53a876c2f079b711e33be5ff7809525872c3f6a086af91d061dae5665686
-  sha256_wil: 2762643e7865c42ac60d809fe951a813ae10960141e56bb74ad28843f2d6b5c1
+  version: 1.22.10352
+  sha256: 76536c9cf796c19052931f109e150c458d523cdfce0f89ac4b4373a11f418c28
 
 package:
   name: openconsole
@@ -15,11 +11,10 @@ source:
   sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch
-- url: https://github.com/microsoft/GSL/archive/${{ version_gsl }}.tar.gz
-  sha256: ${{ sha256_gsl }}
+# ms-gsl 3.1.0 is missing in conda-forge; added as source
+- url: https://github.com/microsoft/GSL/archive/refs/tags/v3.1.0.tar.gz
+  sha256: d3234d7f94cea4389e3ca70619b82e8fb4c2f33bb3a070799f1e18eef500a083
   target_directory: dep/gsl
-- url: https://globalcdn.nuget.org/packages/microsoft.windows.implementationlibrary.${{ version_wil }}.nupkg
-  sha256: ${{ sha256_wil }}
 
 build:
   number: 0
@@ -32,8 +27,9 @@ requirements:
   build:
   - ${{ compiler('cxx') }}
   host:
-  - 7zip
+  - fmt
   - mingw-w64-ucrt-x86_64-crt-git
+  - wil
 
 about:
   license_file: LICENSE
