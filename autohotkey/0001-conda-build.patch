@@ -4,39 +4,10 @@ Date: Mon, 10 Jun 2024 17:30:13 +0800
 Subject: [PATCH] conda build
 
 ---
- AutoHotkeyx.vcxproj   |  7 +++++--
- Config.vcxproj        |  2 +-
- source/AutoHotkey.cpp | 27 +++++++++++++++++++++++++++
- source/lib/pixel.cpp  |  2 +-
- source/script2.cpp    |  5 +++++
- source/util.cpp       | 16 ++++++++--------
- 6 files changed, 47 insertions(+), 12 deletions(-)
+ Config.vcxproj     | 2 +-
+ source/script2.cpp | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/AutoHotkeyx.vcxproj b/AutoHotkeyx.vcxproj
-index 98b5f41..bc0a40a 100644
---- a/AutoHotkeyx.vcxproj
-+++ b/AutoHotkeyx.vcxproj
-@@ -89,7 +89,8 @@
-     </ClCompile>
-     <Link>
-       <SubSystem>Windows</SubSystem>
--      <AdditionalDependencies>wsock32.lib;winmm.lib;version.lib;comctl32.lib;psapi.lib;wininet.lib;shlwapi.lib;uxtheme.lib;dwmapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>wsock32.lib;winmm.lib;version.lib;comctl32.lib;psapi.lib;wininet.lib;shlwapi.lib;uxtheme.lib;dwmapi.lib;libmamba.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalLibraryDirectories>$(LIBRARY_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-       <StackReserveSize>4194304</StackReserveSize>
-       <TerminalServerAware Condition="!$(ConfigDll)">false</TerminalServerAware>
-       <DataExecutionPrevention>false</DataExecutionPrevention>
-@@ -132,7 +133,9 @@
-   <ItemDefinitionGroup>
-     <ClCompile>
-       <PrecompiledHeader Condition="!$(ConfigDebug)">Use</PrecompiledHeader>
--      <AdditionalIncludeDirectories>$(ProjectDir)source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(LIBRARY_INC);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
-+      <LanguageStandard>stdcpp17</LanguageStandard>
-     </ClCompile>
-     <Link>
-       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
 diff --git a/Config.vcxproj b/Config.vcxproj
 index d1c66a7..225a54e 100644
 --- a/Config.vcxproj
@@ -50,69 +21,11 @@ index d1c66a7..225a54e 100644
        
      </ClCompile>
    </ItemDefinitionGroup>
-diff --git a/source/AutoHotkey.cpp b/source/AutoHotkey.cpp
-index 82aa5ea..589935e 100644
---- a/source/AutoHotkey.cpp
-+++ b/source/AutoHotkey.cpp
-@@ -15,6 +15,12 @@ GNU General Public License for more details.
- */
- 
- #include "stdafx.h" // pre-compiled headers
-+#undef max
-+#pragma warning(push)
-+#pragma warning(disable : 4099)
-+#include <mamba/core/activation.hpp>
-+#include <mamba/core/context.hpp>
-+#pragma warning(pop)
- #include "globaldata.h" // for access to many global vars
- #include "application.h" // for MsgSleep()
- #include "window.h" // For MsgBox()
-@@ -88,6 +94,27 @@ int WINAPI _tWinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
- 	if (!InitForExecution())
- 		return CRITICAL_ERROR;
- 
-+	size_t n = _tcslen(g_script.mOurEXE);
-+	if (n >= 29) {
-+		n -= 27;
-+		if (!_tcsicmp(g_script.mOurEXE+n, _T("\\Library\\bin\\AutoHotkey.exe"))) {
-+            mamba::Context ctx;
-+			mamba::PowerShellActivator activator { ctx };
-+#ifdef UNICODE
-+			std::wstring_view
-+#else
-+			std::string_view
-+#endif
-+			conda_prefix { g_script.mOurEXE, n };
-+			mamba::fs::u8path prefix;
-+			prefix /= conda_prefix;
-+			auto new_path = activator.add_prefix_to_path(prefix, 1);
-+			if (!SetEnvironmentVariableA("PATH", new_path.c_str())) {
-+				return CRITICAL_ERROR;
-+			}
-+		}
-+	}
-+
- 	return MainExecuteScript();
- }
- 
-diff --git a/source/lib/pixel.cpp b/source/lib/pixel.cpp
-index deffb91..da22f7c 100644
---- a/source/lib/pixel.cpp
-+++ b/source/lib/pixel.cpp
-@@ -233,7 +233,7 @@ FResult PixelSearch(BOOL *aFound, ResultToken *aFoundX, ResultToken *aFoundY
- 	// (in 16bit there is an extra bit but i forgot for which color). And this will explain the
- 	// second problem [in the test script], since GetPixel even in 16bit will return some "valid"
- 	// data in the last 3bits of each byte."
--	register int i;
-+	int i;
- 	LONG screen_pixel_count = screen_width * screen_height;
- 	if (screen_is_16bit)
- 		for (i = 0; i < screen_pixel_count; ++i)
 diff --git a/source/script2.cpp b/source/script2.cpp
-index 0cdab2e..8e5bfa5 100644
+index 502ee6b..b46be4b 100644
 --- a/source/script2.cpp
 +++ b/source/script2.cpp
-@@ -543,6 +543,11 @@ bool FindAutoHotkeyUtil(LPTSTR aFile, bool &aFoundOurs)
+@@ -546,6 +546,11 @@ bool FindAutoHotkeyUtil(LPTSTR aFile, bool &aFoundOurs)
  
  void LaunchAutoHotkeyUtil(LPTSTR aFile, bool aIsScript)
  {
@@ -124,54 +37,6 @@ index 0cdab2e..8e5bfa5 100644
  	LPTSTR file = aFile, args = _T("");
  	bool our_file, result = false;
  	if (!FindAutoHotkeyUtil(aFile, our_file))
-diff --git a/source/util.cpp b/source/util.cpp
-index dd94c82..b40b65e 100644
---- a/source/util.cpp
-+++ b/source/util.cpp
-@@ -700,8 +700,8 @@ LPTSTR tcscasestr(LPCTSTR phaystack, LPCTSTR pneedle)
- 	// Faster looping by precalculating bl, bu, cl, cu before looping.
- 	// 2004 Apr 08	Jose Da Silva, digital@joescat@com
- {
--	register const TBYTE *haystack, *needle;
--	register unsigned bl, bu, cl, cu;
-+	const TBYTE *haystack, *needle;
-+	unsigned bl, bu, cl, cu;
- 	
- 	haystack = (const TBYTE *) phaystack;
- 	needle = (const TBYTE *) pneedle;
-@@ -732,8 +732,8 @@ LPTSTR tcscasestr(LPCTSTR phaystack, LPCTSTR pneedle)
- 		
- 		for (;;)
- 		{
--			register unsigned a;
--			register const TBYTE *rhaystack, *rneedle;
-+			unsigned a;
-+			const TBYTE *rhaystack, *rneedle;
- 			do
- 			{
- 				a = *++haystack;
-@@ -815,8 +815,8 @@ LPTSTR lstrcasestr(LPCTSTR phaystack, LPCTSTR pneedle)
- // Copyright (C) 1994,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
- // See strcasestr() for more comments.
- {
--	register const TBYTE *haystack, *needle;
--	register unsigned bl, bu, cl, cu;
-+	const TBYTE *haystack, *needle;
-+	unsigned bl, bu, cl, cu;
- 	
- 	haystack = (const TBYTE *) phaystack;
- 	needle = (const TBYTE *) pneedle;
-@@ -845,8 +845,8 @@ LPTSTR lstrcasestr(LPCTSTR phaystack, LPCTSTR pneedle)
- 		
- 		for (;;)
- 		{
--			register unsigned a;
--			register const TBYTE *rhaystack, *rneedle;
-+			unsigned a;
-+			const TBYTE *rhaystack, *rneedle;
- 			do
- 			{
- 				a = *++haystack;
 -- 
 2.45.0.windows.1
 
