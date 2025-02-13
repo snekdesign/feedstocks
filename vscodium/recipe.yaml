@@ -1,7 +1,7 @@
 context:
-  version: 1.97.0
-  release: ${{ version }}.25037
-  sha256: 5bec66cf6314ba2239ee81ca716b8e2de5f1263f1e1ef8b08c05d78497e55fb6
+  version: 1.97.1
+  release: ${{ version }}.25044
+  sha256: 7bb48734e2a5934a80708b4a29f3793c76a6b68a7738b917ab2d4261f2e6b804
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.3
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -10,14 +10,18 @@ context:
   clangd_version: 0.1.33
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
   clangd_sha256: 3cb5c8a0319d74900b1b703a5821691cb97c722da12065dfb99859078dcded05
+  # https://open-vsx.org/api/jeff-hykin/better-m-syntax/versions?size=1
+  matlab_version: 0.0.3
+  # https://open-vsx.org/api/jeff-hykin/better-m-syntax/latest/file/sha256
+  matlab_sha256: 4227836ef17776bd0ef178aa52a1e879905c79d8787e72163716d6802ac24fc6
   # https://open-vsx.org/api/detachhead/basedpyright/versions?size=1
-  pyright_version: 1.26.0
+  pyright_version: 1.27.1
   # https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
-  pyright_sha256: 25c0f63364b73783483b04ddd3adef3ad692238cac03dffc30f52ae0108a2ee5
+  pyright_sha256: 9959d9749357ca54452b0fdfe237c3dbf7ea30bff06dad9a9359d9145b896bda
   # https://open-vsx.org/api/ms-python/python/versions?size=1
-  python_version: 2024.23.0-dev
+  python_version: 2025.0.0
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
-  python_sha256: 65d8855e7785c03c88ca81dfd02470598351bffa44e26678c7266774dfe7859a
+  python_sha256: aef68096228d6ede1f277a6a11b1443ef088a473eb798a31c9d02247f1795707
   # https://api.github.com/repos/ktnrg45/vs-code-cython/releases/latest
   cython_version: 1.0.3
   cython_sha256: 68ad4e17045ce6c90ba24b8416266419582a688db63d35c6175135e9cc741034
@@ -39,6 +43,9 @@ source:
   target_directory: vscodium/bootstrap/extensions
 - url: https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/${{ clangd_version }}/file/llvm-vs-code-extensions.vscode-clangd-${{ clangd_version }}.vsix
   sha256: ${{ clangd_sha256 }}
+  target_directory: vscodium/bootstrap/extensions
+- url: https://open-vsx.org/api/jeff-hykin/better-m-syntax/${{ matlab_version }}/file/jeff-hykin.better-m-syntax-${{ matlab_version }}.vsix
+  sha256: ${{ matlab_sha256 }}
   target_directory: vscodium/bootstrap/extensions
 - url: https://open-vsx.org/api/detachhead/basedpyright/${{ pyright_version }}/file/detachhead.basedpyright-${{ pyright_version }}.vsix
   sha256: ${{ pyright_sha256 }}
