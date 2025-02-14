@@ -40,15 +40,19 @@ build:
   - if: win
     then:
     - mklink /H "%LIBRARY_BIN%\pixi.exe" target\dist\pixi.exe
+    else:
+    - mkdir -p "$PREFIX/bin"
+    - ln target/dist/pixi "$PREFIX/bin"
   skip:
-  - not win
   - build_platform != target_platform
-  - compiler('c')[:2] != 'vs'
+  - win and compiler('c')[:2] != 'vs'
 
 requirements:
   build:
   - ${{ compiler('c') }}
   - rust ==1.84.0
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
 
 tests:
 - script:

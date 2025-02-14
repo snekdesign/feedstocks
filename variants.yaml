@@ -3,24 +3,37 @@ zip_keys:
 - [cxx_compiler, cxx_compiler_version]
 
 c_compiler:
-- gcc
+- if: osx
+  then: clang
+  else: gcc
 - if: win
   then: vs
 
 c_compiler_version:
-- '14.2'
+- if: osx
+  then: '19.1'
+  else: '14.2'
 - if: win
   then: '2022.12'
 
 cxx_compiler:
-- gxx
+- if: osx
+  then: clangxx
+  else: gxx
 - if: win
   then: vs
 
 cxx_compiler_version:
-- '14.2'
+- if: osx
+  then: '19.1'
+  else: '14.2'
 - if: win
   then: '2022.12'
 
 cdt_name:
 - cos7
+
+microarch_level:
+- if: osx and x86_64
+  then: 2
+  else: 0
