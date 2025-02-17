@@ -1,0 +1,124 @@
+From bd187d58c901717744c84ae3d4cf7b1c27adb16d Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Mon, 17 Feb 2025 20:28:07 +0800
+Subject: [PATCH] customize
+
+---
+ Cargo.toml                             |  7 +++++++
+ core/Cargo.toml                        |  6 +++---
+ core/src/tag_utils.rs                  |  2 +-
+ render/Cargo.toml                      |  2 +-
+ video/external/src/decoder/openh264.rs |  1 +
+ video/software/Cargo.toml              | 10 +++++-----
+ 6 files changed, 18 insertions(+), 10 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index d9457be..cbac1cf 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -100,7 +100,11 @@ opt-level = 0
+ panic = "unwind"
+ 
+ [profile.release]
++codegen-units = 1
++lto = true
++opt-level = 3
+ panic = "abort"
++strip = true
+ 
+ [profile.dev.package.h263-rs]
+ opt-level = 3
+@@ -139,3 +143,6 @@ lto = "off"
+ incremental = true
+ # Right between the defaults of 16 and 256, for crate fragment caching.
+ codegen-units = 64
++
++[patch.crates-io]
++clang-sys = { path = "../clang-sys" }
+diff --git a/core/Cargo.toml b/core/Cargo.toml
+index 8abcdd0..7ad254f 100644
+--- a/core/Cargo.toml
++++ b/core/Cargo.toml
+@@ -41,9 +41,9 @@ encoding_rs = "0.8.35"
+ rand = { version = "0.8.5", features = ["std", "small_rng"], default-features = false }
+ serde = { workspace = true }
+ serde_json = { version = "1.0", features = ["preserve_order"] }
+-nellymoser-rs = { git = "https://github.com/ruffle-rs/nellymoser", rev = "754b1184037aa9952a907107284fb73897e26adc", optional = true }
++nellymoser-rs = { path = "../../nellymoser", optional = true }
+ regress = "0.10"
+-flash-lso = { git = "https://github.com/ruffle-rs/rust-flash-lso", rev = "a5e938d9bb1909095f2340c2435867f6aae930b0" }
++flash-lso = { path = "../../rust-flash-lso/flash-lso" }
+ lzma-rs = {version = "0.3.0", optional = true }
+ dasp = { version = "0.11.0", features = ["interpolate", "interpolate-linear", "signal"], optional = true }
+ symphonia = { version = "0.5.4", default-features = false, optional = true }
+@@ -59,7 +59,7 @@ egui_extras = { version = "0.31.0", default-features = false, optional = true }
+ png = { version = "0.17.16", optional = true }
+ flv-rs = { path = "../flv" }
+ async-channel = { workspace = true }
+-jpegxr = { git = "https://github.com/ruffle-rs/jpegxr", rev = "2a429b0d71ab416e10b73d4dbdcf34cfe2900395", optional = true }
++jpegxr = { path = "../../jpegxr", optional = true }
+ image = { workspace = true, features = ["tiff"] }
+ enum-map = { workspace = true }
+ ttf-parser = "0.25"
+diff --git a/core/src/tag_utils.rs b/core/src/tag_utils.rs
+index ddd43a6..8554bbf 100644
+--- a/core/src/tag_utils.rs
++++ b/core/src/tag_utils.rs
+@@ -561,7 +561,7 @@ where
+                 }
+                 Ok(ControlFlow::Continue) => {}
+             }
+-        } else {
++        } else if tag_code != 253 {
+             tracing::warn!("Unknown tag code: {:?}", tag_code);
+         }
+ 
+diff --git a/render/Cargo.toml b/render/Cargo.toml
+index e30007e..224287c 100644
+--- a/render/Cargo.toml
++++ b/render/Cargo.toml
+@@ -26,7 +26,7 @@ wasm-bindgen = { workspace = true, optional = true }
+ enum-map = { workspace = true }
+ serde = { workspace = true, features = ["derive"], optional = true }
+ clap = { workspace = true, optional = true }
+-h263-rs-yuv = { git = "https://github.com/ruffle-rs/h263-rs", rev = "b3f905511acc7b80861dac45fdc5ca913b6029e5"}
++h263-rs-yuv = { path = "../../h263-rs/yuv" }
+ num-traits = { workspace = true }
+ num-derive = { workspace = true }
+ byteorder = "1.5"
+diff --git a/video/external/src/decoder/openh264.rs b/video/external/src/decoder/openh264.rs
+index 5091c62..60f79a9 100644
+--- a/video/external/src/decoder/openh264.rs
++++ b/video/external/src/decoder/openh264.rs
+@@ -52,6 +52,7 @@ impl OpenH264Codec {
+ 
+         let local_filenames = match OS {
+             "linux" => vec!["libopenh264.so.7", "libopenh264.so.2.4.1", "libopenh264.so"],
++            "windows" => vec!["openh264-7.dll"],
+             // TODO: investigate other OSes
+             _ => vec![],
+         };
+diff --git a/video/software/Cargo.toml b/video/software/Cargo.toml
+index 5f5d6d2..af80b92 100644
+--- a/video/software/Cargo.toml
++++ b/video/software/Cargo.toml
+@@ -19,11 +19,11 @@ thiserror = { workspace = true }
+ flate2 = { workspace = true }
+ log = { workspace = true }
+ 
+-h263-rs = { git = "https://github.com/ruffle-rs/h263-rs", rev = "b3f905511acc7b80861dac45fdc5ca913b6029e5", optional = true }
+-h263-rs-deblock = { git = "https://github.com/ruffle-rs/h263-rs", rev = "b3f905511acc7b80861dac45fdc5ca913b6029e5", optional = true }
+-nihav_core = { git = "https://github.com/ruffle-rs/nihav-vp6", rev = "83c7e1094d603d9fc1212d39d99abb17f3a3226b", optional = true }
+-nihav_codec_support = { git = "https://github.com/ruffle-rs/nihav-vp6", rev = "83c7e1094d603d9fc1212d39d99abb17f3a3226b", optional = true }
+-nihav_duck = { git = "https://github.com/ruffle-rs/nihav-vp6", rev = "83c7e1094d603d9fc1212d39d99abb17f3a3226b", optional = true }
++h263-rs = { path = "../../../h263-rs/h263", optional = true }
++h263-rs-deblock = { path = "../../../h263-rs/deblock", optional = true }
++nihav_core = { path = "../../../nihav-vp6/nihav-core", optional = true }
++nihav_codec_support = { path = "../../../nihav-vp6/nihav-codec-support", optional = true }
++nihav_duck = { path = "../../../nihav-vp6/nihav-duck", optional = true }
+ 
+ [features]
+ default = ["h263", "vp6", "screenvideo"]
+-- 
+2.48.1.windows.1
+
