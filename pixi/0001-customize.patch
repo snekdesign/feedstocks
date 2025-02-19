@@ -12,10 +12,10 @@ Subject: [PATCH] customize
  5 files changed, 56 insertions(+), 41 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 9f8a8b0..1a082f6 100644
+index 2cd01c0..45bd9a0 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -100,52 +100,52 @@ toml_edit = "0.22.22"
+@@ -101,52 +101,52 @@ toml_edit = "0.22.22"
  tracing = "0.1.41"
  tracing-subscriber = "0.3.19"
  typed-path = "0.10.0"
@@ -43,27 +43,27 @@ index 9f8a8b0..1a082f6 100644
  
  # Rattler crates
 -file_url = "0.2.2"
--rattler = { version = "0.31.1", default-features = false }
--rattler_cache = { version = "0.3.8", default-features = false }
--rattler_conda_types = { version = "0.30.2", default-features = false, features = [
+-rattler = { version = "0.32.0", default-features = false }
+-rattler_cache = { version = "0.3.9", default-features = false }
+-rattler_conda_types = { version = "0.30.3", default-features = false, features = [
 +file_url = { path = "../rattler/crates/file_url" }
 +rattler = { path = "../rattler/crates/rattler", default-features = false }
 +rattler_cache = { path = "../rattler/crates/rattler_cache", default-features = false }
 +rattler_conda_types = { path = "../rattler/crates/rattler_conda_types", default-features = false, features = [
    "rayon",
  ] }
--rattler_digest = { version = "1.0.5", default-features = false }
--rattler_lock = { version = "0.22.42", default-features = false }
--rattler_networking = { version = "0.22.3", default-features = false, features = [
+-rattler_digest = { version = "1.0.6", default-features = false }
+-rattler_lock = { version = "0.22.43", default-features = false }
+-rattler_networking = { version = "0.22.4", default-features = false, features = [
 +rattler_digest = { path = "../rattler/crates/rattler_digest", default-features = false }
 +rattler_lock = { path = "../rattler/crates/rattler_lock", default-features = false }
 +rattler_networking = { path = "../rattler/crates/rattler_networking", default-features = false, features = [
    "google-cloud-auth",
  ] }
--rattler_repodata_gateway = { version = "0.21.36", default-features = false }
--rattler_shell = { version = "0.22.18", default-features = false }
--rattler_solve = { version = "1.3.7", default-features = false }
--rattler_virtual_packages = { version = "2.0.2", default-features = false }
+-rattler_repodata_gateway = { version = "0.21.37", default-features = false }
+-rattler_shell = { version = "0.22.19", default-features = false }
+-rattler_solve = { version = "1.3.8", default-features = false }
+-rattler_virtual_packages = { version = "2.0.3", default-features = false }
 +rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway", default-features = false }
 +rattler_shell = { path = "../rattler/crates/rattler_shell", default-features = false }
 +rattler_solve = { path = "../rattler/crates/rattler_solve", default-features = false }
@@ -101,7 +101,7 @@ index 9f8a8b0..1a082f6 100644
  winapi = { version = "0.3.9", default-features = false }
  xxhash-rust = "0.8.13"
  zip = { version = "2.2.2", default-features = false }
-@@ -373,7 +373,7 @@ tokio = { workspace = true, features = ["rt"] }
+@@ -375,7 +375,7 @@ tokio = { workspace = true, features = ["rt"] }
  
  [patch.crates-io]
  # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
