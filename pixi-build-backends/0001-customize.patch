@@ -1,0 +1,96 @@
+From ba67283784437c7c3c1aec15824397c5f8ae0828 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Thu, 20 Feb 2025 18:55:09 +0800
+Subject: [PATCH] customize
+
+---
+ Cargo.toml                   | 18 ++++++++++++------
+ crates/pixi-build/src/cli.rs | 21 +++++++++++++++------
+ 2 files changed, 27 insertions(+), 12 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 555a958..8b87a18 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -35,14 +35,20 @@ jsonrpc-stdio-server = "18.0.0"
+ jsonrpc-http-server = "18.0.0"
+ jsonrpc-core = "18.0.0"
+ 
+-rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "6744398", default-features = false }
++rattler-build = { path = "../rattler-build", default-features = false }
+ 
+ rattler_conda_types = { version = "0.30.2", default-features = false }
+ rattler_package_streaming = { version = "0.22.27", default-features = false }
+ rattler_virtual_packages = { version = "2.0.2", default-features = false }
+ 
+-pixi_build_types = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+-pixi_consts = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+-pixi_manifest = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+-pixi_spec = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+-pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
++pixi_build_types = { path = "../pixi/crates/pixi_build_types" }
++pixi_consts = { path = "../pixi/crates/pixi_consts" }
++pixi_manifest = { path = "../pixi/crates/pixi_manifest" }
++pixi_spec = { path = "../pixi/crates/pixi_spec" }
++pixi_build_type_conversions = { path = "../pixi/crates/pixi_build_type_conversions" }
++
++[profile.release]
++codegen-units = 1
++lto = true
++opt-level = 3
++strip = true
+diff --git a/crates/pixi-build/src/cli.rs b/crates/pixi-build/src/cli.rs
+index a72077f..906226b 100644
+--- a/crates/pixi-build/src/cli.rs
++++ b/crates/pixi-build/src/cli.rs
+@@ -19,6 +19,7 @@ use rattler_conda_types::{ChannelConfig, GenericVirtualPackage, Platform};
+ use rattler_virtual_packages::{VirtualPackage, VirtualPackageOverrides};
+ use tempfile::TempDir;
+ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
++use url::Url;
+ 
+ use crate::{
+     consts,
+@@ -181,12 +182,16 @@ async fn conda_get_metadata<T: ProtocolInstantiator>(
+     manifest_path: &Path,
+     host_platform: Option<Platform>,
+ ) -> miette::Result<CondaMetadataResult> {
+-    let channel_config = ChannelConfig::default_with_root_dir(
+-        manifest_path
++    let channel_config = ChannelConfig {
++        channel_alias: std::env::var("RATTLER_BUILD_CHANNEL_ALIAS").map_or_else(
++                |_| Url::parse("https://conda.anaconda.org"),
++                |v| Url::parse(v.as_str()),
++            ).unwrap(),
++        root_dir: manifest_path
+             .parent()
+             .expect("manifest should always reside in a directory")
+             .to_path_buf(),
+-    );
++    };
+ 
+     let protocol = initialize(factory, manifest_path).await?;
+     let virtual_packages: Vec<_> = VirtualPackage::detect(&VirtualPackageOverrides::from_env())
+@@ -228,12 +233,16 @@ async fn capabilities<Factory: ProtocolInstantiator>() -> miette::Result<Backend
+ 
+ /// Frontend implementation for building a conda package.
+ async fn build<T: ProtocolInstantiator>(factory: T, manifest_path: &Path) -> miette::Result<()> {
+-    let channel_config = ChannelConfig::default_with_root_dir(
+-        manifest_path
++    let channel_config = ChannelConfig {
++        channel_alias: std::env::var("RATTLER_BUILD_CHANNEL_ALIAS").map_or_else(
++                |_| Url::parse("https://conda.anaconda.org"),
++                |v| Url::parse(v.as_str()),
++            ).unwrap(),
++        root_dir: manifest_path
+             .parent()
+             .expect("manifest should always reside in a directory")
+             .to_path_buf(),
+-    );
++    };
+ 
+     let protocol = initialize(factory, manifest_path).await?;
+     let work_dir = TempDir::new_in(".")
+-- 
+2.48.1.windows.1
+
