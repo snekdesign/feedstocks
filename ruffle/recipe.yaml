@@ -1,8 +1,8 @@
 context:
   year: 2025
   month: '02'
-  day: 19
-  sha256: 1ab61bb0b9432379d9c4205bd66d9e1645a4692eb5fd47f8f8ca556fae51bada
+  day: 23
+  sha256: f83dd89314151dabbca8198213443899055ae1499204ec6a664bf3221488468f
 
 package:
   name: ruffle
@@ -29,6 +29,9 @@ source:
 - url: https://github.com/ruffle-rs/rust-flash-lso/archive/a5e938d9bb1909095f2340c2435867f6aae930b0.tar.gz
   sha256: 62be1782f9eda70bb8411c839c8f3d3f3da03d2ad97dbbee802f90ff610fbc77
   target_directory: rust-flash-lso
+- url: https://github.com/ruffle-rs/wgpu/archive/refs/tags/v24.0.1-ruffle1.tar.gz
+  sha256: bca7d788185a1926db0ae4454df2765f7f092ef79322aba969255d65262fd7d5
+  target_directory: wgpu
 - url: https://github.com/KyleMayes/clang-sys/archive/refs/tags/v1.8.1.tar.gz
   sha256: f3571b3033fc6ff32f86326de724ece3ced7867f2016ccf7cdb36284d3f9c9b8
   target_directory: clang-sys

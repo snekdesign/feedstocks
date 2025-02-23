@@ -4,19 +4,33 @@ Date: Mon, 17 Feb 2025 20:28:07 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                             |  7 +++++++
+ Cargo.toml                             | 10 ++++++++--
  core/Cargo.toml                        |  6 +++---
  core/src/tag_utils.rs                  |  2 +-
+ desktop/src/backends/ui.rs             |  2 +-
  render/Cargo.toml                      |  2 +-
  video/external/src/decoder/openh264.rs |  1 +
  video/software/Cargo.toml              | 10 +++++-----
- 6 files changed, 18 insertions(+), 10 deletions(-)
+ 7 files changed, 20 insertions(+), 13 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index d9457be..cbac1cf 100644
+index 6b5829c..496b5e8 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -100,7 +100,11 @@ opt-level = 0
+@@ -48,8 +48,10 @@ version = "0.1.0"
+ # TODO: remove this when v25 releases with https://github.com/gfx-rs/wgpu/pull/6994
+ # (or a v24.x with the backport: https://github.com/gfx-rs/wgpu/pull/7169)
+ [patch.crates-io]
+-wgpu = { git = "https://github.com/ruffle-rs/wgpu", tag = "v24.0.1-ruffle1" }
+-naga = { git = "https://github.com/ruffle-rs/wgpu", tag = "v24.0.1-ruffle1" }
++wgpu = { path = "../wgpu/wgpu" }
++naga = { path = "../wgpu/naga" }
++
++clang-sys = { path = "../clang-sys" }
+ 
+ [workspace.dependencies]
+ tracing = "0.1.41"
+@@ -106,7 +108,11 @@ opt-level = 0
  panic = "unwind"
  
  [profile.release]
@@ -28,15 +42,8 @@ index d9457be..cbac1cf 100644
  
  [profile.dev.package.h263-rs]
  opt-level = 3
-@@ -139,3 +143,6 @@ lto = "off"
- incremental = true
- # Right between the defaults of 16 and 256, for crate fragment caching.
- codegen-units = 64
-+
-+[patch.crates-io]
-+clang-sys = { path = "../clang-sys" }
 diff --git a/core/Cargo.toml b/core/Cargo.toml
-index 8abcdd0..7ad254f 100644
+index f0168da..5e33b28 100644
 --- a/core/Cargo.toml
 +++ b/core/Cargo.toml
 @@ -41,9 +41,9 @@ encoding_rs = "0.8.35"
@@ -61,7 +68,7 @@ index 8abcdd0..7ad254f 100644
  enum-map = { workspace = true }
  ttf-parser = "0.25"
 diff --git a/core/src/tag_utils.rs b/core/src/tag_utils.rs
-index ddd43a6..8554bbf 100644
+index ddd43a6..f2b81b0 100644
 --- a/core/src/tag_utils.rs
 +++ b/core/src/tag_utils.rs
 @@ -561,7 +561,7 @@ where
@@ -69,12 +76,25 @@ index ddd43a6..8554bbf 100644
                  Ok(ControlFlow::Continue) => {}
              }
 -        } else {
-+        } else if tag_code != 253 {
++        } else if tag_code != 253 && tag_code != 255 {
              tracing::warn!("Unknown tag code: {:?}", tag_code);
          }
  
+diff --git a/desktop/src/backends/ui.rs b/desktop/src/backends/ui.rs
+index b565045..85dbf58 100644
+--- a/desktop/src/backends/ui.rs
++++ b/desktop/src/backends/ui.rs
+@@ -300,7 +300,7 @@ impl UiBackend for DesktopUiBackend {
+         register: &mut dyn FnMut(FontDefinition),
+     ) {
+         let query = fontdb::Query {
+-            families: &[Family::Name(name)],
++            families: &[Family::Name(name.strip_suffix("_GB2312").unwrap_or(name))],
+             weight: if is_bold {
+                 fontdb::Weight::BOLD
+             } else {
 diff --git a/render/Cargo.toml b/render/Cargo.toml
-index e30007e..224287c 100644
+index 58d685b..f2bc8a7 100644
 --- a/render/Cargo.toml
 +++ b/render/Cargo.toml
 @@ -26,7 +26,7 @@ wasm-bindgen = { workspace = true, optional = true }
