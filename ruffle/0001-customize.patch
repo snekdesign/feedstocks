@@ -6,12 +6,13 @@ Subject: [PATCH] customize
 ---
  Cargo.toml                             | 10 ++++++++--
  core/Cargo.toml                        |  6 +++---
+ core/src/avm1/globals.rs               |  4 +---
  core/src/tag_utils.rs                  |  2 +-
  desktop/src/backends/ui.rs             |  2 +-
  render/Cargo.toml                      |  2 +-
  video/external/src/decoder/openh264.rs |  1 +
  video/software/Cargo.toml              | 10 +++++-----
- 7 files changed, 20 insertions(+), 13 deletions(-)
+ 8 files changed, 21 insertions(+), 16 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
 index 6b5829c..496b5e8 100644
@@ -67,6 +68,21 @@ index f0168da..5e33b28 100644
  image = { workspace = true, features = ["tiff"] }
  enum-map = { workspace = true }
  ttf-parser = "0.25"
+diff --git a/core/src/avm1/globals.rs b/core/src/avm1/globals.rs
+index 5e7f270..dd2915c 100644
+--- a/core/src/avm1/globals.rs
++++ b/core/src/avm1/globals.rs
+@@ -345,9 +345,7 @@ pub fn clear_interval<'gc>(
+         .get(0)
+         .unwrap_or(&Value::Undefined)
+         .coerce_to_i32(activation)?;
+-    if !activation.context.timers.remove(id) {
+-        tracing::info!("clearInterval: Timer {} does not exist", id);
+-    }
++    activation.context.timers.remove(id);
+ 
+     Ok(Value::Undefined)
+ }
 diff --git a/core/src/tag_utils.rs b/core/src/tag_utils.rs
 index ddd43a6..f2b81b0 100644
 --- a/core/src/tag_utils.rs
