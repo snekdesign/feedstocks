@@ -9,10 +9,10 @@ Subject: [PATCH] customize
  2 files changed, 14 insertions(+), 5 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 9f724b7..95799cf 100644
+index 4a90ee4..9b8363e 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -175,6 +175,12 @@ tracing-test = "0.2.5"
+@@ -189,9 +189,15 @@ tracing-test = "0.2.5"
  tracing-indicatif = "0.3.9"
  serial_test = "3.2.0"
  
@@ -22,18 +22,13 @@ index 9f724b7..95799cf 100644
 +opt-level = 3
 +strip = true
 +
- [profile.dev.package."*"]
- opt-level = 3
- 
-@@ -192,7 +198,7 @@ pre-build = [
- 
  [patch.crates-io]
  # this fork contains fixes for slow zip reading and large file writing
 -zip = { git = "https://github.com/wolfv/zip2", branch = "patched" }
 +zip = { path = "zip2" }
  
- # rattler = { git = "https://github.com/conda/rattler", branch = "main" }
- # rattler_sandbox = { git = "https://github.com/conda/rattler", branch = "main" }
+ # rattler = { git = "https://github.com/wolfv/rattler", branch = "pub-schema" }
+ # rattler_sandbox = { git = "https://github.com/wolfv/rattler", branch = "pub-schema" }
 diff --git a/src/tool_configuration.rs b/src/tool_configuration.rs
 index 1802ed8..0235f8e 100644
 --- a/src/tool_configuration.rs

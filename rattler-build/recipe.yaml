@@ -1,6 +1,6 @@
 context:
-  version: 0.36.0
-  sha256: bc99bee1fa07926cc4cfa8995522bca65210df158cc2bf2564a8e3da211d231a
+  version: 0.37.0
+  sha256: a77482fa8b907e91970cab8f0d4bf1e105fd0a2b0521af91dd830b3832ce57a4
 
 package:
   name: rattler-build
