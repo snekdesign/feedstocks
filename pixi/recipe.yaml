@@ -1,6 +1,6 @@
 context:
-  version: 0.41.4
-  sha256: 569e015e2281713dd65175febd077f4544ad6c42d9bf50e2e9febcaa792a0718
+  version: 0.42.1
+  sha256: 64be792c7e8af811db2fb9ee753c56b21ce6122b4abe321d1f2c35ffbf37d716
 
 package:
   name: pixi
@@ -12,13 +12,13 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.32.0.tar.gz
-  sha256: 6c9d926c9b4951c894021ede5db4647848e29df6a21ec2bdc6fefd165d575119
+- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.32.3.tar.gz
+  sha256: a9da655111a79c9874c2d55ce9323f1a1b0ce4c809f47184b567bbf888ad88a4
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
-- url: https://github.com/astral-sh/uv/archive/refs/tags/0.5.29.tar.gz
-  sha256: f562a58d4c5e405664936cc4cab815bfea8a7b4bc4702c0a1735b23ea6cf8643
+- url: https://github.com/astral-sh/uv/archive/refs/tags/0.6.1.tar.gz
+  sha256: 70118971a2b6b7b6ac8e028b2505178b6a75ae77c314a60ff8403645e1ef7d78
   target_directory: uv
   patches:
   - 0001-conda-build.patch
