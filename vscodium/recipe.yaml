@@ -1,7 +1,7 @@
 context:
-  version: 1.97.2
-  release: ${{ version }}.25045
-  sha256: 76785a71712718d469f99ee3aeb95209aff9f1154b553e39c81a40f0f3c811c6
+  version: 1.98.0
+  release: ${{ version }}.25067
+  sha256: eddc511bb2b67c1f911ccd0dfd43df93ddc92bd70cf6dd3dd5202f1be425c99a
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.3
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -15,16 +15,20 @@ context:
   # https://open-vsx.org/api/jeff-hykin/better-m-syntax/latest/file/sha256
   matlab_sha256: 4227836ef17776bd0ef178aa52a1e879905c79d8787e72163716d6802ac24fc6
   # https://open-vsx.org/api/detachhead/basedpyright/versions?size=1
-  pyright_version: 1.27.1
+  pyright_version: 1.28.1
   # https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
-  pyright_sha256: 9959d9749357ca54452b0fdfe237c3dbf7ea30bff06dad9a9359d9145b896bda
+  pyright_sha256: edeafa1b884672ce1e91c66d12fca859ca76b64dbfd4b04cd70cda25b618c8dc
   # https://open-vsx.org/api/ms-python/python/versions?size=1
-  python_version: 2025.0.0
+  python_version: 2025.2.0
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
-  python_sha256: aef68096228d6ede1f277a6a11b1443ef088a473eb798a31c9d02247f1795707
+  python_sha256: b6e7f640bc1b2a184597b518d8d5f73b447009a650c59fa5d2b1b4f68d19d9b1
   # https://api.github.com/repos/ktnrg45/vs-code-cython/releases/latest
   cython_version: 1.0.3
   cython_sha256: 68ad4e17045ce6c90ba24b8416266419582a688db63d35c6175135e9cc741034
+  # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/versions?size=1
+  ruff_version: 2025.14.0
+  # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
+  ruff_sha256: 15a35922300d6d205722809dc156328bb7425d21c79cab5b6dfa500fc7d0f8f2
   # https://open-vsx.org/api/tamasfe/even-better-toml/versions?size=1
   toml_version: 0.21.2
   # https://open-vsx.org/api/tamasfe/even-better-toml/latest/file/sha256
@@ -55,6 +59,9 @@ source:
   target_directory: vscodium/bootstrap/extensions
 - url: https://github.com/ktnrg45/vs-code-cython/releases/download/${{ cython_version }}/vscode-cython.vsix
   sha256: ${{ cython_sha256 }}
+  target_directory: vscodium/bootstrap/extensions
+- url: https://open-vsx.org/api/charliermarsh/ruff/win32-x64/${{ ruff_version }}/file/charliermarsh.ruff-${{ ruff_version }}@win32-x64.vsix
+  sha256: ${{ ruff_sha256 }}
   target_directory: vscodium/bootstrap/extensions
 - url: https://open-vsx.org/api/tamasfe/even-better-toml/${{ toml_version }}/file/tamasfe.even-better-toml-${{ toml_version }}.vsix
   sha256: ${{ toml_sha256 }}
