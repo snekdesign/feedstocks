@@ -1,7 +1,7 @@
 context:
-  version: 1.98.0
-  release: ${{ version }}.25067
-  sha256: eddc511bb2b67c1f911ccd0dfd43df93ddc92bd70cf6dd3dd5202f1be425c99a
+  version: 1.98.1
+  release: ${{ version }}.25070
+  sha256: b4b2f12956e6f6c1df30a5b80ab2ab51bf6611365732e6ac7120ba83ab061259
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.3
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
