@@ -1,6 +1,6 @@
 context:
-  version: 0.38.0
-  sha256: 6ecc54253efd2bd49d55d6fd07eb24b6b0111a786375dcaa16aaf7de4bd24c57
+  version: 0.39.0
+  sha256: 6625a0175d62d0b3cc957e683e9de4258a413db6e6a7a613be86cc15a495c2cf
 
 package:
   name: rattler-build
@@ -12,19 +12,17 @@ source:
   patches:
   - 0001-customize.patch
 - url: https://github.com/wolfv/zip2/archive/refs/heads/patched.tar.gz
-  sha256: a9d60c40aaa017c462830aeb7867d8f4c17099f6e5504577f8229668b51d0bd1
+  sha256: 0d2510a4cab7d8ce826a5122ccf614d1e5955d1a4349c37e6d5f7dd2942adf8b
   target_directory: zip2
 
 build:
   number: 0
   script:
-  - cargo build --release
   - if: win
     then:
-    - mklink /H "%LIBRARY_BIN%\rattler-build.exe" target\release\rattler-build.exe
+    - cargo install --no-track --path . --root "%LIBRARY_PREFIX%"
     else:
-    - mkdir -p "$PREFIX/bin"
-    - ln target/release/rattler-build "$PREFIX/bin"
+    - cargo install --no-track --path . --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and compiler('c')[:2] != 'vs'
