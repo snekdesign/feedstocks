@@ -1,6 +1,6 @@
 context:
-  version: 0.42.1
-  sha256: 64be792c7e8af811db2fb9ee753c56b21ce6122b4abe321d1f2c35ffbf37d716
+  version: 0.43.0
+  sha256: 44f781049bd5d01f550fb17cc3880a36df29bad0429453c6527ee316fc0bad20
 
 package:
   name: pixi
@@ -12,8 +12,8 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.32.3.tar.gz
-  sha256: a9da655111a79c9874c2d55ce9323f1a1b0ce4c809f47184b567bbf888ad88a4
+- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.33.3.tar.gz
+  sha256: 68f6513db56c10fbf363924e4b4f40f9bc218f9044b949723224bfdc82addb9d
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
@@ -35,14 +35,11 @@ source:
 build:
   number: 0
   script:
-  - cd pixi
-  - cargo build --profile dist
   - if: win
     then:
-    - mklink /H "%LIBRARY_BIN%\pixi.exe" target\dist\pixi.exe
+    - cargo install --no-track --path pixi --profile dist --root "%LIBRARY_PREFIX%"
     else:
-    - mkdir -p "$PREFIX/bin"
-    - ln target/dist/pixi "$PREFIX/bin"
+    - cargo install --no-track --path pixi --profile dist --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and compiler('c')[:2] != 'vs'
@@ -50,7 +47,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust ==1.84.0
+  - rust >=1.85.0
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
 

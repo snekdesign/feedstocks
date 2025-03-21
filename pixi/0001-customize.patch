@@ -4,18 +4,18 @@ Date: Tue, 20 Aug 2024 20:44:27 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                                    | 70 +++++++++----------
- .../pypi_mapping/src/custom_pypi_mapping.rs   | 19 +++++
- .../src/prefix_pypi_name_mapping.rs           |  2 +-
+ Cargo.toml                                    | 72 +++++++++----------
+ crates/pypi_mapping/src/custom_mapping.rs     | 19 +++++
+ .../src/prefix/compressed_mapping_client.rs   |  2 +-
  src/global/install.rs                         |  2 +-
  src/global/project/parsed_manifest.rs         |  6 +-
- 5 files changed, 57 insertions(+), 42 deletions(-)
+ 5 files changed, 58 insertions(+), 43 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index ee16e7a..77237cb 100644
+index 81ca43e..209cc8b 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -101,53 +101,53 @@ toml_edit = "0.22.24"
+@@ -99,53 +99,53 @@ toml_edit = "0.22.24"
  tracing = "0.1.41"
  tracing-subscriber = "0.3.19"
  typed-path = "0.10.0"
@@ -43,32 +43,33 @@ index ee16e7a..77237cb 100644
  
  # Rattler crates
 -file_url = "0.2.3"
--rattler = { version = "0.32.3", default-features = false }
--rattler_cache = { version = "0.3.12", default-features = false }
--rattler_conda_types = { version = "0.31.2", default-features = false, features = [
+-rattler = { version = "0.33.3", default-features = false }
+-rattler_cache = { version = "0.3.14", default-features = false }
+-rattler_conda_types = { version = "0.31.4", default-features = false, features = [
 +file_url = { path = "../rattler/crates/file_url" }
 +rattler = { path = "../rattler/crates/rattler", default-features = false }
 +rattler_cache = { path = "../rattler/crates/rattler_cache", default-features = false }
 +rattler_conda_types = { path = "../rattler/crates/rattler_conda_types", default-features = false, features = [
    "rayon",
  ] }
--rattler_digest = { version = "1.0.7", default-features = false }
--rattler_lock = { version = "0.22.46", default-features = false }
--rattler_networking = { version = "0.22.7", default-features = false, features = [
+-rattler_digest = { version = "1.0.8", default-features = false }
+-rattler_lock = { version = "0.22.48", default-features = false }
+-rattler_menuinst = { version = "0.2.5", default-features = false }
+-rattler_networking = { version = "0.22.10", default-features = false, features = [
 +rattler_digest = { path = "../rattler/crates/rattler_digest", default-features = false }
 +rattler_lock = { path = "../rattler/crates/rattler_lock", default-features = false }
++rattler_menuinst = { path = "../rattler/crates/rattler_menuinst", default-features = false }
 +rattler_networking = { path = "../rattler/crates/rattler_networking", default-features = false, features = [
    "google-cloud-auth",
  ] }
--rattler_repodata_gateway = { version = "0.21.40", default-features = false }
--rattler_shell = { version = "0.22.22", default-features = false }
--rattler_solve = { version = "1.3.11", default-features = false }
--rattler_virtual_packages = { version = "2.0.6", default-features = false }
+-rattler_repodata_gateway = { version = "0.22.3", default-features = false }
+-rattler_shell = { version = "0.22.24", default-features = false }
+-rattler_solve = { version = "1.4.2", default-features = false }
+-rattler_virtual_packages = { version = "2.0.8", default-features = false }
 +rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway", default-features = false }
 +rattler_shell = { path = "../rattler/crates/rattler_shell", default-features = false }
 +rattler_solve = { path = "../rattler/crates/rattler_solve", default-features = false }
 +rattler_virtual_packages = { path = "../rattler/crates/rattler_virtual_packages", default-features = false }
- 
  
  # Bumping this to a higher version breaks the Windows path handling.
  url = "2.5.4"
@@ -103,7 +104,7 @@ index ee16e7a..77237cb 100644
  winapi = { version = "0.3.9", default-features = false }
  xxhash-rust = "0.8.15"
  zip = { version = "2.2.3", default-features = false }
-@@ -377,7 +377,7 @@ tokio = { workspace = true, features = ["rt"] }
+@@ -375,7 +375,7 @@ tokio = { workspace = true, features = ["rt"] }
  
  [patch.crates-io]
  # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
@@ -112,21 +113,20 @@ index ee16e7a..77237cb 100644
  
  # Config for 'dist'
  [workspace.metadata.dist]
-diff --git a/crates/pypi_mapping/src/custom_pypi_mapping.rs b/crates/pypi_mapping/src/custom_pypi_mapping.rs
-index bed1531..478e908 100644
---- a/crates/pypi_mapping/src/custom_pypi_mapping.rs
-+++ b/crates/pypi_mapping/src/custom_pypi_mapping.rs
-@@ -5,7 +5,9 @@ use std::{
- };
- 
- use miette::{Context, IntoDiagnostic};
+diff --git a/crates/pypi_mapping/src/custom_mapping.rs b/crates/pypi_mapping/src/custom_mapping.rs
+index c8cc731..0a4d94d 100644
+--- a/crates/pypi_mapping/src/custom_mapping.rs
++++ b/crates/pypi_mapping/src/custom_mapping.rs
+@@ -1,6 +1,8 @@
+ use async_once_cell::OnceCell as AsyncCell;
+ use miette::{IntoDiagnostic, WrapErr};
 +use pixi_consts::consts;
  use rattler_conda_types::{PackageUrl, RepoDataRecord};
 +use reqwest::header::{ACCEPT, HeaderMap, HeaderName, HeaderValue, USER_AGENT};
  use reqwest_middleware::ClientWithMiddleware;
+ use std::path::Path;
  use url::Url;
- 
-@@ -20,8 +22,25 @@ pub async fn fetch_mapping_from_url(
+@@ -77,8 +79,25 @@ async fn fetch_mapping_from_url(
      client: &ClientWithMiddleware,
      url: &Url,
  ) -> miette::Result<CompressedMapping> {
@@ -152,19 +152,19 @@ index bed1531..478e908 100644
          .send()
          .await
          .into_diagnostic()
-diff --git a/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs b/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
-index 7a31c44..b9edb83 100644
---- a/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
-+++ b/crates/pypi_mapping/src/prefix_pypi_name_mapping.rs
-@@ -22,7 +22,7 @@ use super::{
- const STORAGE_URL: &str = "https://conda-mapping.prefix.dev";
- const HASH_DIR: &str = "hash-v0";
+diff --git a/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs b/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
+index c10c460..57e1914 100644
+--- a/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
++++ b/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
+@@ -11,7 +11,7 @@ use crate::{
+ };
+ 
  const COMPRESSED_MAPPING: &str =
 -    "https://raw.githubusercontent.com/prefix-dev/parselmouth/main/files/compressed_mapping.json";
 +    "https://api.github.com/repos/prefix-dev/parselmouth/contents/files/compressed_mapping.json";
  
- #[derive(Debug, Deserialize, Serialize, Clone)]
- pub struct Package {
+ /// A client for fetching and caching the compressed mapping from the
+ /// parselmouth github repository.
 diff --git a/src/global/install.rs b/src/global/install.rs
 index 133ca98..8544e99 100644
 --- a/src/global/install.rs
@@ -179,10 +179,10 @@ index 133ca98..8544e99 100644
          matching_executables.first()
      };
 diff --git a/src/global/project/parsed_manifest.rs b/src/global/project/parsed_manifest.rs
-index 62af091..6bdb298 100644
+index a9ada65..323835c 100644
 --- a/src/global/project/parsed_manifest.rs
 +++ b/src/global/project/parsed_manifest.rs
-@@ -344,11 +344,7 @@ impl FromStr for ExposedName {
+@@ -373,11 +373,7 @@ impl FromStr for ExposedName {
      type Err = ExposedNameError;
  
      fn from_str(value: &str) -> Result<Self, Self::Err> {
