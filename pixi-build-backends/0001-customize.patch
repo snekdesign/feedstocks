@@ -4,15 +4,15 @@ Date: Thu, 20 Feb 2025 18:55:09 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                   | 18 ++++++++++++------
- crates/pixi-build/src/cli.rs | 21 +++++++++++++++------
+ Cargo.toml                           | 18 ++++++++++++------
+ crates/pixi-build-backend/src/cli.rs | 21 +++++++++++++++------
  2 files changed, 27 insertions(+), 12 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 555a958..8b87a18 100644
+index c4f5865..13a6cde 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -35,14 +35,20 @@ jsonrpc-stdio-server = "18.0.0"
+@@ -35,15 +35,21 @@ jsonrpc-stdio-server = "18.0.0"
  jsonrpc-http-server = "18.0.0"
  jsonrpc-core = "18.0.0"
  
@@ -33,17 +33,18 @@ index 555a958..8b87a18 100644
 +pixi_manifest = { path = "../pixi/crates/pixi_manifest" }
 +pixi_spec = { path = "../pixi/crates/pixi_spec" }
 +pixi_build_type_conversions = { path = "../pixi/crates/pixi_build_type_conversions" }
+ pixi-build-backend = { path = "crates/pixi-build-backend" }
 +
 +[profile.release]
 +codegen-units = 1
 +lto = true
 +opt-level = 3
 +strip = true
-diff --git a/crates/pixi-build/src/cli.rs b/crates/pixi-build/src/cli.rs
-index a72077f..906226b 100644
---- a/crates/pixi-build/src/cli.rs
-+++ b/crates/pixi-build/src/cli.rs
-@@ -19,6 +19,7 @@ use rattler_conda_types::{ChannelConfig, GenericVirtualPackage, Platform};
+diff --git a/crates/pixi-build-backend/src/cli.rs b/crates/pixi-build-backend/src/cli.rs
+index 521c8ad..f68e7b5 100644
+--- a/crates/pixi-build-backend/src/cli.rs
++++ b/crates/pixi-build-backend/src/cli.rs
+@@ -17,6 +17,7 @@ use rattler_conda_types::{ChannelConfig, GenericVirtualPackage, Platform};
  use rattler_virtual_packages::{VirtualPackage, VirtualPackageOverrides};
  use tempfile::TempDir;
  use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -51,7 +52,7 @@ index a72077f..906226b 100644
  
  use crate::{
      consts,
-@@ -181,12 +182,16 @@ async fn conda_get_metadata<T: ProtocolInstantiator>(
+@@ -169,12 +170,16 @@ async fn conda_get_metadata<T: ProtocolInstantiator>(
      manifest_path: &Path,
      host_platform: Option<Platform>,
  ) -> miette::Result<CondaMetadataResult> {
@@ -70,8 +71,8 @@ index a72077f..906226b 100644
 +    };
  
      let protocol = initialize(factory, manifest_path).await?;
-     let virtual_packages: Vec<_> = VirtualPackage::detect(&VirtualPackageOverrides::from_env())
-@@ -228,12 +233,16 @@ async fn capabilities<Factory: ProtocolInstantiator>() -> miette::Result<Backend
+ 
+@@ -217,12 +222,16 @@ async fn capabilities<Factory: ProtocolInstantiator>() -> miette::Result<Backend
  
  /// Frontend implementation for building a conda package.
  async fn build<T: ProtocolInstantiator>(factory: T, manifest_path: &Path) -> miette::Result<()> {

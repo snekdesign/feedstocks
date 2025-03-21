@@ -1,10 +1,6 @@
 context:
-  version: 0.1.3
-  sha256: 77f46106c885442ac346bb19b964abe354fb600599fef36619172613f161e133
-  pixi_version: 0.41.4
-  pixi_sha256: 569e015e2281713dd65175febd077f4544ad6c42d9bf50e2e9febcaa792a0718
-  rattler_build_version: 0.36.0
-  rattler_build_sha256: bc99bee1fa07926cc4cfa8995522bca65210df158cc2bf2564a8e3da211d231a
+  version: 0.1.4
+  sha256: abbb92636b2f0b20f55a56f7ac18bd7799b90d4e2ee4e3a8728ff871ea29e317
 
 recipe:
   name: pixi-build-backends
@@ -18,16 +14,16 @@ build:
 
 cache:
   source:
-  - url: https://github.com/prefix-dev/pixi-build-backends/archive/refs/tags/v${{ version }}.tar.gz
+  - url: https://github.com/prefix-dev/pixi-build-backends/archive/refs/tags/pixi-build-rust-v${{ version }}.tar.gz
     sha256: ${{ sha256 }}
     target_directory: pixi-build-backends
     patches:
     - 0001-customize.patch
-  - url: https://github.com/prefix-dev/pixi/archive/refs/tags/v${{ pixi_version }}.tar.gz
-    sha256: ${{ pixi_sha256 }}
+  - url: https://github.com/prefix-dev/pixi/archive/a43ce5509671fea2449b1f6d24a11cee2660a01c.tar.gz
+    sha256: 723e7b6f47af0bffb22fc3c4a5da7f0c4931c769e0036268a08a4d0bdd797ee5
     target_directory: pixi
-  - url: https://github.com/prefix-dev/rattler-build/archive/refs/tags/v${{ rattler_build_version }}.tar.gz
-    sha256: ${{ rattler_build_sha256 }}
+  - url: https://github.com/prefix-dev/rattler-build/archive/674439811c9b67c5928115a594fa168f0eee0cbc.tar.gz
+    sha256: 9bd34172d47cc9aab1f36ae174eba83cbe519630b3ded44ad53fe03593521611
     target_directory: rattler-build
   requirements:
     build:
@@ -64,3 +60,12 @@ outputs:
   tests:
   - script:
     - pixi-build-rattler-build help
+- package:
+    name: pixi-build-rust
+  build:
+    files:
+    - bin/pixi-build-rust
+    - Library/bin/pixi-build-rust.exe
+  tests:
+  - script:
+    - pixi-build-rust help
