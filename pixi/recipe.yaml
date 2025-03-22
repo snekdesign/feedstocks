@@ -33,7 +33,7 @@ source:
   target_directory: uv/tl
 
 build:
-  number: 0
+  number: 1
   script:
   - if: win
     then:

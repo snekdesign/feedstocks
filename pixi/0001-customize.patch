@@ -5,11 +5,10 @@ Subject: [PATCH] customize
 
 ---
  Cargo.toml                                    | 72 +++++++++----------
- crates/pypi_mapping/src/custom_mapping.rs     | 19 +++++
- .../src/prefix/compressed_mapping_client.rs   |  2 +-
+ .../src/prefix/compressed_mapping_client.rs   | 21 +++++-
  src/global/install.rs                         |  2 +-
  src/global/project/parsed_manifest.rs         |  6 +-
- 5 files changed, 58 insertions(+), 43 deletions(-)
+ 4 files changed, 58 insertions(+), 43 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
 index 81ca43e..209cc8b 100644
@@ -113,50 +112,21 @@ index 81ca43e..209cc8b 100644
  
  # Config for 'dist'
  [workspace.metadata.dist]
-diff --git a/crates/pypi_mapping/src/custom_mapping.rs b/crates/pypi_mapping/src/custom_mapping.rs
-index c8cc731..0a4d94d 100644
---- a/crates/pypi_mapping/src/custom_mapping.rs
-+++ b/crates/pypi_mapping/src/custom_mapping.rs
-@@ -1,6 +1,8 @@
- use async_once_cell::OnceCell as AsyncCell;
- use miette::{IntoDiagnostic, WrapErr};
+diff --git a/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs b/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
+index c10c460..4e8c522 100644
+--- a/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
++++ b/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
+@@ -1,7 +1,9 @@
+ use std::sync::Arc;
+ 
+ use async_once_cell::OnceCell;
 +use pixi_consts::consts;
  use rattler_conda_types::{PackageUrl, RepoDataRecord};
 +use reqwest::header::{ACCEPT, HeaderMap, HeaderName, HeaderValue, USER_AGENT};
  use reqwest_middleware::ClientWithMiddleware;
- use std::path::Path;
+ use tokio::sync::Semaphore;
  use url::Url;
-@@ -77,8 +79,25 @@ async fn fetch_mapping_from_url(
-     client: &ClientWithMiddleware,
-     url: &Url,
- ) -> miette::Result<CompressedMapping> {
-+    let mut headers = HeaderMap::new();
-+    if url.as_str().starts_with("https://api.github.com/repos/") {
-+        let user_agent = format!("pixi/{}", consts::PIXI_VERSION);
-+        headers.insert(
-+            ACCEPT,
-+            HeaderValue::from_static("application/vnd.github.raw+json"),
-+        );
-+        headers.insert(
-+            USER_AGENT,
-+            HeaderValue::from_str(&user_agent).unwrap(),
-+        );
-+        headers.insert(
-+            HeaderName::from_static("x-github-api-version"),
-+            HeaderValue::from_static("2022-11-28"),
-+        );
-+    }
-     let response = client
-         .get(url.clone())
-+        .headers(headers)
-         .send()
-         .await
-         .into_diagnostic()
-diff --git a/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs b/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
-index c10c460..57e1914 100644
---- a/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
-+++ b/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
-@@ -11,7 +11,7 @@ use crate::{
+@@ -11,7 +13,7 @@ use crate::{
  };
  
  const COMPRESSED_MAPPING: &str =
@@ -165,6 +135,33 @@ index c10c460..57e1914 100644
  
  /// A client for fetching and caching the compressed mapping from the
  /// parselmouth github repository.
+@@ -98,9 +100,26 @@ impl CompressedMappingClient {
+                     ),
+                     None => None,
+                 };
++                let mut headers = HeaderMap::new();
++                if compressed_mapping_url.as_str().starts_with("https://api.github.com/repos/") {
++                    let user_agent = format!("pixi/{}", consts::PIXI_VERSION);
++                    headers.insert(
++                        ACCEPT,
++                        HeaderValue::from_static("application/vnd.github.raw+json"),
++                    );
++                    headers.insert(
++                        USER_AGENT,
++                        HeaderValue::from_str(&user_agent).unwrap(),
++                    );
++                    headers.insert(
++                        HeaderName::from_static("x-github-api-version"),
++                        HeaderValue::from_static("2022-11-28"),
++                    );
++                }
+                 let response = inner
+                     .client
+                     .get(compressed_mapping_url)
++                    .headers(headers)
+                     .send()
+                     .await?
+                     .error_for_status()
 diff --git a/src/global/install.rs b/src/global/install.rs
 index 133ca98..8544e99 100644
 --- a/src/global/install.rs
