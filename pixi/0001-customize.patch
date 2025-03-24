@@ -4,29 +4,29 @@ Date: Tue, 20 Aug 2024 20:44:27 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                                    | 72 +++++++++----------
- .../src/prefix/compressed_mapping_client.rs   | 21 +++++-
+ Cargo.toml                                    | 76 +++++++++----------
+ .../src/prefix/compressed_mapping_client.rs   | 21 ++++-
  src/global/install.rs                         |  2 +-
  src/global/project/parsed_manifest.rs         |  6 +-
- 4 files changed, 58 insertions(+), 43 deletions(-)
+ 4 files changed, 60 insertions(+), 45 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 81ca43e..209cc8b 100644
+index e5ee115..4223b0b 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -99,53 +99,53 @@ toml_edit = "0.22.24"
+@@ -99,55 +99,55 @@ toml_edit = "0.22.24"
  tracing = "0.1.41"
  tracing-subscriber = "0.3.19"
  typed-path = "0.10.0"
--uv-build-frontend = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-distribution-filename = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-distribution-types = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-install-wheel = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-pep440 = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-pep508 = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-platform-tags = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-pypi-types = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-requirements-txt = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
+-uv-build-frontend = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-distribution-filename = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-distribution-types = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-install-wheel = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-pep440 = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-pep508 = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-platform-tags = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-pypi-types = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-requirements-txt = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
 +uv-build-frontend = { path = "../uv/crates/uv-build-frontend" }
 +uv-distribution-filename = { path = "../uv/crates/uv-distribution-filename" }
 +uv-distribution-types = { path = "../uv/crates/uv-distribution-types" }
@@ -72,22 +72,25 @@ index 81ca43e..209cc8b 100644
  
  # Bumping this to a higher version breaks the Windows path handling.
  url = "2.5.4"
--uv-auth = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-cache = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-client = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-configuration = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-dispatch = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-distribution = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-git = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-git-types = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-installer = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-normalize = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-python = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-requirements = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-resolver = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
--uv-types = { git = "https://github.com/astral-sh/uv", tag = "0.6.1" }
+-uv-auth = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-cache = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-cache-info = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-client = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-configuration = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-dispatch = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-distribution = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-git = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-git-types = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-installer = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-normalize = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-python = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-requirements = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-resolver = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-types = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
+-uv-workspace = { git = "https://github.com/astral-sh/uv", tag = "0.6.9" }
 +uv-auth = { path = "../uv/crates/uv-auth" }
 +uv-cache = { path = "../uv/crates/uv-cache" }
++uv-cache-info = { path = "../uv/crates/uv-cache-info" }
 +uv-client = { path = "../uv/crates/uv-client" }
 +uv-configuration = { path = "../uv/crates/uv-configuration" }
 +uv-dispatch = { path = "../uv/crates/uv-dispatch" }
@@ -100,10 +103,11 @@ index 81ca43e..209cc8b 100644
 +uv-requirements = { path = "../uv/crates/uv-requirements" }
 +uv-resolver = { path = "../uv/crates/uv-resolver" }
 +uv-types = { path = "../uv/crates/uv-types" }
++uv-workspace = { path = "../uv/crates/uv-workspace" }
  winapi = { version = "0.3.9", default-features = false }
  xxhash-rust = "0.8.15"
- zip = { version = "2.2.3", default-features = false }
-@@ -375,7 +375,7 @@ tokio = { workspace = true, features = ["rt"] }
+ zip = { version = "2.4.2", default-features = false }
+@@ -380,7 +380,7 @@ tokio = { workspace = true, features = ["rt"] }
  
  [patch.crates-io]
  # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
@@ -163,7 +167,7 @@ index c10c460..4e8c522 100644
                      .await?
                      .error_for_status()
 diff --git a/src/global/install.rs b/src/global/install.rs
-index 133ca98..8544e99 100644
+index 346ee13..554dfea 100644
 --- a/src/global/install.rs
 +++ b/src/global/install.rs
 @@ -53,7 +53,7 @@ pub(crate) fn script_exec_mapping<'a>(

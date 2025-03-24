@@ -1,6 +1,6 @@
 context:
-  version: 0.43.0
-  sha256: 44f781049bd5d01f550fb17cc3880a36df29bad0429453c6527ee316fc0bad20
+  version: 0.43.1
+  sha256: 5c0a853c3492d447b7be125fa2aeda8123e5ac807ecd020230260410aa8f49d8
 
 package:
   name: pixi
@@ -17,8 +17,8 @@ source:
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
-- url: https://github.com/astral-sh/uv/archive/refs/tags/0.6.1.tar.gz
-  sha256: 70118971a2b6b7b6ac8e028b2505178b6a75ae77c314a60ff8403645e1ef7d78
+- url: https://github.com/astral-sh/uv/archive/refs/tags/0.6.9.tar.gz
+  sha256: a8c8dd9663f7c118195203b2b6d8d3b5cd62c277289e60cf3e77790d53245a3c
   target_directory: uv
   patches:
   - 0001-conda-build.patch
@@ -33,13 +33,13 @@ source:
   target_directory: uv/tl
 
 build:
-  number: 1
+  number: 0
   script:
   - if: win
     then:
-    - cargo install --no-track --path pixi --profile dist --root "%LIBRARY_PREFIX%"
+    - cargo install --locked --no-track --path pixi --profile dist --root "%LIBRARY_PREFIX%"
     else:
-    - cargo install --no-track --path pixi --profile dist --root "$PREFIX"
+    - cargo install --locked --no-track --path pixi --profile dist --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and compiler('c')[:2] != 'vs'
