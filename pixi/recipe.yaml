@@ -1,6 +1,6 @@
 context:
-  version: 0.43.1
-  sha256: 5c0a853c3492d447b7be125fa2aeda8123e5ac807ecd020230260410aa8f49d8
+  version: 0.43.3
+  sha256: 728b22806c5c3978c14362bb406c6ff4e11f1cf7bf031928a40dc883a09a8840
 
 package:
   name: pixi
