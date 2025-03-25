@@ -1,16 +1,10 @@
 context:
   version: 0.4.15
-  sha256: 8033251eb8b9693c4a3105db37ca922f064b27ea43d4552e58626d6826ebc5e4
+  sha256: 317a1d17798c45d5e81facd0f910aa6f1457826c4cc359fed8011d116f194043
 
 recipe:
   name: libcmd
   version: ${{ version }}
-
-source:
-  url: https://github.com/reactos/reactos/archive/refs/tags/${{ version }}.tar.gz
-  sha256: ${{ sha256 }}
-  patches:
-  - 0001-cmd.dll.patch
 
 build:
   number: 0
@@ -20,6 +14,11 @@ build:
   - compiler('cxx')[:2] != 'vs'
 
 cache:
+  source:
+    url: https://github.com/reactos/reactos/archive/refs/tags/${{ version }}-release.tar.gz
+    sha256: ${{ sha256 }}
+    patches:
+    - 0001-cmd.dll.patch
   requirements:
     build:
     - cmake
