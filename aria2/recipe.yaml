@@ -1,7 +1,7 @@
 context:
   version: 1.37.0
   sha256: 60a420ad7085eb616cb6e2bdf0a7206d68ff3d37fb5a956dc44242eb2f79b66b
-  sqlite_version: 3.47.2
+  sqlite_version: 3.49.1
 
 package:
   name: aria2
@@ -12,11 +12,11 @@ source:
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
-- url: https://mirrors.cernet.edu.cn/msys2/mingw/ucrt64/mingw-w64-ucrt-x86_64-gettext-tools-0.23.1-1-any.pkg.tar.zst
-  sha256: 10e452440b4e30cfcd0840bb51e0e034f0ab71927f0abecb5364f668a5c5a4a6
+- url: https://mirrors.cernet.edu.cn/msys2/mingw/ucrt64/mingw-w64-ucrt-x86_64-gettext-tools-0.24-1-any.pkg.tar.zst
+  sha256: 969b57acfe0d612ee2eae501b0cc13719a6b59822a4aff6d9e58e335c69d3e2d
 
 build:
-  number: 2
+  number: 3
   script:
     env:
       MSYS2_PATH_TYPE: inherit
