@@ -9,8 +9,10 @@ readme = 'README.md'
 repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
-git = '>=2.47.1'
 rattler-build = '>=0.32.1'
+
+[target.win-64.dependencies]
+m2-patch = '*'
 
 [tasks.build]
 cmd = [
