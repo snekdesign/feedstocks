@@ -11,6 +11,9 @@ repository = 'https://github.com/snekdesign/feedstocks'
 [dependencies]
 rattler-build = '>=0.32.1'
 
+[target.linux-64.dependencies]
+patch = '*'
+
 [target.win-64.dependencies]
 m2-patch = '*'
 

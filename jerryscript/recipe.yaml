@@ -25,10 +25,11 @@ requirements:
   - cmake >=3.10.0
   - python 3.*
   - if: linux
-    then: make
-  host:
-  - if: linux
     then: diffutils
+  - if: linux
+    then: make
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
 
 about:
   license: Apache-2.0

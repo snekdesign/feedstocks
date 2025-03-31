@@ -31,6 +31,8 @@ requirements:
   build:
   - ${{ compiler('c') }}
   - rust ==1.83.0
+  - if: linux
+    then: diffutils
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
 

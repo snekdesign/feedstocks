@@ -34,6 +34,9 @@ cdt_name:
 - cos7
 
 microarch_level:
+- if: linux and x86_64
+  then: 3
 - if: osx and x86_64
   then: 2
-  else: 0
+- if: win or not x86_64
+  then: 0
