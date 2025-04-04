@@ -4,14 +4,16 @@ Date: Tue, 20 Aug 2024 20:44:27 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                                    | 76 +++++++++----------
+ Cargo.toml                                    | 79 ++++++++++---------
+ build.rs                                      |  3 +
  .../src/prefix/compressed_mapping_client.rs   | 21 ++++-
  src/global/install.rs                         |  2 +-
  src/global/project/parsed_manifest.rs         |  6 +-
- 4 files changed, 60 insertions(+), 45 deletions(-)
+ 5 files changed, 66 insertions(+), 45 deletions(-)
+ create mode 100644 build.rs
 
 diff --git a/Cargo.toml b/Cargo.toml
-index e5ee115..4223b0b 100644
+index 8995851..5504978 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -99,55 +99,55 @@ toml_edit = "0.22.24"
@@ -107,15 +109,27 @@ index e5ee115..4223b0b 100644
  winapi = { version = "0.3.9", default-features = false }
  xxhash-rust = "0.8.15"
  zip = { version = "2.4.2", default-features = false }
-@@ -380,7 +380,7 @@ tokio = { workspace = true, features = ["rt"] }
+@@ -380,7 +380,10 @@ tokio = { workspace = true, features = ["rt"] }
  
  [patch.crates-io]
  # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
 -version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "b70cf707aa43f21b32f3a61b8a0889b15032d5c4" }
 +version-ranges = { path = "../uv/pubgrub/version-ranges" }
++
++[build-dependencies]
++thunk-rs = { version = "0.3.2", features = ["win7"], default-features = false }
  
  # Config for 'dist'
  [workspace.metadata.dist]
+diff --git a/build.rs b/build.rs
+new file mode 100644
+index 0000000..507c62e
+--- /dev/null
++++ b/build.rs
+@@ -0,0 +1,3 @@
++fn main() {
++    thunk::thunk();
++}
 diff --git a/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs b/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
 index c10c460..4e8c522 100644
 --- a/crates/pypi_mapping/src/prefix/compressed_mapping_client.rs
@@ -167,10 +181,10 @@ index c10c460..4e8c522 100644
                      .await?
                      .error_for_status()
 diff --git a/src/global/install.rs b/src/global/install.rs
-index 346ee13..554dfea 100644
+index 7dfe9ad..7f9c2ba 100644
 --- a/src/global/install.rs
 +++ b/src/global/install.rs
-@@ -53,7 +53,7 @@ pub(crate) fn script_exec_mapping<'a>(
+@@ -54,7 +54,7 @@ pub(crate) fn script_exec_mapping<'a>(
              } else {
                  false
              }
@@ -180,7 +194,7 @@ index 346ee13..554dfea 100644
          matching_executables.first()
      };
 diff --git a/src/global/project/parsed_manifest.rs b/src/global/project/parsed_manifest.rs
-index a9ada65..323835c 100644
+index 21efb94..50ea70e 100644
 --- a/src/global/project/parsed_manifest.rs
 +++ b/src/global/project/parsed_manifest.rs
 @@ -373,11 +373,7 @@ impl FromStr for ExposedName {
