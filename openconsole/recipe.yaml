@@ -1,6 +1,6 @@
 context:
-  version: 1.22.10352
-  sha256: 76536c9cf796c19052931f109e150c458d523cdfce0f89ac4b4373a11f418c28
+  version: 1.22.10731
+  sha256: 06bb5c28956ca16f4cbbe00573e890ed3cade1400d599755ffe399566208d886
 
 package:
   name: openconsole
@@ -28,6 +28,7 @@ requirements:
   - ${{ compiler('cxx') }}
   host:
   - fmt
+  - icu 75.*
   - mingw-w64-ucrt-x86_64-crt-git
   - wil
 
