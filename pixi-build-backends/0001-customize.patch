@@ -9,17 +9,19 @@ Subject: [PATCH] customize
  2 files changed, 27 insertions(+), 12 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index c4f5865..13a6cde 100644
+index ae98769..20f0fe6 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -35,15 +35,21 @@ jsonrpc-stdio-server = "18.0.0"
+@@ -35,7 +35,7 @@ jsonrpc-stdio-server = "18.0.0"
  jsonrpc-http-server = "18.0.0"
  jsonrpc-core = "18.0.0"
  
--rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "6744398", default-features = false }
-+rattler-build = { path = "../rattler-build", default-features = false }
+-rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "6744398", default-features = false, features = [
++rattler-build = { path = "../rattler-build", default-features = false, features = [
+   "rustls-tls",
+ ] }
  
- rattler_conda_types = { version = "0.30.2", default-features = false }
+@@ -43,9 +43,15 @@ rattler_conda_types = { version = "0.30.2", default-features = false }
  rattler_package_streaming = { version = "0.22.27", default-features = false }
  rattler_virtual_packages = { version = "2.0.2", default-features = false }
  
@@ -41,7 +43,7 @@ index c4f5865..13a6cde 100644
 +opt-level = 3
 +strip = true
 diff --git a/crates/pixi-build-backend/src/cli.rs b/crates/pixi-build-backend/src/cli.rs
-index 521c8ad..f68e7b5 100644
+index 814f23f..7f4eae4 100644
 --- a/crates/pixi-build-backend/src/cli.rs
 +++ b/crates/pixi-build-backend/src/cli.rs
 @@ -17,6 +17,7 @@ use rattler_conda_types::{ChannelConfig, GenericVirtualPackage, Platform};
@@ -52,7 +54,7 @@ index 521c8ad..f68e7b5 100644
  
  use crate::{
      consts,
-@@ -169,12 +170,16 @@ async fn conda_get_metadata<T: ProtocolInstantiator>(
+@@ -171,12 +172,16 @@ async fn conda_get_metadata<T: ProtocolInstantiator>(
      manifest_path: &Path,
      host_platform: Option<Platform>,
  ) -> miette::Result<CondaMetadataResult> {
@@ -72,7 +74,7 @@ index 521c8ad..f68e7b5 100644
  
      let protocol = initialize(factory, manifest_path).await?;
  
-@@ -217,12 +222,16 @@ async fn capabilities<Factory: ProtocolInstantiator>() -> miette::Result<Backend
+@@ -219,12 +224,16 @@ async fn capabilities<Factory: ProtocolInstantiator>() -> miette::Result<Backend
  
  /// Frontend implementation for building a conda package.
  async fn build<T: ProtocolInstantiator>(factory: T, manifest_path: &Path) -> miette::Result<()> {
