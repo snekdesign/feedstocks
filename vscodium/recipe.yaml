@@ -1,6 +1,6 @@
 context:
-  version: 1.99.02277
-  sha256: 83fbfaa6fd66a486dd3df7a4c8507e886a9527e85e10d269664322166fc854c8
+  version: 1.99.02289
+  sha256: db1b2fabd8d3abedf520d42b5fc5440adefa9ee27b333b2e733c0686870ab29f
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.3
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -18,9 +18,9 @@ context:
   # https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
   pyright_sha256: 9d08d4082c3607c6e6aedd3bff33297f8981a3e6dd9b8bf52f6255ef4670255b
   # https://open-vsx.org/api/ms-python/python/versions?size=1
-  python_version: 2025.2.0
+  python_version: 2025.4.0
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
-  python_sha256: b6e7f640bc1b2a184597b518d8d5f73b447009a650c59fa5d2b1b4f68d19d9b1
+  python_sha256: 31b22cdb399b0aaeb7705e8e38665e0c33ac3dacd13852a1a8b7fb151c728b72
   # https://api.github.com/repos/ktnrg45/vs-code-cython/releases/latest
   cython_version: 1.0.3
   cython_sha256: 68ad4e17045ce6c90ba24b8416266419582a688db63d35c6175135e9cc741034
