@@ -5,7 +5,7 @@ Subject: [PATCH] conda build
 
 ---
  clientloop.c                             | 2 +-
- contrib/win32/openssh/paths.targets      | 2 +-
+ contrib/win32/openssh/paths.targets      | 4 ++--
  contrib/win32/win32compat/inc/stdio.h    | 1 -
  contrib/win32/win32compat/win32_dirent.c | 2 +-
  openbsd-compat/setenv.c                  | 1 -
@@ -13,7 +13,7 @@ Subject: [PATCH] conda build
  sftp-client.c                            | 2 ++
  sftp.c                                   | 2 ++
  ssh-keygen.c                             | 2 ++
- 9 files changed, 10 insertions(+), 6 deletions(-)
+ 9 files changed, 11 insertions(+), 7 deletions(-)
 
 diff --git a/clientloop.c b/clientloop.c
 index 2d6e42b..4602e56 100644
@@ -29,10 +29,10 @@ index 2d6e42b..4602e56 100644
  	    sigaddset(&bsigset, SIGINT) == -1 ||
  	    sigaddset(&bsigset, SIGQUIT) == -1 ||
 diff --git a/contrib/win32/openssh/paths.targets b/contrib/win32/openssh/paths.targets
-index 79f4b87..383deb6 100644
+index ec92853..dd4128a 100644
 --- a/contrib/win32/openssh/paths.targets
 +++ b/contrib/win32/openssh/paths.targets
-@@ -21,7 +21,7 @@
+@@ -21,12 +21,12 @@
      <fido2-arm-Path>$(SolutionDir)\libfido2\ARM\Release\static\</fido2-arm-Path>
      <ZLib-Path>$(SolutionDir)\ZLib\sdk\</ZLib-Path>
      <ZLib-x86-Path>$(SolutionDir)\ZLib\bin\x86\</ZLib-x86-Path>
@@ -41,6 +41,12 @@ index 79f4b87..383deb6 100644
      <ZLib-arm64-Path>$(SolutionDir)\ZLib\bin\arm64\</ZLib-arm64-Path>
      <ZLib-arm-Path>$(SolutionDir)\ZLib\bin\arm\</ZLib-arm-Path>
      <UseOpenSSL>true</UseOpenSSL>
+     <SSLLib>libcrypto.lib;</SSLLib>
+-    <WindowsSDKVersion>10.0.22621.0</WindowsSDKVersion>
++    <WindowsSDKVersion>10.0.26100.0</WindowsSDKVersion>
+     <AdditionalDependentLibs>bcrypt.lib;Userenv.lib;Crypt32.lib;Ws2_32.lib;Secur32.lib;Shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Netapi32.lib;Rpcrt4.lib;ntdll.lib</AdditionalDependentLibs>
+     <MinimalCoreWin>false</MinimalCoreWin>
+   </PropertyGroup>
 diff --git a/contrib/win32/win32compat/inc/stdio.h b/contrib/win32/win32compat/inc/stdio.h
 index 269ece8..bf00424 100644
 --- a/contrib/win32/win32compat/inc/stdio.h
@@ -116,12 +122,12 @@ index c968210..729eaa0 100644
  FILE* infile;
  
 diff --git a/ssh-keygen.c b/ssh-keygen.c
-index 55166d7..b40cd10 100644
+index 41896ac..1948a5b 100644
 --- a/ssh-keygen.c
 +++ b/ssh-keygen.c
-@@ -69,6 +69,8 @@
- 
+@@ -73,6 +73,8 @@
  #define DEFAULT_KEY_TYPE_NAME "ed25519"
+ #endif /* WINDOWS */
  
 +#pragma warning(disable: 4703)
 +
