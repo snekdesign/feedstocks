@@ -1,6 +1,6 @@
 context:
-  version: 1.99.12392
-  sha256: 0ee49833d9d005235eef4157db7f73c9bef6305ec86c54e5e7755c593cd76115
+  version: 1.99.22418
+  sha256: 003061fbf10c069c8d2b228507a7cc8e15acf3013e5021ad60f3497692a63c1a
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.4
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -37,7 +37,7 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ version }}/VSCodium-win32-x64-${{ version }}.zip
+- url: https://mirrors.sdu.edu.cn/github-release/VSCodium_vscodium/${{ version }}/VSCodium-win32-x64-${{ version }}.zip
   sha256: ${{ sha256 }}
   target_directory: vscodium
 - url: https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/${{ cmake_version }}/file/KylinIdeTeam.cmake-intellisence-${{ cmake_version }}.vsix
