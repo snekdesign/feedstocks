@@ -1,14 +1,14 @@
 context:
-  version: 7.4.7
-  sha256: 5a362bb42146673a57c193d424e1a84c449e204eab1a8dbcdc699f9da3fc690d
-  dotnet_version: '8.0'
+  version: 7.5.0
+  sha256: 599b4b5bda3639d667bd420a4e21110ed44e08a014e92532c2fe6c2ce64d21db
+  dotnet_version: '9.0'
 
 package:
   name: powershell
   version: ${{ version }}
 
 source:
-  url: https://github.com/PowerShell/PowerShell/releases/download/v${{ version }}/PowerShell-${{ version }}-win-fxdependentWinDesktop.zip
+  url: https://mirrors.sdu.edu.cn/github-release/PowerShell_PowerShell/v${{ version }}/PowerShell-${{ version }}-win-fxdependentWinDesktop.zip
   sha256: ${{ sha256 }}
 
 build:
@@ -20,7 +20,6 @@ build:
 requirements:
   build:
   - m2-coreutils
-  - python
   host:
   - dotnet-desktop ${{ dotnet_version }}.*
   run:
