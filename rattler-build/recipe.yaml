@@ -1,28 +1,25 @@
 context:
-  version: 0.39.0
-  sha256: 6625a0175d62d0b3cc957e683e9de4258a413db6e6a7a613be86cc15a495c2cf
+  version: 0.40.0
+  sha256: 9da7dd6d0c86ca5fc0eb06768a9edaf7288a54c936f2d20f7923fcaf705e96db
 
 package:
   name: rattler-build
   version: ${{ version }}
 
 source:
-- url: https://github.com/prefix-dev/rattler-build/archive/refs/tags/v${{ version }}.tar.gz
+  url: https://github.com/prefix-dev/rattler-build/archive/refs/tags/v${{ version }}.tar.gz
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
-- url: https://github.com/wolfv/zip2/archive/refs/heads/patched.tar.gz
-  sha256: 0d2510a4cab7d8ce826a5122ccf614d1e5955d1a4349c37e6d5f7dd2942adf8b
-  target_directory: zip2
 
 build:
   number: 0
   script:
   - if: win
     then:
-    - cargo install --no-track --path . --root "%LIBRARY_PREFIX%"
+    - cargo install --bin rattler-build --no-track --path . --root "%LIBRARY_PREFIX%"
     else:
-    - cargo install --no-track --path . --root "$PREFIX"
+    - cargo install --bin rattler-build --no-track --path . --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and compiler('c')[:2] != 'vs'
@@ -35,6 +32,9 @@ requirements:
     then: diffutils
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
+  run:
+  - if: linux
+    then: patchelf
 
 tests:
 - script:

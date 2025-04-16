@@ -4,15 +4,15 @@ Date: Thu, 7 Nov 2024 20:10:12 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                |  8 +++++++-
+ Cargo.toml                |  6 ++++++
  src/tool_configuration.rs | 11 +++++++----
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 4a90ee4..9b8363e 100644
+index b1b99d9..5eee6f7 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -189,9 +189,15 @@ tracing-test = "0.2.5"
+@@ -189,6 +189,12 @@ tracing-test = "0.2.5"
  tracing-indicatif = "0.3.9"
  serial_test = "3.2.0"
  
@@ -23,14 +23,10 @@ index 4a90ee4..9b8363e 100644
 +strip = true
 +
  [patch.crates-io]
- # this fork contains fixes for slow zip reading and large file writing
--zip = { git = "https://github.com/wolfv/zip2", branch = "patched" }
-+zip = { path = "zip2" }
- 
  # rattler = { git = "https://github.com/wolfv/rattler", branch = "pub-schema" }
  # rattler_sandbox = { git = "https://github.com/wolfv/rattler", branch = "pub-schema" }
 diff --git a/src/tool_configuration.rs b/src/tool_configuration.rs
-index 1802ed8..0235f8e 100644
+index bb1d3f9..2701d8b 100644
 --- a/src/tool_configuration.rs
 +++ b/src/tool_configuration.rs
 @@ -14,6 +14,7 @@ use rattler_repodata_gateway::Gateway;
@@ -41,7 +37,7 @@ index 1802ed8..0235f8e 100644
  
  use crate::console_utils::LoggingOutputHandler;
  
-@@ -298,10 +299,12 @@ impl ConfigurationBuilder {
+@@ -312,10 +313,12 @@ impl ConfigurationBuilder {
              reqwest_client_from_auth_storage(None).expect("failed to create client")
          });
          let package_cache = PackageCache::new(cache_dir.join(rattler_cache::PACKAGE_CACHE_DIR));
