@@ -1,6 +1,6 @@
 context:
-  version: 1.99.22418
-  sha256: 003061fbf10c069c8d2b228507a7cc8e15acf3013e5021ad60f3497692a63c1a
+  version: 1.99.32562
+  sha256: ef02170219f281b574fba424e0f0d905763f88e5ff796f9f9d6028295c529827
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.4
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
