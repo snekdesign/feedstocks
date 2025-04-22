@@ -23,23 +23,23 @@ index bc7bfd6..12c0484 100644
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
 diff --git a/Cargo.lock b/Cargo.lock
-index a284b10..73a6d3a 100644
+index bedfb15..2b1be2d 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -4026,6 +4026,12 @@ dependencies = [
+@@ -4027,6 +4027,12 @@ dependencies = [
   "once_cell",
  ]
  
 +[[package]]
 +name = "thunk-rs"
-+version = "0.3.2"
++version = "0.3.3"
 +source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "ac42a4abd0277e5e5c515b4157712673c2e6c855ba107b2c70605871c1973e26"
++checksum = "7cbc000e786a7ea2cfa3a85ef77cf86bfdadeaa2b215ec4751df66442fa4632a"
 +
  [[package]]
  name = "tikv-jemalloc-sys"
  version = "0.6.0+5.3.0-1-ge13ca993e8ccb9ba9847cc330696e02839f328f7"
-@@ -4604,6 +4610,7 @@ dependencies = [
+@@ -4605,6 +4611,7 @@ dependencies = [
   "tempfile",
   "textwrap",
   "thiserror 2.0.12",
@@ -48,7 +48,7 @@ index a284b10..73a6d3a 100644
   "toml",
   "toml_edit",
 diff --git a/Cargo.toml b/Cargo.toml
-index e597b51..5a06534 100644
+index a8797f3..a0c698d 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -79,7 +79,7 @@ async-channel = { version = "2.3.1" }
@@ -60,7 +60,7 @@ index e597b51..5a06534 100644
  axoupdater = { version = "0.9.0", default-features = false }
  backon = { version = "1.3.0" }
  base64 = { version = "0.22.1" }
-@@ -132,7 +132,7 @@ percent-encoding = { version = "2.3.1" }
+@@ -133,7 +133,7 @@ percent-encoding = { version = "2.3.1" }
  petgraph = { version = "0.7.1" }
  proc-macro2 = { version = "1.0.86" }
  procfs = { version = "0.17.0", default-features = false, features = ["flate2"] }
@@ -69,7 +69,7 @@ index e597b51..5a06534 100644
  quote = { version = "1.0.37" }
  rayon = { version = "1.10.0" }
  reflink-copy = { version = "0.1.19" }
-@@ -163,7 +163,7 @@ target-lexicon = { version = "0.13.0" }
+@@ -164,7 +164,7 @@ target-lexicon = { version = "0.13.0" }
  tempfile = { version = "3.14.0" }
  textwrap = { version = "0.16.1" }
  thiserror = { version = "2.0.0" }
@@ -78,8 +78,8 @@ index e597b51..5a06534 100644
  tokio = { version = "1.40.0", features = ["fs", "io-util", "macros", "process", "rt", "signal", "sync"] }
  tokio-stream = { version = "0.1.16" }
  tokio-util = { version = "0.7.12", features = ["compat", "io"] }
-@@ -176,7 +176,7 @@ tracing-tree = { version = "0.4.0" }
- unicode-width = { version = "0.1.13" }
+@@ -178,7 +178,7 @@ tracing-tree = { version = "0.4.0" }
+ unicode-width = { version = "0.2.0" }
  unscanny = { version = "0.1.0" }
  url = { version = "2.5.2", features = ["serde"] }
 -version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "b70cf707aa43f21b32f3a61b8a0889b15032d5c4" }
@@ -87,7 +87,7 @@ index e597b51..5a06534 100644
  walkdir = { version = "2.5.0" }
  which = { version = "7.0.0", features = ["regex"] }
  windows-registry = { version = "0.5.0" }
-@@ -230,6 +230,8 @@ large_stack_arrays = "allow"
+@@ -232,6 +232,8 @@ large_stack_arrays = "allow"
  [profile.release]
  strip = true
  lto = "fat"
@@ -97,16 +97,18 @@ index e597b51..5a06534 100644
  # This profile is meant to mimic the `release` profile as closely as
  # possible, but using settings that are more beneficial for iterative
 diff --git a/crates/uv/Cargo.toml b/crates/uv/Cargo.toml
-index 3db0da9..f56720e 100644
+index a34a801..e420063 100644
 --- a/crates/uv/Cargo.toml
 +++ b/crates/uv/Cargo.toml
-@@ -162,3 +162,6 @@ slow-tests = []
- test-ecosystem = []
+@@ -164,5 +164,8 @@ test-ecosystem = []
  # Adds self-update functionality.
  self-update = ["axoupdater", "uv-cli/self-update"]
-+
+ 
 +[build-dependencies]
 +thunk-rs = { version = "0.3.2", default-features = false, features = ["win7"] }
++
+ [package.metadata.dist]
+ dist = true
 diff --git a/crates/uv/build.rs b/crates/uv/build.rs
 new file mode 100644
 index 0000000..507c62e
