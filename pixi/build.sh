@@ -1,1 +1,7 @@
-cargo install --locked --no-track --path pixi --profile dist --root "$PREFIX"
+cargo install \
+    --features performance \
+    --locked \
+    --no-track \
+    --path pixi \
+    --profile dist \
+    --root "$PREFIX"
