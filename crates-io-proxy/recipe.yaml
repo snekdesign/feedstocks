@@ -1,0 +1,45 @@
+context:
+  version: 0.2.4
+  sha256: 3d5a1ee65596eb165e28645b658053b0aa91a5d9a1ad4ff0f3f06f21efdf9913
+
+package:
+  name: crates-io-proxy
+  version: ${{ version }}
+
+source:
+  url: https://github.com/ravenexp/crates-io-proxy/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-customize.patch
+
+build:
+  number: 0
+  script:
+  - if: win
+    then:
+    - cargo install --no-track --path . --root "%LIBRARY_PREFIX%"
+    else:
+    - cargo install --no-track --path . --root "$PREFIX"
+  skip:
+  - build_platform != target_platform
+  - win and compiler('c')[:2] != 'vs'
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - rust
+  - if: linux
+    then: diffutils
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
+
+tests:
+- script:
+  - crates-io-proxy -V
+
+about:
+  license: Apache-2.0 OR MIT
+  license_file:
+  - LICENSE-APACHE
+  - LICENSE-MIT
+  summary: Caching HTTP proxy server for the crates.io registry
