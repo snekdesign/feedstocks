@@ -9,7 +9,7 @@ readme = 'README.md'
 repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
-rattler-build = '>=0.32.1'
+rattler-build = '>=0.41.0'
 
 [target.linux-64.dependencies]
 patch = '*'
@@ -21,10 +21,14 @@ m2-patch = '*'
 cmd = [
     'rattler-build',
     'build',
+    '--config-file', '$PIXI_HOME/config.toml',
     '--no-include-recipe',
     '--variant-config', 'variants.yaml',
     '--recipe-dir',
 ]
+
+[tasks.build.env]
+PIXI_HOME = '~/.pixi'
 
 [environments.boa-build]
 features = ['boa-build']

@@ -37,7 +37,7 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://mirrors.sdu.edu.cn/github-release/VSCodium_vscodium/${{ version }}/VSCodium-win32-x64-${{ version }}.zip
+- url: https://github.com/VSCodium/VSCodium/releases/download/${{ version }}/VSCodium-win32-x64-${{ version }}.zip
   sha256: ${{ sha256 }}
   target_directory: vscodium
 - url: https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/${{ cmake_version }}/file/KylinIdeTeam.cmake-intellisence-${{ cmake_version }}.vsix

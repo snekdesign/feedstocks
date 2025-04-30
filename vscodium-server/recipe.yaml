@@ -9,7 +9,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://mirror.nju.edu.cn/github-release/VSCodium/vscodium/${{ version_full }}/vscodium-reh-web-win32-x64-${{ version_full }}.tar.gz
+  url: https://github.com/VSCodium/VSCodium/releases/download/${{ version_full }}/vscodium-reh-web-win32-x64-${{ version_full }}.tar.gz
   sha256: ${{ sha256 }}
   target_directory: vscodium-server
 

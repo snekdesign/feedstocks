@@ -7,7 +7,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://mirrors.huaweicloud.com/nginx/nginx-${{ version }}.tar.gz
+  url: https://nginx.org/download/nginx-${{ version }}.tar.gz
   sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch

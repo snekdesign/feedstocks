@@ -8,11 +8,11 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://mirrors.sdu.edu.cn/github-release/aria2_aria2/release-${{ version }}/aria2-${{ version }}.tar.xz
+- url: https://github.com/aria2/aria2/releases/download/release-${{ version }}/aria2-${{ version }}.tar.xz
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
-- url: https://mirrors.cernet.edu.cn/msys2/mingw/ucrt64/mingw-w64-ucrt-x86_64-gettext-tools-0.24-1-any.pkg.tar.zst
+- url: https://mirror.msys2.org/mingw/ucrt64/mingw-w64-ucrt-x86_64-gettext-tools-0.24-2-any.pkg.tar.zst
   sha256: 969b57acfe0d612ee2eae501b0cc13719a6b59822a4aff6d9e58e335c69d3e2d
 
 build:
