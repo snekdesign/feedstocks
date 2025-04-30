@@ -1,7 +1,7 @@
 [project]
 name = 'feedstocks'
 channels = ['conda-forge']
-platforms = ['win-64']
+platforms = ['linux-64', 'osx-64', 'win-64']
 
 authors = ['snekdesign']
 license-file = 'LICENSE'
@@ -11,7 +11,7 @@ repository = 'https://github.com/snekdesign/feedstocks'
 [dependencies]
 rattler-build = '>=0.41.0'
 
-[target.linux-64.dependencies]
+[target.unix.dependencies]
 patch = '*'
 
 [target.win-64.dependencies]
