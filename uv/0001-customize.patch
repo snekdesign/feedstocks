@@ -23,10 +23,10 @@ index bc7bfd6..12c0484 100644
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
 diff --git a/Cargo.lock b/Cargo.lock
-index bedfb15..2b1be2d 100644
+index c5237d4..f96e033 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -4027,6 +4027,12 @@ dependencies = [
+@@ -4029,6 +4029,12 @@ dependencies = [
   "once_cell",
  ]
  
@@ -39,7 +39,7 @@ index bedfb15..2b1be2d 100644
  [[package]]
  name = "tikv-jemalloc-sys"
  version = "0.6.0+5.3.0-1-ge13ca993e8ccb9ba9847cc330696e02839f328f7"
-@@ -4605,6 +4611,7 @@ dependencies = [
+@@ -4614,6 +4620,7 @@ dependencies = [
   "tempfile",
   "textwrap",
   "thiserror 2.0.12",
@@ -48,28 +48,28 @@ index bedfb15..2b1be2d 100644
   "toml",
   "toml_edit",
 diff --git a/Cargo.toml b/Cargo.toml
-index a8797f3..a0c698d 100644
+index 717c925..8270eaf 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -79,7 +79,7 @@ async-channel = { version = "2.3.1" }
  async-compression = { version = "0.4.12", features = ["bzip2", "gzip", "xz", "zstd"] }
  async-trait = { version = "0.1.82" }
  async_http_range_reader = { version = "0.9.1" }
--async_zip = { git = "https://github.com/charliermarsh/rs-async-zip", rev = "c909fda63fcafe4af496a07bfda28a5aae97e58d", features = ["deflate", "tokio"] }
-+async_zip = { path = "../rs-async-zip", features = ["deflate", "tokio"] }
+-async_zip = { git = "https://github.com/charliermarsh/rs-async-zip", rev = "c909fda63fcafe4af496a07bfda28a5aae97e58d", features = ["bzip2", "deflate", "lzma", "tokio", "xz", "zstd"] }
++async_zip = { path = "../rs-async-zip", features = ["bzip2", "deflate", "lzma", "tokio", "xz", "zstd"] }
  axoupdater = { version = "0.9.0", default-features = false }
  backon = { version = "1.3.0" }
  base64 = { version = "0.22.1" }
-@@ -133,7 +133,7 @@ percent-encoding = { version = "2.3.1" }
- petgraph = { version = "0.7.1" }
+@@ -134,7 +134,7 @@ percent-encoding = { version = "2.3.1" }
+ petgraph = { version = "0.8.0" }
  proc-macro2 = { version = "1.0.86" }
  procfs = { version = "0.17.0", default-features = false, features = ["flate2"] }
--pubgrub = { git = "https://github.com/astral-sh/pubgrub", rev = "b70cf707aa43f21b32f3a61b8a0889b15032d5c4" }
+-pubgrub = { git = "https://github.com/astral-sh/pubgrub", rev = "a3b4db3abb1829ce889fb89fa6d157fef529ef7e" }
 +pubgrub = { path = "../pubgrub" }
  quote = { version = "1.0.37" }
  rayon = { version = "1.10.0" }
  reflink-copy = { version = "0.1.19" }
-@@ -164,7 +164,7 @@ target-lexicon = { version = "0.13.0" }
+@@ -165,7 +165,7 @@ target-lexicon = { version = "0.13.0" }
  tempfile = { version = "3.14.0" }
  textwrap = { version = "0.16.1" }
  thiserror = { version = "2.0.0" }
@@ -78,16 +78,16 @@ index a8797f3..a0c698d 100644
  tokio = { version = "1.40.0", features = ["fs", "io-util", "macros", "process", "rt", "signal", "sync"] }
  tokio-stream = { version = "0.1.16" }
  tokio-util = { version = "0.7.12", features = ["compat", "io"] }
-@@ -178,7 +178,7 @@ tracing-tree = { version = "0.4.0" }
+@@ -179,7 +179,7 @@ tracing-tree = { version = "0.4.0" }
  unicode-width = { version = "0.2.0" }
  unscanny = { version = "0.1.0" }
  url = { version = "2.5.2", features = ["serde"] }
--version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "b70cf707aa43f21b32f3a61b8a0889b15032d5c4" }
+-version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "a3b4db3abb1829ce889fb89fa6d157fef529ef7e" }
 +version-ranges = { path = "../pubgrub/version-ranges" }
  walkdir = { version = "2.5.0" }
  which = { version = "7.0.0", features = ["regex"] }
  windows-registry = { version = "0.5.0" }
-@@ -232,6 +232,8 @@ large_stack_arrays = "allow"
+@@ -233,6 +233,8 @@ large_stack_arrays = "allow"
  [profile.release]
  strip = true
  lto = "fat"
@@ -97,15 +97,15 @@ index a8797f3..a0c698d 100644
  # This profile is meant to mimic the `release` profile as closely as
  # possible, but using settings that are more beneficial for iterative
 diff --git a/crates/uv/Cargo.toml b/crates/uv/Cargo.toml
-index a34a801..e420063 100644
+index eba2758..abe6073 100644
 --- a/crates/uv/Cargo.toml
 +++ b/crates/uv/Cargo.toml
-@@ -164,5 +164,8 @@ test-ecosystem = []
- # Adds self-update functionality.
- self-update = ["axoupdater", "uv-cli/self-update"]
+@@ -175,5 +175,8 @@ slow-tests = []
+ # Includes test cases that require ecosystem packages
+ test-ecosystem = []
  
 +[build-dependencies]
-+thunk-rs = { version = "0.3.2", default-features = false, features = ["win7"] }
++thunk-rs = { version = "0.3.3", default-features = false, features = ["win7"] }
 +
  [package.metadata.dist]
  dist = true
@@ -119,5 +119,4 @@ index 0000000..507c62e
 +    thunk::thunk();
 +}
 -- 
-2.49.0.windows.1
 
