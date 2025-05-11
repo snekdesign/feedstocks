@@ -1,0 +1,282 @@
+context:
+  version: 2.1.1
+  sha256: 789d3d89fe8ca9f06344da21797e3d949ad1ff0ae4c633dc242a333e0ee37485
+
+package:
+  name: micromamba
+  version: ${{ version }}
+
+source:
+- url: https://github.com/mamba-org/mamba/archive/refs/tags/${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-conda-build.patch
+- url: https://mirror.nyist.edu.cn/github-release/microsoft/vcpkg-tool/2025-04-16 Release/vcpkg.exe
+  sha256: 09cfc79ea1fbd8a5cee7c1d8d42d5334df0e7b9ad015ac4195b8ca94082f1ee5
+  target_directory: vcpkg
+- url: https://github.com/microsoft/vcpkg/archive/refs/tags/2025.04.09.tar.gz
+  sha256: 9a129eb4206157a03013dd87805406ef751a892170eddcaaf94a9b5db8a89b0f
+  target_directory: vcpkg
+- url: https://github.com/ip7z/7zip/releases/download/24.09/7z2409.exe
+  sha256: e35e4374100b52e697e002859aefdd5533bcbf4118e5d2210fae6de318947c41
+  target_directory: vcpkg/downloads
+  file_name: 7z2409.7z.exe
+- url: https://github.com/ip7z/7zip/releases/download/24.09/7zr.exe
+  sha256: d2c0045523cf053a6b43f9315e9672fc2535f06aeadd4ffa53c729cd8b2b6dfe
+  target_directory: vcpkg/downloads/tools/7zr-24.09-windows
+- url: https://github.com/GNOME/libxml2/commit/fe1ee0f25f43e33a9981fd6fe7b0483a8c8b5e8d.diff?full_index=1
+  sha256: 037c937bbe3d8adca5576dfa2d105158d3f84c2f73473fcb5ae7c7f5798cab6e
+  target_directory: vcpkg/downloads
+  file_name: Add-missing-Bcrypt-link.patch
+- url: https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
+  sha256: ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269
+  target_directory: vcpkg/downloads
+  file_name: bzip2-1.0.8.tar.gz
+- url: https://github.com/curl/curl/archive/curl-8_13_0.tar.gz
+  sha256: ccc5ba45d9f5320c70ffb24e5411b66ba55ea1f333bf78be0963ed90a9328699
+  target_directory: vcpkg/downloads
+  file_name: curl-curl-curl-8_13_0.tar.gz
+- url: https://github.com/facebook/zstd/archive/v1.5.7.tar.gz
+  sha256: 37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c9012ee3
+  target_directory: vcpkg/downloads
+  file_name: facebook-zstd-v1.5.7.tar.gz
+- url: https://github.com/GNOME/libxml2/commit/b347a008a745778630a9eb4fbd29694f3c135bfa.diff?full_index=1
+  sha256: 449365b38a8d239875fe6246064be6a36ddb506ec367414c88ef0918486e49a3
+  target_directory: vcpkg/downloads
+  file_name: Fix-compatibility-in-package-version-file.patch
+- url: https://github.com/GiovanniDicanio/WinReg/archive/v6.3.2.tar.gz
+  sha256: 644adca91229d714efaeebf0c010cc795f888f6a1015bb7d42c2f0a45fe52f8b
+  target_directory: vcpkg/downloads
+  file_name: GiovanniDicanio-WinReg-v6.3.2.tar.gz
+- url: https://github.com/GNOME/libxml2/archive/v2.13.5.tar.gz
+  sha256: 87d681718760ba42e749a61482d71b34d1d566843e9ade39a73fea92caf8293b
+  target_directory: vcpkg/downloads
+  file_name: GNOME-libxml2-v2.13.5.tar.gz
+- url: https://download.qt.io/official_releases/jom/jom_1_1_4.zip
+  sha256: d533c1ef49214229681e90196ed2094691e8c4a0a0bef0b2c901debcb562682b
+  target_directory: vcpkg/downloads
+  file_name: jom_1_1_4.zip
+- url: https://github.com/libarchive/libarchive/archive/v3.7.8.tar.gz
+  sha256: a1d557d7d8b7fb61102d20006fead5a916624051b7c6ded444e6c6b5af01b226
+  target_directory: vcpkg/downloads
+  file_name: libarchive-libarchive-v3.7.8.tar.gz
+- url: https://ftp.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz
+  sha256: 3b08f5f4f9b4eb82f151a7040bfd6fe6c6fb922efe4b1659c66ea933276965e8
+  target_directory: vcpkg/downloads
+  file_name: libiconv-1.18.tar.gz
+- url: https://github.com/lz4/lz4/archive/v1.10.0.tar.gz
+  sha256: 537512904744b35e232912055ccf8ec66d768639ff3abe5788d90d792ec5f48b
+  target_directory: vcpkg/downloads
+  file_name: lz4-lz4-v1.10.0.tar.gz
+- url: http://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz
+  sha256: c0f892943208266f9b6543b3ae308fab6284c5c90e627931446fb49b4221a072
+  target_directory: vcpkg/downloads
+  file_name: lzo-2.10.tar.gz
+- url: https://github.com/madler/zlib/archive/v1.3.1.tar.gz
+  sha256: 17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c
+  target_directory: vcpkg/downloads
+  file_name: madler-zlib-v1.3.1.tar.gz
+- url: https://mirror.msys2.org/msys/x86_64/autoconf2.72-2.72-1-any.pkg.tar.zst
+  sha256: 740b1de1dcb89c64f0ac1cd8591ae1b822f53600ab5fbf28e9ab8d0d21a05857
+  target_directory: vcpkg/downloads
+  file_name: msys2-autoconf2.72-2.72-1-any.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/autoconf-wrapper-20240607-1-any.pkg.tar.zst
+  sha256: a8fc32c62d399d38b305f3f8af156b538fb5bbd7ea4411bf2244791c767ac70b
+  target_directory: vcpkg/downloads
+  file_name: msys2-autoconf-wrapper-20240607-1-any.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/automake1.16-1.16.5-1-any.pkg.tar.zst
+  sha256: 1963b5fa0ab5eaf1bdc311501cd742c6bb19941e831dcc8ab1e51a8c7f1634fe
+  target_directory: vcpkg/downloads
+  file_name: msys2-automake1.16-1.16.5-1-any.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/automake1.17-1.17-1-any.pkg.tar.zst
+  sha256: bb069dbb6f580c2346d2f6d74268b5e12e625f7ba57299426f9cd6c0fa714191
+  target_directory: vcpkg/downloads
+  file_name: msys2-automake1.17-1.17-1-any.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/automake-wrapper-20240607-1-any.pkg.tar.zst
+  sha256: 070e3ff77b0d689c28cdb4986dd0bb29eb466009801ac5381a9259db427378f2
+  target_directory: vcpkg/downloads
+  file_name: msys2-automake-wrapper-20240607-1-any.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/bash-5.2.037-1-x86_64.pkg.tar.zst
+  sha256: 1d0f94a531754b34c211f727bd14fb3fe94bf87fc26719ff2e98a0022346bb7c
+  target_directory: vcpkg/downloads
+  file_name: msys2-bash-5.2.037-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/binutils-2.43.1-1-x86_64.pkg.tar.zst
+  sha256: c78c18db26a9ffd15cf814a18ad61d60580d1f6d97bbaca93b1902e8a929bef4
+  target_directory: vcpkg/downloads
+  file_name: msys2-binutils-2.43.1-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/coreutils-8.32-5-x86_64.pkg.tar.zst
+  sha256: 62dfee1c39fd15f99c39802b35e82643bc14fffc16d6c76d4001caa385ec77e3
+  target_directory: vcpkg/downloads
+  file_name: msys2-coreutils-8.32-5-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/diffutils-3.10-1-x86_64.pkg.tar.zst
+  sha256: ed5084a37995377c0288050640363a0daf1c8ace774da26ca84ec305ba51c7ce
+  target_directory: vcpkg/downloads
+  file_name: msys2-diffutils-3.10-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/file-5.45-3-x86_64.pkg.tar.zst
+  sha256: 065b40c1ce6444136307c59eb196d5509f4c370ede625d7daf37e57e73e41b16
+  target_directory: vcpkg/downloads
+  file_name: msys2-file-5.45-3-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/findutils-4.10.0-2-x86_64.pkg.tar.zst
+  sha256: ed3ce5a8684156dd90c98e50e34cb988867ad1462efc3c6f58170ca244d7c161
+  target_directory: vcpkg/downloads
+  file_name: msys2-findutils-4.10.0-2-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/gawk-5.3.1-1-x86_64.pkg.tar.zst
+  sha256: 9ce65f18c696723278031d05d978b0eb0cb9ee2db2d1d8c2bd5603d050b09096
+  target_directory: vcpkg/downloads
+  file_name: msys2-gawk-5.3.1-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/gcc-libs-13.3.0-1-x86_64.pkg.tar.zst
+  sha256: 38b6cd7df7476ce8e1b095f8f5901f93427fa901135501231295263ba171a36d
+  target_directory: vcpkg/downloads
+  file_name: msys2-gcc-libs-13.3.0-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/gmp-6.3.0-1-x86_64.pkg.tar.zst
+  sha256: d52634e1b0b99237e3ea457e5b4b114fdf39576d85efef3acb6c22069533b611
+  target_directory: vcpkg/downloads
+  file_name: msys2-gmp-6.3.0-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/grep-1~3.0-6-x86_64.pkg.tar.zst
+  sha256: c6f4e3ef55d56e0ea7695cd9450486157bae50c4b1c68bd073aa5a8b8af855bf
+  target_directory: vcpkg/downloads
+  file_name: msys2-grep-1~3.0-6-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/gzip-1.13-1-x86_64.pkg.tar.zst
+  sha256: 5f2fced435165f16a65ae82c6877a57d693f69e48916b842f6a4ef51c3e3f4a2
+  target_directory: vcpkg/downloads
+  file_name: msys2-gzip-1.13-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/libbz2-1.0.8-4-x86_64.pkg.tar.zst
+  sha256: 89fb0e1478b22b80effda55ab4ae7549388d01245d3841a096d8a2d63236c2a1
+  target_directory: vcpkg/downloads
+  file_name: msys2-libbz2-1.0.8-4-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/libiconv-1.17-1-x86_64.pkg.tar.zst
+  sha256: e7f76e543fc27b44b243d9c3a69af036f40c6da64f16488813301a32646127c2
+  target_directory: vcpkg/downloads
+  file_name: msys2-libiconv-1.17-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/libintl-0.22.4-1-x86_64.pkg.tar.zst
+  sha256: 4d7efc165142e31498accbe52e5bae9bdba6ff9496aab72d78d66d22c0fe1185
+  target_directory: vcpkg/downloads
+  file_name: msys2-libintl-0.22.4-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/liblzma-5.6.3-1-x86_64.pkg.tar.zst
+  sha256: a5af735fd3121dca253c9a5c4acc82ce45b236c3e8314238ffb18ec6129e7139
+  target_directory: vcpkg/downloads
+  file_name: msys2-liblzma-5.6.3-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/libpcre-8.45-4-x86_64.pkg.tar.zst
+  sha256: 6b36968294f7c37e2814c6a6e6552b69eba6d6fd0138ab6a9e7491d65374e794
+  target_directory: vcpkg/downloads
+  file_name: msys2-libpcre-8.45-4-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/libreadline-8.2.013-1-x86_64.pkg.tar.zst
+  sha256: 43b0c2235e7416ff9284de6c20e75b22590bcdbb898d8564489f23615bbe2490
+  target_directory: vcpkg/downloads
+  file_name: msys2-libreadline-8.2.013-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/libtool-2.4.7-4-x86_64.pkg.tar.zst
+  sha256: a0e8f7304d459ef4a16e3bdee3c6d689455832e97772b13bee718732adfcfa16
+  target_directory: vcpkg/downloads
+  file_name: msys2-libtool-2.4.7-4-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/libxcrypt-4.4.36-1-x86_64.pkg.tar.zst
+  sha256: cbbbd3bd5ea8e1ecd5314d22cd06b284f3ae8e7d8ae3a1ffa8a863672703a2ee
+  target_directory: vcpkg/downloads
+  file_name: msys2-libxcrypt-4.4.36-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/libzstd-1.5.6-1-x86_64.pkg.tar.zst
+  sha256: 4d732b09013d1c3d0bb20408e2bdfb21877e50e4523cfdf220225a469ab71db9
+  target_directory: vcpkg/downloads
+  file_name: msys2-libzstd-1.5.6-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/m4-1.4.19-2-x86_64.pkg.tar.zst
+  sha256: 4a1d296571afa7b8837fd5e227e16c9cb7e26c0f31f03b364e11c1ae8ee2a913
+  target_directory: vcpkg/downloads
+  file_name: msys2-m4-1.4.19-2-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/make-4.4.1-2-x86_64.pkg.tar.zst
+  sha256: 2408af61717dae87b00c855b132769a125c708907fc94a46bb16dae076113e5c
+  target_directory: vcpkg/downloads
+  file_name: msys2-make-4.4.1-2-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~2.3.0-1-any.pkg.tar.zst
+  sha256: b0882ff56ac19807d0ba7f046052d9ef18ba74d3add866148ee39b55d545c23b
+  target_directory: vcpkg/downloads
+  file_name: msys2-mingw-w64-x86_64-pkgconf-1~2.3.0-1-any.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/mpfr-4.2.1-1-x86_64.pkg.tar.zst
+  sha256: f3c80c5b56f34d2dbc3aa29c53d68444125bb39ac92b4eb022151c3157837af8
+  target_directory: vcpkg/downloads
+  file_name: msys2-mpfr-4.2.1-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/msys2-runtime-3.5.4-2-x86_64.pkg.tar.zst
+  sha256: 059391ac5e0f1896a56ec9d75c1302de264b503719dfccdbb2b30e7c550d6aef
+  target_directory: vcpkg/downloads
+  file_name: msys2-msys2-runtime-3.5.4-2-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/ncurses-6.5.20240831-2-x86_64.pkg.tar.zst
+  sha256: 9f2db80641574caa58636d1bf3f4737f9b572f148a644dbb02a854b38e008dce
+  target_directory: vcpkg/downloads
+  file_name: msys2-ncurses-6.5.20240831-2-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/perl-5.38.2-2-x86_64.pkg.tar.zst
+  sha256: c3e6db01604e157665aed604c5418f4753f116ddd591c041cfd971af235b83eb
+  target_directory: vcpkg/downloads
+  file_name: msys2-perl-5.38.2-2-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/pkgconf-2.3.0-1-x86_64.pkg.tar.zst
+  sha256: 9ca6331af1e61b9e5d7c3d08503841087b664db570cf9cc9b07890cc39757301
+  target_directory: vcpkg/downloads
+  file_name: msys2-pkgconf-2.3.0-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/sed-4.9-1-x86_64.pkg.tar.zst
+  sha256: 3748af28f69e946ec5a42e6670c9bbf6da7352dc93baaa537f69e99c5483b9fc
+  target_directory: vcpkg/downloads
+  file_name: msys2-sed-4.9-1-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/tar-1.35-2-x86_64.pkg.tar.zst
+  sha256: 1bfdfbbf51b45f53cf6b5f6f4155fc0a8ede1d740fde7fec5764f043accd76e4
+  target_directory: vcpkg/downloads
+  file_name: msys2-tar-1.35-2-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/which-2.21-4-x86_64.pkg.tar.zst
+  sha256: f5a64b01b801032dcfaecb80e7419ee6ff77e708fc2f6ab91bff67cdefdb4608
+  target_directory: vcpkg/downloads
+  file_name: msys2-which-2.21-4-x86_64.pkg.tar.zst
+- url: https://mirror.msys2.org/msys/x86_64/zlib-1.3.1-1-x86_64.pkg.tar.zst
+  sha256: 8f027ac1b9404196a146efbf46ab12edf7fa20c7d9f6ca500d5cd275e492ef30
+  target_directory: vcpkg/downloads
+  file_name: msys2-zlib-1.3.1-1-x86_64.pkg.tar.zst
+- url: https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip
+  sha256: 3ee4782247bcb874378d02f7eab4e294a84d3d15f3f6ee2de2f47a46aa7226e6
+  target_directory: vcpkg/downloads
+  file_name: nasm-2.16.03-win64.zip
+- url: https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip
+  sha256: f550fec705b6d6ff58f2db3c374c2277a37691678d6aba463adcbb129108467a
+  target_directory: vcpkg/downloads
+  file_name: ninja-win-1.12.1.zip
+- url: https://github.com/openssl/openssl/archive/openssl-3.5.0.tar.gz
+  sha256: 576740bfe93209efda2be7cecb00dfeabe77fe9c5c908c1790cbe8fa50b223d0
+  target_directory: vcpkg/downloads
+  file_name: openssl-openssl-openssl-3.5.0.tar.gz
+- url: https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_54001_64bit_UCRT/strawberry-perl-5.40.0.1-64bit-portable.zip
+  sha256: 754f3e2a8e473dc68d1540c7802fb166a025f35ef18960c4564a31f8b5933907
+  target_directory: vcpkg/downloads
+  file_name: strawberry-perl-5.40.0.1-64bit-portable.zip
+- url: https://github.com/tukaani-project/xz/archive/v5.8.1.tar.gz
+  sha256: bdbc23fbf9098843357e71e49685724fda2c320c29cb1b25fd90505f14bb0b3d
+  target_directory: vcpkg/downloads
+  file_name: tukaani-project-xz-v5.8.1.tar.gz
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+  - compiler('cxx')[:2] != 'vs'
+
+requirements:
+  build:
+  - cmake >=3.16.0
+  - ${{ compiler('cxx') }}
+  - ninja
+  - python 3.*
+  host:
+  - cli11
+  - cpp-expected
+  - fmt
+  - libsolv-static
+  - nlohmann_json
+  - reproc-cpp-static
+  - simdjson-static
+  - spdlog
+  - yaml-cpp-static
+  ignore_run_exports:
+    from_package:
+    - fmt
+    - spdlog
+
+tests:
+- script:
+  - micromamba --version
+
+about:
+  license_file: LICENSE
+  summary: Micromamba is a tiny version of mamba, the fast conda package installer.
