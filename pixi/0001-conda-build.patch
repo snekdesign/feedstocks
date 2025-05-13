@@ -48,5 +48,4 @@ index 6cae44b..4e33700 100644
  which = { version = "7.0.0", features = ["regex"] }
  windows-registry = { version = "0.4.0" }
 -- 
-2.46.0.windows.1
 

@@ -1,6 +1,6 @@
 context:
-  version: 0.46.0
-  sha256: 23d14a2b8216ca7f0e7acc25468ee103f34d2f7062e70f12c0d07e6a8a68b3ea
+  version: 0.47.0
+  sha256: a1bdf15b861b63d2a7d12947980e415e35d6ae268194b4c09bb765a406fe0259
 
 package:
   name: pixi
@@ -12,8 +12,8 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.33.5.tar.gz
-  sha256: 224534dc97ebb33e44654f8ccee1da36a699eb8fa2854521f2af1516af58ebc3
+- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.33.6.tar.gz
+  sha256: 5a528767e850469d33d7c94fd0e0cfa62bc824cea1d62cb5881dbf70d40d0e9a
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
@@ -37,8 +37,8 @@ source:
     sha256: 0b0b17b7a4ed993701208b2eaeba91f3acf2f1b5402430b52ac7bfbca2519464
 - if: win
   then:
-  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.6/YY-Thunks-Objs.zip
-    sha256: fa4de6bda69f476907f780f63f3dda792537a2e3236cd23043a490c6b91cb0b5
+  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.7/YY-Thunks-Objs.zip
+    sha256: c3066f3f074ebc2a89b2def5f427bdea238dee17349d2bab579af519781691ab
     target_directory: yy_thunks
 
 build:
