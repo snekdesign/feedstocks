@@ -4,38 +4,44 @@ Date: Thu, 20 Feb 2025 18:55:09 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                           | 18 ++++++++++++------
+ Cargo.toml                           | 24 ++++++++++++------------
  crates/pixi-build-backend/src/cli.rs | 21 +++++++++++++++------
- 2 files changed, 27 insertions(+), 12 deletions(-)
+ 2 files changed, 27 insertions(+), 18 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index ae98769..20f0fe6 100644
+index 32d749b..babc281 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -35,7 +35,7 @@ jsonrpc-stdio-server = "18.0.0"
- jsonrpc-http-server = "18.0.0"
- jsonrpc-core = "18.0.0"
+@@ -53,17 +53,12 @@ pixi_build_type_conversions = { version = "*" }
+ pixi-build-backend = { path = "crates/pixi-build-backend" }
  
--rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "6744398", default-features = false, features = [
-+rattler-build = { path = "../rattler-build", default-features = false, features = [
-   "rustls-tls",
- ] }
- 
-@@ -43,9 +43,15 @@ rattler_conda_types = { version = "0.30.2", default-features = false }
- rattler_package_streaming = { version = "0.22.27", default-features = false }
- rattler_virtual_packages = { version = "2.0.2", default-features = false }
- 
+ [patch.crates-io]
 -pixi_build_types = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
 -pixi_consts = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
 -pixi_manifest = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
 -pixi_spec = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
 -pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+ 
+-#pixi_build_types = { path = "../pixi/crates/pixi_build_types" }
+-#pixi_consts = { path = "../pixi/crates/pixi_consts" }
+-#pixi_manifest = { path = "../pixi/crates/pixi_manifest" }
+-#pixi_spec = { path = "../pixi/crates/pixi_spec" }
+-#pixi_build_type_conversions = { path = "../pixi/crates/pixi_build_type_conversions" }
 +pixi_build_types = { path = "../pixi/crates/pixi_build_types" }
 +pixi_consts = { path = "../pixi/crates/pixi_consts" }
 +pixi_manifest = { path = "../pixi/crates/pixi_manifest" }
 +pixi_spec = { path = "../pixi/crates/pixi_spec" }
 +pixi_build_type_conversions = { path = "../pixi/crates/pixi_build_type_conversions" }
- pixi-build-backend = { path = "crates/pixi-build-backend" }
+ 
+ #rattler_cache = { path = "../rattler/crates/rattler_cache" }
+ #rattler_conda_types = { path = "../rattler/crates/rattler_conda_types" }
+@@ -72,5 +67,10 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
+ #rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway" }
+ #simple_spawn_blocking = { path = "../rattler/crates/simple_spawn_blocking" }
+ 
+-rattler-build = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-#rattler-build = { path = "../rattler-build" }
++rattler-build = { path = "../rattler-build" }
 +
 +[profile.release]
 +codegen-units = 1
@@ -43,7 +49,7 @@ index ae98769..20f0fe6 100644
 +opt-level = 3
 +strip = true
 diff --git a/crates/pixi-build-backend/src/cli.rs b/crates/pixi-build-backend/src/cli.rs
-index 814f23f..7f4eae4 100644
+index 1521233..f021e11 100644
 --- a/crates/pixi-build-backend/src/cli.rs
 +++ b/crates/pixi-build-backend/src/cli.rs
 @@ -17,6 +17,7 @@ use rattler_conda_types::{ChannelConfig, GenericVirtualPackage, Platform};
@@ -95,5 +101,4 @@ index 814f23f..7f4eae4 100644
      let protocol = initialize(factory, manifest_path).await?;
      let work_dir = TempDir::new_in(".")
 -- 
-2.48.1.windows.1
 
