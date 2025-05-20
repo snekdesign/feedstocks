@@ -29,7 +29,7 @@ build:
     - cargo install --all-features --locked --no-track --path crates/rattler-bin --root "$PREFIX"
   skip:
   - build_platform != target_platform
-  - win and compiler('c')[:2] != 'vs'
+  - win and not (compiler('c') is startingwith('vs'))
 
 requirements:
   build:

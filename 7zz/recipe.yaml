@@ -27,7 +27,7 @@ build:
   skip:
   - not (win or linux)
   - build_platform != target_platform
-  - win and compiler('cxx')[:2] != 'vs'
+  - win and not (compiler('cxx') is startingwith('vs'))
 
 requirements:
   build:

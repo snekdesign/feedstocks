@@ -2,6 +2,7 @@
 ## Dependencies
 - [pixi][1] >=0.39.0
 - MSVC 17.12.* [LTSC][2] (Windows only)
+- Git (Windows only)
 ## Usage
 ```
 [sudo] pixi run build <package-name>

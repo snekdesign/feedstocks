@@ -15,7 +15,7 @@ build:
   skip:
   - not win
   - build_platform != target_platform
-  - compiler('c')[:2] != 'vs'
+  - not (compiler('c') is startingwith('vs'))
 
 requirements:
   build:
