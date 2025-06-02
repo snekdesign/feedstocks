@@ -1,6 +1,6 @@
 context:
-  version: 0.7.3
-  sha256: ad6dbd387c8627571580c81e9e127555d4b91d2bec4578876c5f2505a4cda29c
+  version: 0.7.8
+  sha256: 4f12e8b5f9706e28d689d3df47a14cda07fb638dbd83889233fdbf2e1e01d9db
 
 package:
   name: uv
@@ -15,8 +15,8 @@ source:
 - url: https://github.com/charliermarsh/rs-async-zip/archive/c909fda63fcafe4af496a07bfda28a5aae97e58d.tar.gz
   sha256: 8fc71e219a505af64d9c616f7940d24c1b38dc1f54c03d32cb34ba84930f3e1d
   target_directory: rs-async-zip
-- url: https://github.com/astral-sh/pubgrub/archive/a3b4db3abb1829ce889fb89fa6d157fef529ef7e.tar.gz
-  sha256: 3294d1b09d2f99f96fb38a114b54bcfb098e347d5cc14c96f0e356dbc678bcc9
+- url: https://github.com/astral-sh/pubgrub/archive/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db.tar.gz
+  sha256: 7c39356749ea0084a75ef64f59890b2ce395d5f4492cb32474573650b7e52685
   target_directory: pubgrub
 - url: https://github.com/astral-sh/tl/archive/6e25b2ee2513d75385101a8ff9f591ef51f314ec.tar.gz
   sha256: e838bca7cb205e373cd801ce19476a808534a6090fc261aa2ea74dfd9cea68b0
@@ -40,7 +40,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust >=1.85.0
+  - rust >=1.86.0
   - if: linux
     then: diffutils
   - if: microarch_level|int > 0
