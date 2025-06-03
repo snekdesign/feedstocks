@@ -1,6 +1,6 @@
 context:
-  version: 0.47.0
-  sha256: a1bdf15b861b63d2a7d12947980e415e35d6ae268194b4c09bb765a406fe0259
+  version: 0.48.0
+  sha256: 008d49f5adfece6a0cb8b4cdf2a44b0577c9d3760fdd64b466ae54923077562e
 
 package:
   name: pixi
@@ -17,16 +17,16 @@ source:
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
-- url: https://github.com/astral-sh/uv/archive/refs/tags/0.6.9.tar.gz
-  sha256: a8c8dd9663f7c118195203b2b6d8d3b5cd62c277289e60cf3e77790d53245a3c
+- url: https://github.com/astral-sh/uv/archive/refs/tags/0.7.8.tar.gz
+  sha256: 4f12e8b5f9706e28d689d3df47a14cda07fb638dbd83889233fdbf2e1e01d9db
   target_directory: uv
   patches:
   - 0001-conda-build.patch
 - url: https://github.com/charliermarsh/rs-async-zip/archive/c909fda63fcafe4af496a07bfda28a5aae97e58d.tar.gz
   sha256: 8fc71e219a505af64d9c616f7940d24c1b38dc1f54c03d32cb34ba84930f3e1d
   target_directory: uv/rs-async-zip
-- url: https://github.com/astral-sh/pubgrub/archive/b70cf707aa43f21b32f3a61b8a0889b15032d5c4.tar.gz
-  sha256: 64b53dc8b30240d6636cab321750f786e7f50594f0403a1f96b6e8e235014d0a
+- url: https://github.com/astral-sh/pubgrub/archive/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db.tar.gz
+  sha256: 7c39356749ea0084a75ef64f59890b2ce395d5f4492cb32474573650b7e52685
   target_directory: uv/pubgrub
 - url: https://github.com/astral-sh/tl/archive/6e25b2ee2513d75385101a8ff9f591ef51f314ec.tar.gz
   sha256: e838bca7cb205e373cd801ce19476a808534a6090fc261aa2ea74dfd9cea68b0
