@@ -21,7 +21,7 @@ cache:
     - 0001-cmd.dll.patch
   requirements:
     build:
-    - cmake
+    - cmake >=3.17.0,<4
     - ${{ compiler('cxx') }}
     - ninja
     - winflexbison
