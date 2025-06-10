@@ -1,0 +1,38 @@
+context:
+  version: 2025.6.10
+  sha256: c4cb58700186f9c02d192087e4b298539bf2403da49531d65b60f5ad97a9cd87
+
+package:
+  name: vscodium-conda-launcher
+  version: ${{ version }}
+
+source:
+  url: https://github.com/snekdesign/startmenu/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('cxx') is startingwith('vs'))
+
+requirements:
+  build:
+  - cmake >=3.30.0
+  - ${{ compiler('cxx') }}
+  - ninja
+  host:
+  - libcmd-devel
+  - libmamba >=2.2.0
+  - spdlog
+  run:
+  - vscodium >=1.101.0
+  ignore_run_exports:
+    from_package:
+    - spdlog
+
+about:
+  license: GPL-2.0-only
+  license_family: GPL
+  license_file: LICENSE
