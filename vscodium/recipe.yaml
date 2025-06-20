@@ -1,6 +1,6 @@
 context:
-  version: 1.101.03933
-  sha256: f2da9e84f7a8e916640a73416d43b5f0c9b20a9d53058eeae37f651efa2a5a49
+  version: 1.101.14098
+  sha256: 324c483bb3f847b5a8fa9cf3ea900f2e0e2a0f702923aa38fbd5dbcf34754a35
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.3.4
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -24,9 +24,9 @@ context:
   cython_version: 1.0.3
   cython_sha256: 68ad4e17045ce6c90ba24b8416266419582a688db63d35c6175135e9cc741034
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/versions?size=1
-  ruff_version: 2025.22.0
+  ruff_version: 2025.24.0
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
-  ruff_sha256: af4567b31df07877e27a4a4a2cd37324c9ee7381e87db8d5f4f587da3064a389
+  ruff_sha256: c0eae4abdb4ad0827c3fc41a2859ff9de3f7940d9b11bb23ab623993dff958e9
   # https://open-vsx.org/api/tamasfe/even-better-toml/versions?size=1
   toml_version: 0.21.2
   # https://open-vsx.org/api/tamasfe/even-better-toml/latest/file/sha256
