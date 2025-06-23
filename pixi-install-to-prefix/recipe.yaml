@@ -1,0 +1,52 @@
+context:
+  version: 0.1.2
+  sha256: 473a90e49c917b1fb8635741228ffba51b265ef4452334563d2120206b9f1a89
+
+package:
+  name: pixi-install-to-prefix
+  version: ${{ version }}
+
+source:
+- url: https://github.com/pavelzw/pixi-install-to-prefix/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-customize.patch
+- url: https://github.com/prefix-dev/pixi/archive/dfbefb4f7d1b1a7dd8dbff013e31c85dcb148e87.tar.gz
+  sha256: 9b90d857c967ad8f580c60b59595624cd9b754f1e774057b9715d72526523f3c
+  target_directory: pixi
+- if: win
+  then:
+  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.2.1/VC-LTL-Binary.7z
+    sha256: 0b0b17b7a4ed993701208b2eaeba91f3acf2f1b5402430b52ac7bfbca2519464
+- if: win
+  then:
+  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.7/YY-Thunks-Objs.zip
+    sha256: c3066f3f074ebc2a89b2def5f427bdea238dee17349d2bab579af519781691ab
+    target_directory: yy_thunks
+
+build:
+  number: 0
+  skip:
+  - build_platform != target_platform
+  - win and not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - rust >=1.86.0
+  - if: linux
+    then: diffutils
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
+  - if: win
+    then: 7zip
+
+tests:
+- script:
+  - pixi-install-to-prefix -h
+
+about:
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: Install pixi environments to an arbitrary prefix
