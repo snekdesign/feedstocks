@@ -1,6 +1,6 @@
 context:
-  version: 0.1.14
-  sha256: 818624ef2df72094b167cfbac9c3ab2e998f49014ae8f926cf52230857990bf5
+  version: 0.1.15
+  sha256: 8d5b69a931bcbdff64528bfae9f28748f625a70fb5ec93630a5f56196ef9f50c
 
 recipe:
   name: pixi-build-backends
@@ -14,7 +14,7 @@ build:
 
 cache:
   source:
-  - url: https://github.com/prefix-dev/pixi-build-backends/archive/refs/tags/pixi-build-rust-v${{ version }}.tar.gz
+  - url: https://github.com/prefix-dev/pixi-build-backends/archive/refs/tags/pixi-build-rattler-build-v${{ version }}.tar.gz
     sha256: ${{ sha256 }}
     target_directory: pixi-build-backends
     patches:
@@ -25,6 +25,8 @@ cache:
   - url: https://github.com/prefix-dev/rattler-build/archive/ea03f64d243260dfd06e7ec75e015233ae9e2bd2.tar.gz
     sha256: e3dec3a3f67abd309543838e69c11dc14f3cc2237ac31d1817cc3ecf67308e89
     target_directory: rattler-build
+    patches:
+    - 0001-conda-build.patch
   requirements:
     build:
     - ${{ compiler('c') }}

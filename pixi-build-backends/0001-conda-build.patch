@@ -1,0 +1,25 @@
+From 4eeef188265a250a9a6dc8656c952bbb94e0a62b Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Mon, 23 Jun 2025 19:53:00 +0800
+Subject: [PATCH] conda build
+
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index f7b2f4c..f0a01d7 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -141,7 +141,7 @@ opendal = { version = "0.53.1", default-features = false, features = [
+ ] }
+ 
+ # Rattler crates
+-pixi_config = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
++pixi_config = { path = "../pixi/crates/pixi_config" }
+ rattler = { version = "0.33.5", default-features = false, features = [
+   "cli-tools",
+   "indicatif",
+-- 
+2.49.0.windows.1
+

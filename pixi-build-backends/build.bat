@@ -1,5 +1,5 @@
 @echo off
-if EXIST "%LIBRARY_BIN%\pixi-build-cmake.exe" ( exit 0 )
+if exist "%LIBRARY_BIN%\pixi-build-cmake.exe" ( exit /b 0 )
 cargo install ^
     --locked ^
     --no-track ^

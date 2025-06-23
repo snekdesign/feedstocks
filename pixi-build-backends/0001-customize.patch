@@ -4,15 +4,30 @@ Date: Thu, 20 Feb 2025 18:55:09 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                           | 24 ++++++++++++------------
- crates/pixi-build-backend/src/cli.rs | 21 +++++++++++++++------
- 2 files changed, 27 insertions(+), 18 deletions(-)
+ Cargo.toml                                    | 26 +++++++------
+ crates/pixi-build-cmake/Cargo.toml            |  1 +
+ crates/pixi-build-cmake/src/protocol.rs       | 36 +++++++++++++++++
+ crates/pixi-build-python/Cargo.toml           |  1 +
+ crates/pixi-build-python/src/protocol.rs      | 36 +++++++++++++++++
+ crates/pixi-build-rattler-build/Cargo.toml    |  1 +
+ .../pixi-build-rattler-build/src/protocol.rs  | 39 ++++++++++++++++---
+ crates/pixi-build-rust/Cargo.toml             |  1 +
+ crates/pixi-build-rust/src/protocol.rs        | 36 +++++++++++++++++
+ 9 files changed, 159 insertions(+), 18 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 32d749b..babc281 100644
+index 3eba2e8..cde44a8 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -53,17 +53,12 @@ pixi_build_type_conversions = { version = "*" }
+@@ -48,6 +48,7 @@ rattler_package_streaming = { version = "0.22.35", default-features = false }
+ rattler_virtual_packages = { version = "2.0.9", default-features = false }
+ 
+ pixi_build_types = { version = "*" }
++pixi_config = { version = "*" }
+ pixi_consts = { version = "*" }
+ pixi_manifest = { version = "*" }
+ pixi_spec = { version = "*" }
+@@ -56,17 +57,13 @@ pixi_build_type_conversions = { version = "*" }
  pixi-build-backend = { path = "crates/pixi-build-backend" }
  
  [patch.crates-io]
@@ -28,6 +43,7 @@ index 32d749b..babc281 100644
 -#pixi_spec = { path = "../pixi/crates/pixi_spec" }
 -#pixi_build_type_conversions = { path = "../pixi/crates/pixi_build_type_conversions" }
 +pixi_build_types = { path = "../pixi/crates/pixi_build_types" }
++pixi_config = { path = "../pixi/crates/pixi_config" }
 +pixi_consts = { path = "../pixi/crates/pixi_consts" }
 +pixi_manifest = { path = "../pixi/crates/pixi_manifest" }
 +pixi_spec = { path = "../pixi/crates/pixi_spec" }
@@ -35,7 +51,7 @@ index 32d749b..babc281 100644
  
  #rattler_cache = { path = "../rattler/crates/rattler_cache" }
  #rattler_conda_types = { path = "../rattler/crates/rattler_conda_types" }
-@@ -72,5 +67,10 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
+@@ -75,5 +72,10 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
  #rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway" }
  #simple_spawn_blocking = { path = "../rattler/crates/simple_spawn_blocking" }
  
@@ -48,57 +64,326 @@ index 32d749b..babc281 100644
 +lto = true
 +opt-level = 3
 +strip = true
-diff --git a/crates/pixi-build-backend/src/cli.rs b/crates/pixi-build-backend/src/cli.rs
-index 1521233..f021e11 100644
---- a/crates/pixi-build-backend/src/cli.rs
-+++ b/crates/pixi-build-backend/src/cli.rs
-@@ -17,6 +17,7 @@ use rattler_conda_types::{ChannelConfig, GenericVirtualPackage, Platform};
- use rattler_virtual_packages::{VirtualPackage, VirtualPackageOverrides};
- use tempfile::TempDir;
- use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
-+use url::Url;
+diff --git a/crates/pixi-build-cmake/Cargo.toml b/crates/pixi-build-cmake/Cargo.toml
+index b12a9b7..36d801d 100644
+--- a/crates/pixi-build-cmake/Cargo.toml
++++ b/crates/pixi-build-cmake/Cargo.toml
+@@ -20,6 +20,7 @@ tokio = { workspace = true, features = ["macros"] }
+ pixi-build-backend = { workspace = true }
  
- use crate::{
-     consts,
-@@ -171,12 +172,16 @@ async fn conda_get_metadata<T: ProtocolInstantiator>(
-     manifest_path: &Path,
-     host_platform: Option<Platform>,
- ) -> miette::Result<CondaMetadataResult> {
--    let channel_config = ChannelConfig::default_with_root_dir(
--        manifest_path
-+    let channel_config = ChannelConfig {
-+        channel_alias: std::env::var("RATTLER_BUILD_CHANNEL_ALIAS").map_or_else(
-+                |_| Url::parse("https://conda.anaconda.org"),
-+                |v| Url::parse(v.as_str()),
-+            ).unwrap(),
-+        root_dir: manifest_path
-             .parent()
-             .expect("manifest should always reside in a directory")
-             .to_path_buf(),
--    );
-+    };
+ pixi_build_types = { workspace = true }
++pixi_config = { workspace = true }
+ pixi_manifest = { workspace = true }
+ pixi_build_type_conversions = { workspace = true }
  
-     let protocol = initialize(factory, manifest_path).await?;
+diff --git a/crates/pixi-build-cmake/src/protocol.rs b/crates/pixi-build-cmake/src/protocol.rs
+index 33f4557..8190a2d 100644
+--- a/crates/pixi-build-cmake/src/protocol.rs
++++ b/crates/pixi-build-cmake/src/protocol.rs
+@@ -84,6 +84,23 @@ impl Protocol for CMakeBuildBackend<ProjectModelV1> {
+             .map(|p| p.platform)
+             .unwrap_or(Platform::current());
  
-@@ -219,12 +224,16 @@ async fn capabilities<Factory: ProtocolInstantiator>() -> miette::Result<Backend
++        let base_client = {
++            let common = rattler_build::opt::CommonData::new(
++                None,
++                false,
++                None,
++                pixi_config::Config::load_global(),
++                None,
++                None,
++            );
++            rattler_build::tool_configuration::reqwest_client_from_auth_storage(
++                None,
++                common.s3_config,
++                common.mirror_config,
++                None,
++            ).into_diagnostic()?
++        };
++
+         // Build the tool configuration
+         let tool_config = Arc::new(
+             Configuration::builder()
+@@ -92,6 +109,7 @@ impl Protocol for CMakeBuildBackend<ProjectModelV1> {
+                 .with_channel_config(channel_config.clone())
+                 .with_testing(false)
+                 .with_keep_build(true)
++                .with_reqwest_client(base_client)
+                 .finish(),
+         );
  
- /// Frontend implementation for building a conda package.
- async fn build<T: ProtocolInstantiator>(factory: T, manifest_path: &Path) -> miette::Result<()> {
--    let channel_config = ChannelConfig::default_with_root_dir(
--        manifest_path
-+    let channel_config = ChannelConfig {
-+        channel_alias: std::env::var("RATTLER_BUILD_CHANNEL_ALIAS").map_or_else(
-+                |_| Url::parse("https://conda.anaconda.org"),
-+                |v| Url::parse(v.as_str()),
-+            ).unwrap(),
-+        root_dir: manifest_path
-             .parent()
-             .expect("manifest should always reside in a directory")
-             .to_path_buf(),
--    );
-+    };
+@@ -307,6 +325,23 @@ impl Protocol for CMakeBuildBackend<ProjectModelV1> {
+             outputs.push(output);
+         }
  
-     let protocol = initialize(factory, manifest_path).await?;
-     let work_dir = TempDir::new_in(".")
++        let base_client = {
++            let common = rattler_build::opt::CommonData::new(
++                None,
++                false,
++                None,
++                pixi_config::Config::load_global(),
++                None,
++                None,
++            );
++            rattler_build::tool_configuration::reqwest_client_from_auth_storage(
++                None,
++                common.s3_config,
++                common.mirror_config,
++                None,
++            ).into_diagnostic()?
++        };
++
+         // Setup tool configuration
+         let tool_config = Arc::new(
+             Configuration::builder()
+@@ -315,6 +350,7 @@ impl Protocol for CMakeBuildBackend<ProjectModelV1> {
+                 .with_channel_config(channel_config.clone())
+                 .with_testing(false)
+                 .with_keep_build(true)
++                .with_reqwest_client(base_client)
+                 .finish(),
+         );
+ 
+diff --git a/crates/pixi-build-python/Cargo.toml b/crates/pixi-build-python/Cargo.toml
+index 9533b02..29026aa 100644
+--- a/crates/pixi-build-python/Cargo.toml
++++ b/crates/pixi-build-python/Cargo.toml
+@@ -36,6 +36,7 @@ pathdiff = { workspace = true }
+ pixi-build-backend = { workspace = true }
+ 
+ pixi_build_types = { workspace = true }
++pixi_config = { workspace = true }
+ pixi_consts = { workspace = true }
+ pixi_manifest = { workspace = true }
+ pixi_spec = { workspace = true }
+diff --git a/crates/pixi-build-python/src/protocol.rs b/crates/pixi-build-python/src/protocol.rs
+index 6d306b4..eca3be8 100644
+--- a/crates/pixi-build-python/src/protocol.rs
++++ b/crates/pixi-build-python/src/protocol.rs
+@@ -76,6 +76,23 @@ impl<P: ProjectModel + Sync> Protocol for PythonBuildBackend<P> {
+         .into_diagnostic()
+         .context("failed to setup build directories")?;
+ 
++        let base_client = {
++            let common = rattler_build::opt::CommonData::new(
++                None,
++                false,
++                None,
++                pixi_config::Config::load_global(),
++                None,
++                None,
++            );
++            rattler_build::tool_configuration::reqwest_client_from_auth_storage(
++                None,
++                common.s3_config,
++                common.mirror_config,
++                None,
++            ).into_diagnostic()?
++        };
++
+         // Build the tool configuration
+         let tool_config = Arc::new(
+             Configuration::builder()
+@@ -84,6 +101,7 @@ impl<P: ProjectModel + Sync> Protocol for PythonBuildBackend<P> {
+                 .with_channel_config(channel_config.clone())
+                 .with_testing(false)
+                 .with_keep_build(true)
++                .with_reqwest_client(base_client)
+                 .finish(),
+         );
+ 
+@@ -299,6 +317,23 @@ impl<P: ProjectModel + Sync> Protocol for PythonBuildBackend<P> {
+             outputs.push(output);
+         }
+ 
++        let base_client = {
++            let common = rattler_build::opt::CommonData::new(
++                None,
++                false,
++                None,
++                pixi_config::Config::load_global(),
++                None,
++                None,
++            );
++            rattler_build::tool_configuration::reqwest_client_from_auth_storage(
++                None,
++                common.s3_config,
++                common.mirror_config,
++                None,
++            ).into_diagnostic()?
++        };
++
+         // Setup tool configuration
+         let tool_config = Arc::new(
+             Configuration::builder()
+@@ -307,6 +342,7 @@ impl<P: ProjectModel + Sync> Protocol for PythonBuildBackend<P> {
+                 .with_channel_config(channel_config.clone())
+                 .with_testing(false)
+                 .with_keep_build(true)
++                .with_reqwest_client(base_client)
+                 .finish(),
+         );
+ 
+diff --git a/crates/pixi-build-rattler-build/Cargo.toml b/crates/pixi-build-rattler-build/Cargo.toml
+index 05cd000..793a240 100644
+--- a/crates/pixi-build-rattler-build/Cargo.toml
++++ b/crates/pixi-build-rattler-build/Cargo.toml
+@@ -21,5 +21,6 @@ itertools = { workspace = true }
+ pixi-build-backend = { workspace = true }
+ 
+ pixi_build_types = { workspace = true }
++pixi_config = { workspace = true }
+ 
+ [dev-dependencies]
+diff --git a/crates/pixi-build-rattler-build/src/protocol.rs b/crates/pixi-build-rattler-build/src/protocol.rs
+index 72957fd..d1920a3 100644
+--- a/crates/pixi-build-rattler-build/src/protocol.rs
++++ b/crates/pixi-build-rattler-build/src/protocol.rs
+@@ -1,5 +1,4 @@
+ use std::{
+-    collections::HashMap,
+     path::{Path, PathBuf},
+     str::FromStr,
+ };
+@@ -31,7 +30,7 @@ use rattler_build::{
+     recipe::{Jinja, parser::BuildString},
+     render::resolved_dependencies::DependencyInfo,
+     selectors::SelectorConfig,
+-    tool_configuration::{BaseClient, Configuration},
++    tool_configuration::{Configuration, reqwest_client_from_auth_storage},
+ };
+ use rattler_conda_types::{ChannelConfig, MatchSpec, PackageName, Platform};
+ use rattler_virtual_packages::VirtualPackageOverrides;
+@@ -129,8 +128,22 @@ impl Protocol for RattlerBuildBackend {
+             build_platform,
+         )?;
+ 
+-        let base_client =
+-            BaseClient::new(None, None, HashMap::default(), HashMap::default()).unwrap();
++        let base_client = {
++            let common = rattler_build::opt::CommonData::new(
++                None,
++                false,
++                None,
++                pixi_config::Config::load_global(),
++                None,
++                None,
++            );
++            reqwest_client_from_auth_storage(
++                None,
++                common.s3_config,
++                common.mirror_config,
++                None,
++            ).into_diagnostic()?
++        };
+ 
+         let tool_config = Configuration::builder()
+             .with_opt_cache_dir(self.cache_dir.clone())
+@@ -320,8 +333,22 @@ impl Protocol for RattlerBuildBackend {
+ 
+         let mut built = vec![];
+ 
+-        let base_client =
+-            BaseClient::new(None, None, HashMap::default(), HashMap::default()).unwrap();
++        let base_client = {
++            let common = rattler_build::opt::CommonData::new(
++                None,
++                false,
++                None,
++                pixi_config::Config::load_global(),
++                None,
++                None,
++            );
++            reqwest_client_from_auth_storage(
++                None,
++                common.s3_config,
++                common.mirror_config,
++                None,
++            ).into_diagnostic()?
++        };
+ 
+         let tool_config = Configuration::builder()
+             .with_opt_cache_dir(self.cache_dir.clone())
+diff --git a/crates/pixi-build-rust/Cargo.toml b/crates/pixi-build-rust/Cargo.toml
+index 739388a..7a3a4f8 100644
+--- a/crates/pixi-build-rust/Cargo.toml
++++ b/crates/pixi-build-rust/Cargo.toml
+@@ -20,6 +20,7 @@ tokio = { workspace = true, features = ["macros"] }
+ pixi-build-backend = { workspace = true }
+ 
+ pixi_build_types = { workspace = true }
++pixi_config = { workspace = true }
+ pixi_manifest = { workspace = true }
+ pixi_build_type_conversions = { workspace = true }
+ 
+diff --git a/crates/pixi-build-rust/src/protocol.rs b/crates/pixi-build-rust/src/protocol.rs
+index 77032c3..2acdffd 100644
+--- a/crates/pixi-build-rust/src/protocol.rs
++++ b/crates/pixi-build-rust/src/protocol.rs
+@@ -76,6 +76,23 @@ impl<P: ProjectModel + Sync> Protocol for RustBuildBackend<P> {
+         .into_diagnostic()
+         .context("failed to setup build directories")?;
+ 
++        let base_client = {
++            let common = rattler_build::opt::CommonData::new(
++                None,
++                false,
++                None,
++                pixi_config::Config::load_global(),
++                None,
++                None,
++            );
++            rattler_build::tool_configuration::reqwest_client_from_auth_storage(
++                None,
++                common.s3_config,
++                common.mirror_config,
++                None,
++            ).into_diagnostic()?
++        };
++
+         // Build the tool configuration
+         let tool_config = Arc::new(
+             Configuration::builder()
+@@ -84,6 +101,7 @@ impl<P: ProjectModel + Sync> Protocol for RustBuildBackend<P> {
+                 .with_channel_config(channel_config.clone())
+                 .with_testing(false)
+                 .with_keep_build(true)
++                .with_reqwest_client(base_client)
+                 .finish(),
+         );
+ 
+@@ -298,6 +316,23 @@ impl<P: ProjectModel + Sync> Protocol for RustBuildBackend<P> {
+             outputs.push(output);
+         }
+ 
++        let base_client = {
++            let common = rattler_build::opt::CommonData::new(
++                None,
++                false,
++                None,
++                pixi_config::Config::load_global(),
++                None,
++                None,
++            );
++            rattler_build::tool_configuration::reqwest_client_from_auth_storage(
++                None,
++                common.s3_config,
++                common.mirror_config,
++                None,
++            ).into_diagnostic()?
++        };
++
+         // Setup tool configuration
+         let tool_config = Arc::new(
+             Configuration::builder()
+@@ -306,6 +341,7 @@ impl<P: ProjectModel + Sync> Protocol for RustBuildBackend<P> {
+                 .with_channel_config(channel_config.clone())
+                 .with_testing(false)
+                 .with_keep_build(true)
++                .with_reqwest_client(base_client)
+                 .finish(),
+         );
+ 
 -- 
+2.49.0.windows.1
 
