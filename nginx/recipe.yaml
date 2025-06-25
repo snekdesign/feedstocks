@@ -1,6 +1,6 @@
 context:
-  version: 1.28.0
-  sha256: c6b5c6b086c0df9d3ca3ff5e084c1d0ef909e6038279c71c1c3e985f576ff76a
+  version: 1.29.0
+  sha256: 109754dfe8e5169a7a0cf0db6718e7da2db495753308f933f161e525a579a664
 
 package:
   name: nginx
@@ -15,7 +15,9 @@ source:
 build:
   number: 0
   script:
+    content: bash -el "%RECIPE_DIR%\build.sh"
     env:
+      CHERE_INVOKING: '1'
       MSYS2_PATH_TYPE: inherit
   skip:
   - not win
