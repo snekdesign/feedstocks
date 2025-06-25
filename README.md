@@ -2,11 +2,9 @@
 ## Dependencies
 - [pixi][1] >=0.39.0
 - MSVC 17.12.* [LTSC][2] (Windows only)
-- Git (Windows only)
 ## Usage
 ```
 [sudo] pixi run build <package-name>
-pixi run boa-build akelpad
 ```
 ## License
 Recipes in this repo are published under [GPL-2.0-only][3] and [Anti-996][4]

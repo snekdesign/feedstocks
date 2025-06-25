@@ -4,26 +4,47 @@ context:
 
 package:
   name: akelpad
-  version: '{{ version }}'
+  version: ${{ version }}
 
 source:
-- url: https://jaist.dl.sourceforge.net/project/akelpad/AkelPad%204/{{ version }}/AkelPad-{{ version }}-src.zip
-  sha256: '{{ sha256 }}'
+- url: https://jaist.dl.sourceforge.net/project/akelpad/AkelPad%204/${{ version }}/AkelPad-${{ version }}-src.zip
+  sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
 - path: CMakeLists.txt
 
 build:
-  include_recipe: false
   number: 1
+  script:
+  - if: compiler('c') is startingwith('vs')
+    then:
+    - '"%RECIPE_DIR%\build.bat"'
+    else:
+    - set CHERE_INVOKING=1
+    - set MSYS2_PATH_TYPE=inherit
+    - bash -el "%RECIPE_DIR%\build.sh"
   skip:
   - not win
   - build_platform != target_platform
 
 requirements:
   build:
-  - cmake >=3.21.0
-  - "{{ compiler('c') }}"
+  - ${{ compiler('c') }}
+  - if: compiler('c') is startingwith('vs')
+    then:
+    - cmake >=3.21.0
+    else:
+    - m2-base
+    - m2-diffutils
+  host:
+  - if: not (compiler('c') is startingwith('vs'))
+    then:  # Shadowed by msys2 if installed into build env
+    - cmake >=3.21.0
+    - ninja
+  ignore_run_exports:
+    from_package:
+    - if: not (compiler('c') is startingwith('vs'))
+      then: ${{ compiler('c') }}
 
 about:
   license_family: BSD

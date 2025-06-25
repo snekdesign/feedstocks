@@ -1,8 +1,0 @@
-zip_keys:
-- [c_compiler, c_compiler_version]
-
-c_compiler:
-- vs  # [win]
-
-c_compiler_version:
-- '2022.12'  # [win]

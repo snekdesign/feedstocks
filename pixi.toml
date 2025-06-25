@@ -9,10 +9,7 @@ readme = 'README.md'
 repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
-rattler-build = '>=0.42.1'
-
-[target.unix.dependencies]
-git = '*'
+rattler-build = '>=0.44.0'
 
 [tasks.build]
 cmd = [
@@ -26,16 +23,3 @@ cmd = [
 
 [tasks.build.env]
 PIXI_HOME = '~/.pixi'
-
-[environments.boa-build]
-features = ['boa-build']
-no-default-feature = true
-
-[feature.boa-build]
-platforms = ['win-64']
-
-[feature.boa-build.dependencies]
-boa = '>=0.17.0'
-
-[feature.boa-build.tasks.boa-build]
-cmd = ['boa', 'build', '--pkg-format=2']
