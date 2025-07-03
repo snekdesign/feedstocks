@@ -12,9 +12,10 @@ build:
 
 requirements:
   run:
+  - dulwich !=0.23.1
   - fastwsgi
   - git
-  - klaus ${{ version }}
+  - klaus ==${{ version }}
 
 tests:
 - script:
