@@ -23,3 +23,14 @@ cmd = [
 
 [tasks.build.env]
 PIXI_HOME = '~/.pixi'
+
+[tasks.debug]
+cmd = [
+    'rattler-build',
+    'debug',
+    '--config-file', '$PIXI_HOME/config.toml',
+    '--recipe',
+]
+
+[tasks.debug.env]
+PIXI_HOME = '~/.pixi'
