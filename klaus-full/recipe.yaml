@@ -11,11 +11,15 @@ build:
   - not win
 
 requirements:
+  host:
+  - python
   run:
   - dulwich !=0.23.1
-  - fastwsgi
   - git
+  - gitoxide
+  - granian
   - klaus ==${{ version }}
+  - python >=3.10.0
 
 tests:
 - script:
