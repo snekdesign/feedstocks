@@ -1,10 +1,10 @@
 context:
-  major: 24
-  minor: 9
+  major: 25
+  minor: 0
   version: ${{ major }}.${{ minor }}.0
   version_string: ${{ major }}0${{ minor }}
-  sha256_src: 49c05169f49572c1128453579af1632a952409ced028259381dac30726b6133a
-  sha256_linux64: 914c7e20ad5ef8e4d3cf08620ff8894b28fe11b7eb99809d6930870fbe48a281
+  sha256_src: bff9e69b6ca73a5b8715d7623870a39dc90ad6ce1f4d1070685843987af1af9b
+  sha256_linux64: 15e914b5452f1da7879c6e12868d389fde5111cafab87b34857a2e3a12018409
 
 package:
   name: 7zz
