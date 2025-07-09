@@ -1,1 +1,6 @@
-cargo install --no-track --path uv/crates/uv --root "$PREFIX"
+cargo install \
+    --locked \
+    --no-track \
+    --path uv/crates/uv \
+    --profile minimal-size \
+    --root "$PREFIX"

@@ -6,10 +6,10 @@ Subject: [PATCH] customize
 ---
  .cargo/config.toml   |  2 --
  Cargo.lock           |  7 +++++++
- Cargo.toml           | 10 ++++++----
+ Cargo.toml           | 18 +++++++++---------
  crates/uv/Cargo.toml |  3 +++
  crates/uv/build.rs   |  3 +++
- 5 files changed, 19 insertions(+), 6 deletions(-)
+ 5 files changed, 22 insertions(+), 11 deletions(-)
  create mode 100644 crates/uv/build.rs
 
 diff --git a/.cargo/config.toml b/.cargo/config.toml
@@ -23,10 +23,10 @@ index bc7bfd6..12c0484 100644
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
 diff --git a/Cargo.lock b/Cargo.lock
-index 2e8febf..2a86d58 100644
+index f9e51c4..2fa51e9 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -3998,6 +3998,12 @@ dependencies = [
+@@ -4048,6 +4048,12 @@ dependencies = [
   "once_cell",
  ]
  
@@ -39,7 +39,7 @@ index 2e8febf..2a86d58 100644
  [[package]]
  name = "tikv-jemalloc-sys"
  version = "0.6.0+5.3.0-1-ge13ca993e8ccb9ba9847cc330696e02839f328f7"
-@@ -4589,6 +4595,7 @@ dependencies = [
+@@ -4646,6 +4652,7 @@ dependencies = [
   "tempfile",
   "textwrap",
   "thiserror 2.0.12",
@@ -48,7 +48,7 @@ index 2e8febf..2a86d58 100644
   "toml",
   "toml_edit",
 diff --git a/Cargo.toml b/Cargo.toml
-index 81a3a50..9a4315e 100644
+index 817c5c6..9bee5ab 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -80,7 +80,7 @@ async-channel = { version = "2.3.1" }
@@ -68,8 +68,19 @@ index 81a3a50..9a4315e 100644
 +pubgrub = { path = "../pubgrub" }
  quote = { version = "1.0.37" }
  rayon = { version = "1.10.0" }
- reflink-copy = { version = "0.1.19" }
-@@ -166,7 +166,7 @@ target-lexicon = { version = "0.13.0" }
+ ref-cast = { version = "1.0.24" }
+@@ -143,8 +143,8 @@ reflink-copy = { version = "0.1.19" }
+ regex = { version = "1.10.6" }
+ regex-automata = { version = "0.4.8", default-features = false, features = ["dfa-build", "dfa-search", "perf", "std", "syntax"] }
+ reqwest = { version = "=0.12.15", default-features = false, features = ["json", "gzip", "deflate", "zstd", "stream", "rustls-tls", "rustls-tls-native-roots", "socks", "multipart", "http2", "blocking"] }
+-reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8", features = ["multipart"] }
+-reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8" }
++reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware", features = ["multipart"] }
++reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
+ rkyv = { version = "0.8.8", features = ["bytecheck"] }
+ rmp-serde = { version = "1.3.0" }
+ rust-netrc = { version = "0.1.2" }
+@@ -167,7 +167,7 @@ target-lexicon = { version = "0.13.0" }
  tempfile = { version = "3.14.0" }
  textwrap = { version = "0.16.1" }
  thiserror = { version = "2.0.0" }
@@ -78,37 +89,46 @@ index 81a3a50..9a4315e 100644
  tokio = { version = "1.40.0", features = ["fs", "io-util", "macros", "process", "rt", "signal", "sync"] }
  tokio-stream = { version = "0.1.16" }
  tokio-util = { version = "0.7.12", features = ["compat", "io"] }
-@@ -180,7 +180,7 @@ tracing-tree = { version = "0.4.0" }
+@@ -181,7 +181,7 @@ tracing-tree = { version = "0.4.0" }
  unicode-width = { version = "0.2.0" }
  unscanny = { version = "0.1.0" }
  url = { version = "2.5.2", features = ["serde"] }
 -version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "06ec5a5f59ffaeb6cf5079c6cb184467da06c9db" }
 +version-ranges = { path = "../pubgrub/version-ranges" }
  walkdir = { version = "2.5.0" }
- which = { version = "7.0.0", features = ["regex"] }
- windows-registry = { version = "0.5.0" }
-@@ -234,6 +234,8 @@ large_stack_arrays = "allow"
- [profile.release]
- strip = true
- lto = "fat"
-+codegen-units = 1
+ which = { version = "8.0.0", features = ["regex"] }
+ windows = { version = "0.59.0", features = ["Win32_Storage_FileSystem"] }
+@@ -288,7 +288,7 @@ strip = "debuginfo"
+ # Profile to build a minimally sized binary for uv-build
+ [profile.minimal-size]
+ inherits = "release"
+-opt-level = "z"
 +opt-level = 3
+ # This will still show a panic message, we only skip the unwind
+ panic = "abort"
+ codegen-units = 1
+@@ -298,5 +298,5 @@ codegen-units = 1
+ inherits = "release"
  
- # This profile is meant to mimic the `release` profile as closely as
- # possible, but using settings that are more beneficial for iterative
+ [patch.crates-io]
+-reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8" }
+-reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8" }
++reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware" }
++reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
 diff --git a/crates/uv/Cargo.toml b/crates/uv/Cargo.toml
-index 3774b70..95b11bc 100644
+index 0a352d2..caa5101 100644
 --- a/crates/uv/Cargo.toml
 +++ b/crates/uv/Cargo.toml
-@@ -176,5 +176,8 @@ slow-tests = []
- # Includes test cases that require ecosystem packages
- test-ecosystem = []
+@@ -183,6 +183,9 @@ test-ecosystem = []
+ # Build uvw binary on Windows
+ windows-gui-bin = []
  
 +[build-dependencies]
 +thunk-rs = { version = "0.3.3", default-features = false, features = ["win7"] }
 +
  [package.metadata.dist]
  dist = true
+ 
 diff --git a/crates/uv/build.rs b/crates/uv/build.rs
 new file mode 100644
 index 0000000..507c62e
@@ -119,4 +139,5 @@ index 0000000..507c62e
 +    thunk::thunk();
 +}
 -- 
+2.49.0.windows.1
 

@@ -1,6 +1,6 @@
 context:
-  version: 0.7.8
-  sha256: 4f12e8b5f9706e28d689d3df47a14cda07fb638dbd83889233fdbf2e1e01d9db
+  version: 0.7.19
+  sha256: 51a069ebb3236f39dfa9c3e3e56cf3db2b267cca3153fc32eeab05e1b2ffa1b9
 
 package:
   name: uv
@@ -18,6 +18,9 @@ source:
 - url: https://github.com/astral-sh/pubgrub/archive/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db.tar.gz
   sha256: 7c39356749ea0084a75ef64f59890b2ce395d5f4492cb32474573650b7e52685
   target_directory: pubgrub
+- url: https://github.com/astral-sh/reqwest-middleware/archive/ad8b9d332d1773fde8b4cd008486de5973e0a3f8.tar.gz
+  sha256: 5ff23bcb5f724323cb2c7d6a9b597a9a05ce06295b1a7e2c667d378099f1a8d7
+  target_directory: reqwest-middleware
 - url: https://github.com/astral-sh/tl/archive/6e25b2ee2513d75385101a8ff9f591ef51f314ec.tar.gz
   sha256: e838bca7cb205e373cd801ce19476a808534a6090fc261aa2ea74dfd9cea68b0
   target_directory: tl
