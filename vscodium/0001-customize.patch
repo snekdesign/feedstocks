@@ -1,0 +1,22 @@
+From 26dea4d0c060e32507f7bb4993f4fbf53ebf84d3 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Fri, 4 Jul 2025 19:08:51 +0800
+Subject: [PATCH] customize
+
+---
+ bin/codium.cmd | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/bin/codium.cmd b/bin/codium.cmd
+index a70fcbd..64f4a9e 100644
+--- a/bin/codium.cmd
++++ b/bin/codium.cmd
+@@ -1,4 +1,5 @@
+ @echo off
++if exist build_env.bat call build_env.bat
+ setlocal
+ set VSCODE_DEV=
+ set ELECTRON_RUN_AS_NODE=1
+-- 
+2.49.0.windows.1
+
