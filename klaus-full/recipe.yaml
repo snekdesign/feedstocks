@@ -14,7 +14,7 @@ requirements:
   host:
   - python
   run:
-  - dulwich !=0.23.1
+  - dulwich <=0.23.0
   - git
   - gitoxide
   - granian
