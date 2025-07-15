@@ -1,0 +1,11 @@
+--- "a/src\\cli.c"
++++ "b/src\\cli.c"
+@@ -159,7 +159,7 @@
+ #include <stdio.h>
+
+ // IPC Header from the Everything SDK:
+-#include "..\..\sdk\ipc\everything_ipc.h"
++#include "everything_ipc.h"
+ #include "shlwapi.h" // Path functions
+
+ #define ES_COPYDATA_IPCTEST_QUERYCOMPLETEW		0

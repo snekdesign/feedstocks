@@ -1,21 +1,16 @@
 context:
-  version: 1.1.0.27
-  sha256: 16058ccaa225d2b40bf2fc67acf64fd2d928a4ba485def7277885d66b6dc8a6a
+  version: 1.1.0.30
+  sha256: f8f78be9682b32941794510c05eb7b91211b5e5daf3e810d2a5e12b934373a81
 
 package:
   name: everything-cli
   version: ${{ version }}
 
 source:
-- url: https://www.voidtools.com/Everything-SDK.zip
-  sha256: 545c3565c7531318fbd8e0b0d00ba3b4f747f0caa612a35df5b9e99f7323f794
-  target_directory: sdk
-- url: https://www.voidtools.com/ES-${{ version }}.x64.zip
+  url: https://github.com/voidtools/ES/archive/refs/tags/${{ version }}.tar.gz
   sha256: ${{ sha256 }}
-  target_directory: sdk/src
   patches:
-  # https://www.voidtools.com/forum/viewtopic.php?t=6220
-  - 0001-windows-7-support.patch
+  - changes.patch
 
 build:
   number: 0
