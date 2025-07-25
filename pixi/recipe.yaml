@@ -1,6 +1,6 @@
 context:
-  version: 0.48.1
-  sha256: 02114cfb34d8527527e8368a5a83bb06aa07ae99724e88e8139052be58dc809b
+  version: 0.50.1
+  sha256: b247b6ec361232adb4e1d59fb2aa7b13783c4032666f82ca960e9a482b9d87db
 
 package:
   name: pixi
@@ -12,29 +12,32 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.33.6.tar.gz
-  sha256: 5a528767e850469d33d7c94fd0e0cfa62bc824cea1d62cb5881dbf70d40d0e9a
+- url: https://github.com/conda/rattler/archive/refs/tags/rattler-v0.34.10.tar.gz
+  sha256: 524451dc29cb815c7d4ce37633a36e9d1f19e50a3d66646bc1808584f60ee0f5
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
-- url: https://github.com/astral-sh/uv/archive/refs/tags/0.7.8.tar.gz
-  sha256: 4f12e8b5f9706e28d689d3df47a14cda07fb638dbd83889233fdbf2e1e01d9db
+- url: https://github.com/astral-sh/uv/archive/refs/tags/0.7.20.tar.gz
+  sha256: c07afb70c926715b4280815393770350b2cfc63c899bc171f508c74de7fc3f5e
   target_directory: uv
   patches:
   - 0001-conda-build.patch
 - url: https://github.com/charliermarsh/rs-async-zip/archive/c909fda63fcafe4af496a07bfda28a5aae97e58d.tar.gz
   sha256: 8fc71e219a505af64d9c616f7940d24c1b38dc1f54c03d32cb34ba84930f3e1d
-  target_directory: uv/rs-async-zip
+  target_directory: rs-async-zip
 - url: https://github.com/astral-sh/pubgrub/archive/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db.tar.gz
   sha256: 7c39356749ea0084a75ef64f59890b2ce395d5f4492cb32474573650b7e52685
-  target_directory: uv/pubgrub
+  target_directory: pubgrub
+- url: https://github.com/astral-sh/reqwest-middleware/archive/ad8b9d332d1773fde8b4cd008486de5973e0a3f8.tar.gz
+  sha256: 5ff23bcb5f724323cb2c7d6a9b597a9a05ce06295b1a7e2c667d378099f1a8d7
+  target_directory: reqwest-middleware
 - url: https://github.com/astral-sh/tl/archive/6e25b2ee2513d75385101a8ff9f591ef51f314ec.tar.gz
   sha256: e838bca7cb205e373cd801ce19476a808534a6090fc261aa2ea74dfd9cea68b0
-  target_directory: uv/tl
+  target_directory: tl
 - if: win
   then:
-  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.2.1/VC-LTL-Binary.7z
-    sha256: 0b0b17b7a4ed993701208b2eaeba91f3acf2f1b5402430b52ac7bfbca2519464
+  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.2.2/VC-LTL-Binary.7z
+    sha256: 04aa46a7d2af655bcf42c4937504525eb7e66a75910ed42fd25a1cdcec587df0
 - if: win
   then:
   - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.7/YY-Thunks-Objs.zip
