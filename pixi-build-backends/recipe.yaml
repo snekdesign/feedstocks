@@ -1,6 +1,6 @@
 context:
-  version: 0.1.15
-  sha256: 8d5b69a931bcbdff64528bfae9f28748f625a70fb5ec93630a5f56196ef9f50c
+  version: 0.2.0
+  sha256: c68afa9715980dcb233f9591fca4b26b37696d089536d30217dca0eb8c14772b
 
 recipe:
   name: pixi-build-backends
