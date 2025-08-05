@@ -9,6 +9,11 @@ cargo install \
 cargo install \
     --locked \
     --no-track \
+    --path pixi-build-backends/crates/pixi-build-mojo \
+    --root "$PREFIX"
+cargo install \
+    --locked \
+    --no-track \
     --path pixi-build-backends/crates/pixi-build-python \
     --root "$PREFIX"
 cargo install \

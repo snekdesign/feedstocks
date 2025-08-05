@@ -1,6 +1,6 @@
 context:
-  version: 0.2.0
-  sha256: c68afa9715980dcb233f9591fca4b26b37696d089536d30217dca0eb8c14772b
+  version: 0.3.1
+  sha256: a7771aa3083030c27531563c7635f8a4cb7b42f339689c815d7c8c58e348e4bd
 
 recipe:
   name: pixi-build-backends
@@ -19,14 +19,20 @@ cache:
     target_directory: pixi-build-backends
     patches:
     - 0001-customize.patch
-  - url: https://codeload.github.com/prefix-dev/pixi/tar.gz/1ca9578b0ad73dbd5a889849f3bff47ddb91a81f
-    sha256: 7f7b8a4b4fdfe393266cc930403469cf2d73a9a822f3d796c873044909f02282
+  - url: https://codeload.github.com/prefix-dev/pixi/tar.gz/3484c4f8771b322b7a5a5546af3c785de2cd68b3
+    sha256: 1d1646829e12ac85a93f86b7a556b575a1e29919d6bcecbb037766c89cf483fe
     target_directory: pixi
-  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/ea03f64d243260dfd06e7ec75e015233ae9e2bd2
-    sha256: e3dec3a3f67abd309543838e69c11dc14f3cc2237ac31d1817cc3ecf67308e89
+  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/8c42c38cfd0fc5a75e8fdba0c8cbe6d87831f912
+    sha256: a6d56cf2b61cd470fdb10827f13aa3e28672baf37e10c12d5fba36ae3f983b67
     target_directory: rattler-build
     patches:
     - 0001-conda-build.patch
+  - url: https://codeload.github.com/prefix-dev/diffy/tar.gz/da81bf4ceb4a5b9e6f9c43616a4a74aabf50a29b
+    sha256: 59e7cbd560c4b1a247ff8ad9efc8d11bed9571554b30db9da4a966a32baba0e0
+    target_directory: diffy
+  - url: https://codeload.github.com/pka/http-range-client/tar.gz/b3ab3efd54b657f728686189495b1afa75d38fb7
+    sha256: 2e390fcf523277cfc1a835d184ca917930044a1b96995a39992229e98fc96a20
+    target_directory: http-range-client
   requirements:
     build:
     - ${{ compiler('c') }}
@@ -46,6 +52,15 @@ outputs:
   tests:
   - script:
     - pixi-build-cmake help
+- package:
+    name: pixi-build-mojo
+  build:
+    files:
+    - bin/pixi-build-mojo
+    - Library/bin/pixi-build-mojo.exe
+  tests:
+  - script:
+    - pixi-build-mojo help
 - package:
     name: pixi-build-python
   build:

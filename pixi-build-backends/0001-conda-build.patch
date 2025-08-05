@@ -4,22 +4,24 @@ Date: Mon, 23 Jun 2025 19:53:00 +0800
 Subject: [PATCH] conda build
 
 ---
- Cargo.toml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Cargo.toml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index f7b2f4c..f0a01d7 100644
+index aa7f6da..e5da61c 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -141,7 +141,7 @@ opendal = { version = "0.53.1", default-features = false, features = [
+@@ -182,8 +182,8 @@ retry-policies = "0.5.1"
+ strum = "0.27.1"
+ unicode-normalization = "0.1.24"
+ line-ending = "1.5.1"
+-diffy = { git = "https://github.com/prefix-dev/diffy.git", branch = "master" }
+-http-range-client = { git = "https://github.com/pka/http-range-client.git", default-features = false, features = [
++diffy = { path = "../diffy" }
++http-range-client = { path = "../http-range-client", default-features = false, features = [
+   "reqwest-sync",
+   "rustls-tls",
  ] }
- 
- # Rattler crates
--pixi_config = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
-+pixi_config = { path = "../pixi/crates/pixi_config" }
- rattler = { version = "0.33.5", default-features = false, features = [
-   "cli-tools",
-   "indicatif",
 -- 
 2.49.0.windows.1
 

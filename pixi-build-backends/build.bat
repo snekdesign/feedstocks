@@ -8,6 +8,11 @@ cargo install ^
 cargo install ^
     --locked ^
     --no-track ^
+    --path pixi-build-backends/crates/pixi-build-mojo ^
+    --root "%LIBRARY_PREFIX%" && ^
+cargo install ^
+    --locked ^
+    --no-track ^
     --path pixi-build-backends/crates/pixi-build-python ^
     --root "%LIBRARY_PREFIX%" && ^
 cargo install ^
