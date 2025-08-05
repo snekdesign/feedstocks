@@ -7,7 +7,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/voidtools/ES/archive/refs/tags/${{ version }}.tar.gz
+  url: https://codeload.github.com/voidtools/ES/tar.gz/${{ version }}
   sha256: ${{ sha256 }}
   patches:
   - changes.patch

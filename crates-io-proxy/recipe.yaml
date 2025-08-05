@@ -7,7 +7,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/ravenexp/crates-io-proxy/archive/refs/tags/v${{ version }}.tar.gz
+  url: https://codeload.github.com/ravenexp/crates-io-proxy/tar.gz/v${{ version }}
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch

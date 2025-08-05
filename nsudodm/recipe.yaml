@@ -7,7 +7,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/M2TeamArchived/NSudo/archive/refs/heads/master.tar.gz
+  url: https://codeload.github.com/M2TeamArchived/NSudo/tar.gz/refs/heads/master
   sha256: ${{ sha256 }}
   patches:
   - 0001-latest-msvc-compat.patch

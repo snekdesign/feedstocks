@@ -7,7 +7,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/snekdesign/startmenu/archive/refs/tags/v${{ version }}.tar.gz
+  url: https://codeload.github.com/snekdesign/startmenu/tar.gz/v${{ version }}
   sha256: ${{ sha256 }}
 
 build:

@@ -7,27 +7,28 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://github.com/astral-sh/uv/archive/refs/tags/${{ version }}.tar.gz
+- url: https://codeload.github.com/astral-sh/uv/tar.gz/${{ version }}
   sha256: ${{ sha256 }}
   target_directory: uv
   patches:
   - 0001-customize.patch
-- url: https://github.com/charliermarsh/rs-async-zip/archive/c909fda63fcafe4af496a07bfda28a5aae97e58d.tar.gz
+- url: https://codeload.github.com/charliermarsh/rs-async-zip/tar.gz/c909fda63fcafe4af496a07bfda28a5aae97e58d
   sha256: 8fc71e219a505af64d9c616f7940d24c1b38dc1f54c03d32cb34ba84930f3e1d
   target_directory: rs-async-zip
-- url: https://github.com/astral-sh/pubgrub/archive/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db.tar.gz
+- url: https://codeload.github.com/astral-sh/pubgrub/tar.gz/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db
   sha256: 7c39356749ea0084a75ef64f59890b2ce395d5f4492cb32474573650b7e52685
   target_directory: pubgrub
-- url: https://github.com/astral-sh/reqwest-middleware/archive/ad8b9d332d1773fde8b4cd008486de5973e0a3f8.tar.gz
+- url: https://codeload.github.com/astral-sh/reqwest-middleware/tar.gz/ad8b9d332d1773fde8b4cd008486de5973e0a3f8
   sha256: 5ff23bcb5f724323cb2c7d6a9b597a9a05ce06295b1a7e2c667d378099f1a8d7
   target_directory: reqwest-middleware
-- url: https://github.com/astral-sh/tl/archive/6e25b2ee2513d75385101a8ff9f591ef51f314ec.tar.gz
+- url: https://codeload.github.com/astral-sh/tl/tar.gz/6e25b2ee2513d75385101a8ff9f591ef51f314ec
   sha256: e838bca7cb205e373cd801ce19476a808534a6090fc261aa2ea74dfd9cea68b0
   target_directory: tl
 - if: win
   then:
-  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.2.1/VC-LTL-Binary.7z
-    sha256: 0b0b17b7a4ed993701208b2eaeba91f3acf2f1b5402430b52ac7bfbca2519464
+  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.2.2/VC-LTL-Binary.7z
+    sha256: 04aa46a7d2af655bcf42c4937504525eb7e66a75910ed42fd25a1cdcec587df0
+    target_directory: vc_ltl
 - if: win
   then:
   - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.7/YY-Thunks-Objs.zip

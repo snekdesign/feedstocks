@@ -8,7 +8,7 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://github.com/AutoHotkey/AutoHotkey/archive/refs/tags/v${{ version }}.tar.gz
+- url: https://codeload.github.com/AutoHotkey/AutoHotkey/tar.gz/v${{ version }}
   sha256: ${{ sha256_src }}
   patches:
   - 0001-conda-build.patch

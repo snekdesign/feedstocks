@@ -7,14 +7,14 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://github.com/mamba-org/mamba/archive/refs/tags/${{ version }}.tar.gz
+- url: https://codeload.github.com/mamba-org/mamba/tar.gz/${{ version }}
   sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch
 - url: https://mirror.nyist.edu.cn/github-release/microsoft/vcpkg-tool/2025-04-16 Release/vcpkg.exe
   sha256: 09cfc79ea1fbd8a5cee7c1d8d42d5334df0e7b9ad015ac4195b8ca94082f1ee5
   target_directory: vcpkg
-- url: https://github.com/microsoft/vcpkg/archive/refs/tags/2025.04.09.tar.gz
+- url: https://codeload.github.com/microsoft/vcpkg/tar.gz/2025.04.09
   sha256: 9a129eb4206157a03013dd87805406ef751a892170eddcaaf94a9b5db8a89b0f
   target_directory: vcpkg
 - url: https://github.com/ip7z/7zip/releases/download/24.09/7z2409.exe
@@ -32,11 +32,11 @@ source:
   sha256: ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269
   target_directory: vcpkg/downloads
   file_name: bzip2-1.0.8.tar.gz
-- url: https://github.com/curl/curl/archive/curl-8_13_0.tar.gz
+- url: https://codeload.github.com/curl/curl/tar.gz/curl-8_13_0
   sha256: ccc5ba45d9f5320c70ffb24e5411b66ba55ea1f333bf78be0963ed90a9328699
   target_directory: vcpkg/downloads
   file_name: curl-curl-curl-8_13_0.tar.gz
-- url: https://github.com/facebook/zstd/archive/v1.5.7.tar.gz
+- url: https://codeload.github.com/facebook/zstd/tar.gz/v1.5.7
   sha256: 37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c9012ee3
   target_directory: vcpkg/downloads
   file_name: facebook-zstd-v1.5.7.tar.gz
@@ -44,11 +44,11 @@ source:
   sha256: 449365b38a8d239875fe6246064be6a36ddb506ec367414c88ef0918486e49a3
   target_directory: vcpkg/downloads
   file_name: Fix-compatibility-in-package-version-file.patch
-- url: https://github.com/GiovanniDicanio/WinReg/archive/v6.3.2.tar.gz
+- url: https://codeload.github.com/GiovanniDicanio/WinReg/tar.gz/v6.3.2
   sha256: 644adca91229d714efaeebf0c010cc795f888f6a1015bb7d42c2f0a45fe52f8b
   target_directory: vcpkg/downloads
   file_name: GiovanniDicanio-WinReg-v6.3.2.tar.gz
-- url: https://github.com/GNOME/libxml2/archive/v2.13.5.tar.gz
+- url: https://codeload.github.com/GNOME/libxml2/tar.gz/v2.13.5
   sha256: 87d681718760ba42e749a61482d71b34d1d566843e9ade39a73fea92caf8293b
   target_directory: vcpkg/downloads
   file_name: GNOME-libxml2-v2.13.5.tar.gz
@@ -56,7 +56,7 @@ source:
   sha256: d533c1ef49214229681e90196ed2094691e8c4a0a0bef0b2c901debcb562682b
   target_directory: vcpkg/downloads
   file_name: jom_1_1_4.zip
-- url: https://github.com/libarchive/libarchive/archive/v3.7.8.tar.gz
+- url: https://codeload.github.com/libarchive/libarchive/tar.gz/v3.7.8
   sha256: a1d557d7d8b7fb61102d20006fead5a916624051b7c6ded444e6c6b5af01b226
   target_directory: vcpkg/downloads
   file_name: libarchive-libarchive-v3.7.8.tar.gz
@@ -64,7 +64,7 @@ source:
   sha256: 3b08f5f4f9b4eb82f151a7040bfd6fe6c6fb922efe4b1659c66ea933276965e8
   target_directory: vcpkg/downloads
   file_name: libiconv-1.18.tar.gz
-- url: https://github.com/lz4/lz4/archive/v1.10.0.tar.gz
+- url: https://codeload.github.com/lz4/lz4/tar.gz/v1.10.0
   sha256: 537512904744b35e232912055ccf8ec66d768639ff3abe5788d90d792ec5f48b
   target_directory: vcpkg/downloads
   file_name: lz4-lz4-v1.10.0.tar.gz
@@ -72,7 +72,7 @@ source:
   sha256: c0f892943208266f9b6543b3ae308fab6284c5c90e627931446fb49b4221a072
   target_directory: vcpkg/downloads
   file_name: lzo-2.10.tar.gz
-- url: https://github.com/madler/zlib/archive/v1.3.1.tar.gz
+- url: https://codeload.github.com/madler/zlib/tar.gz/v1.3.1
   sha256: 17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c
   target_directory: vcpkg/downloads
   file_name: madler-zlib-v1.3.1.tar.gz
@@ -232,7 +232,7 @@ source:
   sha256: f550fec705b6d6ff58f2db3c374c2277a37691678d6aba463adcbb129108467a
   target_directory: vcpkg/downloads
   file_name: ninja-win-1.12.1.zip
-- url: https://github.com/openssl/openssl/archive/openssl-3.5.0.tar.gz
+- url: https://codeload.github.com/openssl/openssl/tar.gz/openssl-3.5.0
   sha256: 576740bfe93209efda2be7cecb00dfeabe77fe9c5c908c1790cbe8fa50b223d0
   target_directory: vcpkg/downloads
   file_name: openssl-openssl-openssl-3.5.0.tar.gz
@@ -240,7 +240,7 @@ source:
   sha256: 754f3e2a8e473dc68d1540c7802fb166a025f35ef18960c4564a31f8b5933907
   target_directory: vcpkg/downloads
   file_name: strawberry-perl-5.40.0.1-64bit-portable.zip
-- url: https://github.com/tukaani-project/xz/archive/v5.8.1.tar.gz
+- url: https://codeload.github.com/tukaani-project/xz/tar.gz/v5.8.1
   sha256: bdbc23fbf9098843357e71e49685724fda2c320c29cb1b25fd90505f14bb0b3d
   target_directory: vcpkg/downloads
   file_name: tukaani-project-xz-v5.8.1.tar.gz

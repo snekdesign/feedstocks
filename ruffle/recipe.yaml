@@ -9,30 +9,30 @@ package:
   version: 0.1.0dev${{ year }}${{ month }}${{ day }}
 
 source:
-- url: https://github.com/ruffle-rs/ruffle/archive/refs/tags/nightly-${{ year }}-${{ month }}-${{ day }}.tar.gz
+- url: https://codeload.github.com/ruffle-rs/ruffle/tar.gz/nightly-${{ year }}-${{ month }}-${{ day }}
   sha256: ${{ sha256 }}
   target_directory: ruffle
   patches:
   - 0001-customize.patch
-- url: https://github.com/ruffle-rs/h263-rs/archive/b3f905511acc7b80861dac45fdc5ca913b6029e5.tar.gz
+- url: https://codeload.github.com/ruffle-rs/h263-rs/tar.gz/b3f905511acc7b80861dac45fdc5ca913b6029e5
   sha256: ad6ef55b8c955fa0e134c9d039deb1c65d07c01f7dab2b61970da01a782b1275
   target_directory: h263-rs
-- url: https://github.com/ruffle-rs/jpegxr/archive/2a429b0d71ab416e10b73d4dbdcf34cfe2900395.tar.gz
+- url: https://codeload.github.com/ruffle-rs/jpegxr/tar.gz/2a429b0d71ab416e10b73d4dbdcf34cfe2900395
   sha256: 1091a188d1a6459dff64459a9131ff9d81ec314af59f6576fe2a78f4b7d74661
   target_directory: jpegxr
-- url: https://github.com/ruffle-rs/nellymoser/archive/754b1184037aa9952a907107284fb73897e26adc.tar.gz
+- url: https://codeload.github.com/ruffle-rs/nellymoser/tar.gz/754b1184037aa9952a907107284fb73897e26adc
   sha256: 289f4866760471bcc8500a2a5837eda19e6f132a96c95a25de77add36352134b
   target_directory: nellymoser
-- url: https://github.com/ruffle-rs/nihav-vp6/archive/83c7e1094d603d9fc1212d39d99abb17f3a3226b.tar.gz
+- url: https://codeload.github.com/ruffle-rs/nihav-vp6/tar.gz/83c7e1094d603d9fc1212d39d99abb17f3a3226b
   sha256: b23849bc98fec53b8aa4467cc49e73ab3e87f635a7e1d0738542e5e81a5a885d
   target_directory: nihav-vp6
-- url: https://github.com/ruffle-rs/rust-flash-lso/archive/a5e938d9bb1909095f2340c2435867f6aae930b0.tar.gz
+- url: https://codeload.github.com/ruffle-rs/rust-flash-lso/tar.gz/a5e938d9bb1909095f2340c2435867f6aae930b0
   sha256: 62be1782f9eda70bb8411c839c8f3d3f3da03d2ad97dbbee802f90ff610fbc77
   target_directory: rust-flash-lso
-- url: https://github.com/ruffle-rs/wgpu/archive/refs/tags/v24.0.1-ruffle1.tar.gz
+- url: https://codeload.github.com/ruffle-rs/wgpu/tar.gz/v24.0.1-ruffle1
   sha256: bca7d788185a1926db0ae4454df2765f7f092ef79322aba969255d65262fd7d5
   target_directory: wgpu
-- url: https://github.com/KyleMayes/clang-sys/archive/refs/tags/v1.8.1.tar.gz
+- url: https://codeload.github.com/KyleMayes/clang-sys/tar.gz/v1.8.1
   sha256: f3571b3033fc6ff32f86326de724ece3ced7867f2016ccf7cdb36284d3f9c9b8
   target_directory: clang-sys
   patches:

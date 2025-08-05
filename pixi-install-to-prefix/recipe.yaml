@@ -7,17 +7,18 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://github.com/pavelzw/pixi-install-to-prefix/archive/refs/tags/v${{ version }}.tar.gz
+- url: https://codeload.github.com/pavelzw/pixi-install-to-prefix/tar.gz/v${{ version }}
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
-- url: https://github.com/prefix-dev/pixi/archive/dfbefb4f7d1b1a7dd8dbff013e31c85dcb148e87.tar.gz
+- url: https://codeload.github.com/prefix-dev/pixi/tar.gz/dfbefb4f7d1b1a7dd8dbff013e31c85dcb148e87
   sha256: 9b90d857c967ad8f580c60b59595624cd9b754f1e774057b9715d72526523f3c
   target_directory: pixi
 - if: win
   then:
-  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.2.1/VC-LTL-Binary.7z
-    sha256: 0b0b17b7a4ed993701208b2eaeba91f3acf2f1b5402430b52ac7bfbca2519464
+  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.2.2/VC-LTL-Binary.7z
+    sha256: 04aa46a7d2af655bcf42c4937504525eb7e66a75910ed42fd25a1cdcec587df0
+    target_directory: vc_ltl
 - if: win
   then:
   - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.7/YY-Thunks-Objs.zip

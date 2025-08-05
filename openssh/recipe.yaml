@@ -7,7 +7,7 @@ package:
   version: ${{ version }}p2
 
 source:
-- url: https://github.com/PowerShell/openssh-portable/archive/refs/tags/v${{ version }}.0.tar.gz
+- url: https://codeload.github.com/PowerShell/openssh-portable/tar.gz/v${{ version }}.0
   sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch

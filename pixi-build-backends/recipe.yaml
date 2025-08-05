@@ -14,15 +14,15 @@ build:
 
 cache:
   source:
-  - url: https://github.com/prefix-dev/pixi-build-backends/archive/refs/tags/pixi-build-rattler-build-v${{ version }}.tar.gz
+  - url: https://codeload.github.com/prefix-dev/pixi-build-backends/tar.gz/pixi-build-rattler-build-v${{ version }}
     sha256: ${{ sha256 }}
     target_directory: pixi-build-backends
     patches:
     - 0001-customize.patch
-  - url: https://github.com/prefix-dev/pixi/archive/1ca9578b0ad73dbd5a889849f3bff47ddb91a81f.tar.gz
+  - url: https://codeload.github.com/prefix-dev/pixi/tar.gz/1ca9578b0ad73dbd5a889849f3bff47ddb91a81f
     sha256: 7f7b8a4b4fdfe393266cc930403469cf2d73a9a822f3d796c873044909f02282
     target_directory: pixi
-  - url: https://github.com/prefix-dev/rattler-build/archive/ea03f64d243260dfd06e7ec75e015233ae9e2bd2.tar.gz
+  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/ea03f64d243260dfd06e7ec75e015233ae9e2bd2
     sha256: e3dec3a3f67abd309543838e69c11dc14f3cc2237ac31d1817cc3ecf67308e89
     target_directory: rattler-build
     patches:

@@ -15,7 +15,7 @@ build:
 
 cache:
   source:
-    url: https://github.com/reactos/reactos/archive/refs/tags/${{ version }}-release.tar.gz
+    url: https://codeload.github.com/reactos/reactos/tar.gz/${{ version }}-release
     sha256: ${{ sha256 }}
     patches:
     - 0001-cmd.dll.patch

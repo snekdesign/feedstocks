@@ -12,9 +12,11 @@ package:
 source:
   url: https://master.dl.sourceforge.net/project/sevenmax/7-max/${{ major }}.0${{ minor }}/7max${{ version_string }}-src.7z?viasf=1
   sha256: ${{ sha256 }}
+  patches:
+  - 0001-always-o2.patch
 
 build:
-  number: 0
+  number: 1
   skip:
   - not win
   - build_platform != target_platform

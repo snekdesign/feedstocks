@@ -7,7 +7,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/libgit2/libgit2/archive/refs/tags/v${{ version }}.tar.gz
+  url: https://codeload.github.com/libgit2/libgit2/tar.gz/v${{ version }}
   sha256: ${{ sha256 }}
 
 build:

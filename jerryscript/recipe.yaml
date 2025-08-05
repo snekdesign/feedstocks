@@ -7,7 +7,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/jerryscript-project/jerryscript/archive/refs/tags/v${{ version }}.tar.gz
+  url: https://codeload.github.com/jerryscript-project/jerryscript/tar.gz/v${{ version }}
   sha256: ${{ sha256 }}
   patches:
   - 0002-enable-lto.patch

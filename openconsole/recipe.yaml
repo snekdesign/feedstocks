@@ -7,12 +7,12 @@ package:
   version: ${{ version }}
 
 source:
-- url: https://github.com/microsoft/terminal/archive/refs/tags/v${{ version }}.0.tar.gz
+- url: https://codeload.github.com/microsoft/terminal/tar.gz/v${{ version }}.0
   sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch
 # ms-gsl 3.1.0 is missing in conda-forge; added as source
-- url: https://github.com/microsoft/GSL/archive/refs/tags/v3.1.0.tar.gz
+- url: https://codeload.github.com/microsoft/GSL/tar.gz/v3.1.0
   sha256: d3234d7f94cea4389e3ca70619b82e8fb4c2f33bb3a070799f1e18eef500a083
   target_directory: dep/gsl
 
