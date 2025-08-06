@@ -12,10 +12,10 @@ Subject: [PATCH] customize
  5 files changed, 137 insertions(+), 22 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index d490389..2c614a1 100644
+index 564b5fb..6628a0c 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -48,15 +48,17 @@ jsonrpc-stdio-server = "18.0.0"
+@@ -48,16 +48,18 @@ jsonrpc-stdio-server = "18.0.0"
  jsonrpc-http-server = "18.0.0"
  jsonrpc-core = "18.0.0"
  
@@ -26,6 +26,7 @@ index d490389..2c614a1 100644
  
  rattler_conda_types = { version = "0.37.0", default-features = false }
 +rattler_config = { version = "0.2.5", default-features = false }
+ rattler_digest = { version = "1.1.5", default-features = false }
  rattler_package_streaming = { version = "0.22.42", default-features = false }
  rattler_virtual_packages = { version = "2.0.16", default-features = false }
  
@@ -34,7 +35,7 @@ index d490389..2c614a1 100644
  pixi_consts = { version = "*" }
  pixi_manifest = { version = "*" }
  pixi_spec = { version = "*" }
-@@ -69,17 +71,12 @@ recipe-stage0 = { path = "crates/recipe-stage0" }
+@@ -70,17 +72,12 @@ recipe-stage0 = { path = "crates/recipe-stage0" }
  
  
  [patch.crates-io]
@@ -58,7 +59,7 @@ index d490389..2c614a1 100644
  
  #rattler_cache = { path = "../rattler/crates/rattler_cache" }
  #rattler_conda_types = { path = "../rattler/crates/rattler_conda_types" }
-@@ -88,9 +85,11 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
+@@ -89,9 +86,11 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
  #rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway" }
  #simple_spawn_blocking = { path = "../rattler/crates/simple_spawn_blocking" }
  
@@ -74,7 +75,7 @@ index d490389..2c614a1 100644
  [profile.ci]
  codegen-units = 16
 diff --git a/crates/pixi-build-backend/Cargo.toml b/crates/pixi-build-backend/Cargo.toml
-index 71c3082..6ab242d 100644
+index 38a49c0..5d2cca9 100644
 --- a/crates/pixi-build-backend/Cargo.toml
 +++ b/crates/pixi-build-backend/Cargo.toml
 @@ -17,6 +17,7 @@ miette = { workspace = true }
@@ -85,7 +86,7 @@ index 71c3082..6ab242d 100644
  rattler_package_streaming = { workspace = true }
  rattler_virtual_packages = { workspace = true }
  rattler-build = { workspace = true }
-@@ -36,6 +37,7 @@ pathdiff = { workspace = true }
+@@ -37,6 +38,7 @@ pathdiff = { workspace = true }
  thiserror = { workspace = true }
  
  pixi_build_types = { workspace = true }
@@ -186,7 +187,7 @@ index 4f53b95..b28756c 100644
          );
  
 diff --git a/crates/pixi-build-rattler-build/Cargo.toml b/crates/pixi-build-rattler-build/Cargo.toml
-index 5ba8399..f5fc2db 100644
+index c21bf96..66175b0 100644
 --- a/crates/pixi-build-rattler-build/Cargo.toml
 +++ b/crates/pixi-build-rattler-build/Cargo.toml
 @@ -8,6 +8,7 @@ async-trait = { workspace = true }
