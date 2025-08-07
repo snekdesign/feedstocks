@@ -29,3 +29,6 @@ tests:
 
 about:
   license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: Everything Command Line Interface
