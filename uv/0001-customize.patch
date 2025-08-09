@@ -23,23 +23,23 @@ index bc7bfd6..12c0484 100644
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
 diff --git a/Cargo.lock b/Cargo.lock
-index f9e51c4..2fa51e9 100644
+index adc9e2b..7926cdd 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -4048,6 +4048,12 @@ dependencies = [
-  "once_cell",
+@@ -4076,6 +4076,12 @@ dependencies = [
+  "cfg-if",
  ]
  
 +[[package]]
 +name = "thunk-rs"
-+version = "0.3.3"
++version = "0.3.5"
 +source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "7cbc000e786a7ea2cfa3a85ef77cf86bfdadeaa2b215ec4751df66442fa4632a"
++checksum = "9b4c52c965c79d34af24f3c3a891c4a1441c9ae20e7465607c20ecf3a544d0e1"
 +
  [[package]]
  name = "tikv-jemalloc-sys"
  version = "0.6.0+5.3.0-1-ge13ca993e8ccb9ba9847cc330696e02839f328f7"
-@@ -4646,6 +4652,7 @@ dependencies = [
+@@ -4700,6 +4706,7 @@ dependencies = [
   "tempfile",
   "textwrap",
   "thiserror 2.0.12",
@@ -48,19 +48,19 @@ index f9e51c4..2fa51e9 100644
   "toml",
   "toml_edit",
 diff --git a/Cargo.toml b/Cargo.toml
-index 817c5c6..9bee5ab 100644
+index 1447172..1204765 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -80,7 +80,7 @@ async-channel = { version = "2.3.1" }
+@@ -82,7 +82,7 @@ async-channel = { version = "2.3.1" }
  async-compression = { version = "0.4.12", features = ["bzip2", "gzip", "xz", "zstd"] }
  async-trait = { version = "0.1.82" }
  async_http_range_reader = { version = "0.9.1" }
--async_zip = { git = "https://github.com/charliermarsh/rs-async-zip", rev = "c909fda63fcafe4af496a07bfda28a5aae97e58d", features = ["bzip2", "deflate", "lzma", "tokio", "xz", "zstd"] }
+-async_zip = { git = "https://github.com/astral-sh/rs-async-zip", rev = "c909fda63fcafe4af496a07bfda28a5aae97e58d", features = ["bzip2", "deflate", "lzma", "tokio", "xz", "zstd"] }
 +async_zip = { path = "../rs-async-zip", features = ["bzip2", "deflate", "lzma", "tokio", "xz", "zstd"] }
  axoupdater = { version = "0.9.0", default-features = false }
  backon = { version = "1.3.0" }
  base64 = { version = "0.22.1" }
-@@ -135,7 +135,7 @@ percent-encoding = { version = "2.3.1" }
+@@ -138,7 +138,7 @@ percent-encoding = { version = "2.3.1" }
  petgraph = { version = "0.8.0" }
  proc-macro2 = { version = "1.0.86" }
  procfs = { version = "0.17.0", default-features = false, features = ["flate2"] }
@@ -69,10 +69,10 @@ index 817c5c6..9bee5ab 100644
  quote = { version = "1.0.37" }
  rayon = { version = "1.10.0" }
  ref-cast = { version = "1.0.24" }
-@@ -143,8 +143,8 @@ reflink-copy = { version = "0.1.19" }
+@@ -146,8 +146,8 @@ reflink-copy = { version = "0.1.19" }
  regex = { version = "1.10.6" }
  regex-automata = { version = "0.4.8", default-features = false, features = ["dfa-build", "dfa-search", "perf", "std", "syntax"] }
- reqwest = { version = "=0.12.15", default-features = false, features = ["json", "gzip", "deflate", "zstd", "stream", "rustls-tls", "rustls-tls-native-roots", "socks", "multipart", "http2", "blocking"] }
+ reqwest = { version = "0.12.22", default-features = false, features = ["json", "gzip", "deflate", "zstd", "stream", "rustls-tls", "rustls-tls-native-roots", "socks", "multipart", "http2", "blocking"] }
 -reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8", features = ["multipart"] }
 -reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8" }
 +reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware", features = ["multipart"] }
@@ -80,7 +80,7 @@ index 817c5c6..9bee5ab 100644
  rkyv = { version = "0.8.8", features = ["bytecheck"] }
  rmp-serde = { version = "1.3.0" }
  rust-netrc = { version = "0.1.2" }
-@@ -167,7 +167,7 @@ target-lexicon = { version = "0.13.0" }
+@@ -170,7 +170,7 @@ target-lexicon = { version = "0.13.0" }
  tempfile = { version = "3.14.0" }
  textwrap = { version = "0.16.1" }
  thiserror = { version = "2.0.0" }
@@ -89,7 +89,7 @@ index 817c5c6..9bee5ab 100644
  tokio = { version = "1.40.0", features = ["fs", "io-util", "macros", "process", "rt", "signal", "sync"] }
  tokio-stream = { version = "0.1.16" }
  tokio-util = { version = "0.7.12", features = ["compat", "io"] }
-@@ -181,7 +181,7 @@ tracing-tree = { version = "0.4.0" }
+@@ -184,7 +184,7 @@ tracing-tree = { version = "0.4.0" }
  unicode-width = { version = "0.2.0" }
  unscanny = { version = "0.1.0" }
  url = { version = "2.5.2", features = ["serde"] }
@@ -97,8 +97,8 @@ index 817c5c6..9bee5ab 100644
 +version-ranges = { path = "../pubgrub/version-ranges" }
  walkdir = { version = "2.5.0" }
  which = { version = "8.0.0", features = ["regex"] }
- windows = { version = "0.59.0", features = ["Win32_Storage_FileSystem"] }
-@@ -288,7 +288,7 @@ strip = "debuginfo"
+ windows = { version = "0.59.0", features = ["Win32_Globalization", "Win32_System_Console", "Win32_System_Kernel", "Win32_System_Diagnostics_Debug", "Win32_Storage_FileSystem"] }
+@@ -309,7 +309,7 @@ strip = "debuginfo"
  # Profile to build a minimally sized binary for uv-build
  [profile.minimal-size]
  inherits = "release"
@@ -107,7 +107,7 @@ index 817c5c6..9bee5ab 100644
  # This will still show a panic message, we only skip the unwind
  panic = "abort"
  codegen-units = 1
-@@ -298,5 +298,5 @@ codegen-units = 1
+@@ -319,5 +319,5 @@ codegen-units = 1
  inherits = "release"
  
  [patch.crates-io]
@@ -116,15 +116,15 @@ index 817c5c6..9bee5ab 100644
 +reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware" }
 +reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
 diff --git a/crates/uv/Cargo.toml b/crates/uv/Cargo.toml
-index 0a352d2..caa5101 100644
+index 28d2e2a..012c23e 100644
 --- a/crates/uv/Cargo.toml
 +++ b/crates/uv/Cargo.toml
-@@ -183,6 +183,9 @@ test-ecosystem = []
+@@ -188,6 +188,9 @@ test-ecosystem = []
  # Build uvw binary on Windows
  windows-gui-bin = []
  
 +[build-dependencies]
-+thunk-rs = { version = "0.3.3", default-features = false, features = ["win7"] }
++thunk-rs = { version = "0.3.5", default-features = false, features = ["win7"] }
 +
  [package.metadata.dist]
  dist = true

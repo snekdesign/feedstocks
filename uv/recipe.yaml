@@ -1,6 +1,6 @@
 context:
-  version: 0.7.20
-  sha256: c07afb70c926715b4280815393770350b2cfc63c899bc171f508c74de7fc3f5e
+  version: 0.8.5
+  sha256: 611e2ad9b20f2462bf30632d2d2dc0eae865046e058c8c8f7180ddb0cd4e2b26
 
 package:
   name: uv
@@ -12,7 +12,7 @@ source:
   target_directory: uv
   patches:
   - 0001-customize.patch
-- url: https://codeload.github.com/charliermarsh/rs-async-zip/tar.gz/c909fda63fcafe4af496a07bfda28a5aae97e58d
+- url: https://codeload.github.com/astral-sh/rs-async-zip/tar.gz/c909fda63fcafe4af496a07bfda28a5aae97e58d
   sha256: 8fc71e219a505af64d9c616f7940d24c1b38dc1f54c03d32cb34ba84930f3e1d
   target_directory: rs-async-zip
 - url: https://codeload.github.com/astral-sh/pubgrub/tar.gz/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db
