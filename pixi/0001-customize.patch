@@ -12,22 +12,22 @@ Subject: [PATCH] customize
  create mode 100644 build.rs
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 062cf4d..a800a98 100644
+index 546a253..57aa497 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -107,59 +107,59 @@ toml_edit = "0.22.24"
+@@ -108,59 +108,59 @@ toml_edit = "0.22.24"
  tracing = "0.1.41"
  tracing-subscriber = "0.3.19"
  typed-path = "0.11.0"
--uv-build-frontend = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-distribution-filename = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-distribution-types = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-install-wheel = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-pep440 = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-pep508 = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-platform-tags = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-pypi-types = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-requirements-txt = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
+-uv-build-frontend = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-distribution-filename = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-distribution-types = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-install-wheel = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-pep440 = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-pep508 = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-platform-tags = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-pypi-types = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-requirements-txt = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
 +uv-build-frontend = { path = "../uv/crates/uv-build-frontend" }
 +uv-distribution-filename = { path = "../uv/crates/uv-distribution-filename" }
 +uv-distribution-types = { path = "../uv/crates/uv-distribution-types" }
@@ -63,7 +63,7 @@ index 062cf4d..a800a98 100644
    "google-cloud-auth",
    "dirs",
  ] }
--rattler_package_streaming = { version = "0.22.47", default-features = false }
+-rattler_package_streaming = { version = "0.22.48", default-features = false }
 -rattler_repodata_gateway = { version = "0.23.9", default-features = false }
 -rattler_shell = { version = "0.24.7", default-features = false }
 -rattler_solve = { version = "2.1.8", default-features = false }
@@ -78,23 +78,23 @@ index 062cf4d..a800a98 100644
  
  # Bumping this to a higher version breaks the Windows path handling.
  url = "2.5.4"
--uv-auth = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-cache = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-cache-info = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-client = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-configuration = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-dispatch = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-distribution = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-git = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-git-types = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-installer = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-normalize = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-python = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-redacted = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-requirements = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-resolver = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-types = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
--uv-workspace = { git = "https://github.com/astral-sh/uv", tag = "0.7.20" }
+-uv-auth = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-cache = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-cache-info = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-client = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-configuration = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-dispatch = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-distribution = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-git = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-git-types = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-installer = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-normalize = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-python = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-redacted = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-requirements = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-resolver = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-types = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
+-uv-workspace = { git = "https://github.com/astral-sh/uv", tag = "0.8.5" }
 +uv-auth = { path = "../uv/crates/uv-auth" }
 +uv-cache = { path = "../uv/crates/uv-cache" }
 +uv-cache-info = { path = "../uv/crates/uv-cache-info" }
@@ -115,7 +115,7 @@ index 062cf4d..a800a98 100644
  winapi = { version = "0.3.9", default-features = false }
  xxhash-rust = "0.8.15"
  zip = { version = "2.4.2", default-features = false }
-@@ -401,6 +401,9 @@ tokio = { workspace = true, features = ["rt"] }
+@@ -404,6 +404,9 @@ tokio = { workspace = true, features = ["rt"] }
  
  [patch.crates-io]
  # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
@@ -127,7 +127,7 @@ index 062cf4d..a800a98 100644
 +version-ranges = { path = "../pubgrub/version-ranges" }
 +
 +[build-dependencies]
-+thunk-rs = { version = "0.3.3", features = ["win7"], default-features = false }
++thunk-rs = { version = "0.3.5", features = ["win7"], default-features = false }
 diff --git a/build.rs b/build.rs
 new file mode 100644
 index 0000000..507c62e

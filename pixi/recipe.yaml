@@ -1,6 +1,6 @@
 context:
-  version: 0.50.2
-  sha256: 26636239084fba212f175d843f1b3f3a1321946ea9287db0cee473ecd47cafaf
+  version: 0.51.0
+  sha256: 42346913e069751f22d4187953ba2fce8894c61b2da4b1f5798453d9c94ff5e8
 
 package:
   name: pixi
@@ -12,17 +12,17 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.34.10
-  sha256: 524451dc29cb815c7d4ce37633a36e9d1f19e50a3d66646bc1808584f60ee0f5
+- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.34.11
+  sha256: 3604d719eeedff09aec71d7c64669a034c1d9f654955cd2673fb15a21e3a7641
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
-- url: https://codeload.github.com/astral-sh/uv/tar.gz/0.7.20
-  sha256: c07afb70c926715b4280815393770350b2cfc63c899bc171f508c74de7fc3f5e
+- url: https://codeload.github.com/astral-sh/uv/tar.gz/0.8.5
+  sha256: 611e2ad9b20f2462bf30632d2d2dc0eae865046e058c8c8f7180ddb0cd4e2b26
   target_directory: uv
   patches:
   - 0001-conda-build.patch
-- url: https://codeload.github.com/charliermarsh/rs-async-zip/tar.gz/c909fda63fcafe4af496a07bfda28a5aae97e58d
+- url: https://codeload.github.com/astral-sh/rs-async-zip/tar.gz/c909fda63fcafe4af496a07bfda28a5aae97e58d
   sha256: 8fc71e219a505af64d9c616f7940d24c1b38dc1f54c03d32cb34ba84930f3e1d
   target_directory: rs-async-zip
 - url: https://codeload.github.com/astral-sh/pubgrub/tar.gz/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db
