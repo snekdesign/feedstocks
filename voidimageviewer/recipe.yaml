@@ -1,0 +1,32 @@
+context:
+  version: 1.0.0.13
+  sha256: d0af1bd4c0af603f366fa1bc8083a27c0bd6f89ab985026c18b542823f945274
+
+package:
+  name: voidimageviewer
+  version: ${{ version }}
+
+source:
+- url: https://codeload.github.com/voidtools/voidImageViewer/tar.gz/${{ version }}
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-conda-build.patch
+- path: CMakeLists.txt
+
+build:
+  number: 0
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - cmake >=4.0.0
+  - ${{ compiler('c') }}
+  host:
+  - libwebp-base >=1.3.2
+
+about:
+  license_file: LICENSE
+  summary: Lightweight image viewer for Windows with animated GIF/WEBP support

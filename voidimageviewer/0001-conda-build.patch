@@ -1,0 +1,39 @@
+From b40aa4c4e78aa794f9b60758d169ca5f8379f478 Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Wed, 13 Aug 2025 19:02:06 +0800
+Subject: [PATCH] conda build
+
+---
+ res/voidImageViewer.rc | 2 +-
+ src/webp.c             | 5 -----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/res/voidImageViewer.rc b/res/voidImageViewer.rc
+index 615a146..2c20676 100644
+--- a/res/voidImageViewer.rc
++++ b/res/voidImageViewer.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "afxres.h"
++#include "winres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+diff --git a/src/webp.c b/src/webp.c
+index dedcfe6..64cb897 100644
+--- a/src/webp.c
++++ b/src/webp.c
+@@ -175,8 +175,3 @@ int webp_load(IStream *stream,void *user_data,int (*info_callback)(void *user_da
+ 	
+ 	return ret;
+ }
+-
+-void __cdecl _wassert(const wchar_t * _Message, const wchar_t *_File, unsigned _Line)
+-{
+-	debug_fatal("%S(%d) : %S",_File,_Line,_Message);
+-}
+-- 
+2.49.0.windows.1
+
