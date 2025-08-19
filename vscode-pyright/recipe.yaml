@@ -1,0 +1,33 @@
+context:
+  # curl https://open-vsx.org/api/detachhead/basedpyright/versions?size=1
+  version: 1.31.2
+  # curl -L https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
+  sha256: 5aa21d7be23b7a5b11fc9127d31407feea350c1520929676db747aef50792d91
+
+package:
+  name: vscode-pyright
+  version: ${{ version }}
+
+source:
+  url: https://open-vsx.org/api/detachhead/basedpyright/${{ version }}/file/detachhead.basedpyright-${{ version }}.vsix
+  sha256: ${{ sha256 }}
+
+build:
+  number: 0
+  script:
+  - robocopy . "%LIBRARY_PREFIX%\opt\vscodium\bootstrap\extensions" detachhead.basedpyright-${{ version }}.vsix
+  - if errorlevel 2 exit %ERRORLEVEL%
+  - if not errorlevel 1 exit 1
+  skip:
+  - not win
+
+requirements:
+  run:
+  - vscodium >=1.103.15539
+  run_constraints:
+  - ty-vscode <0a0
+
+about:
+  license: MIT
+  license_family: MIT
+  summary: VS Code static type checking for Python (but based)
