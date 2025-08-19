@@ -1,0 +1,33 @@
+context:
+  # curl https://open-vsx.org/api/astral-sh/ty/win32-x64/versions?size=1
+  version: 2025.37.12311339
+  # curl -L https://open-vsx.org/api/astral-sh/ty/win32-x64/latest/file/sha256
+  sha256: 651eba33488c4e5b3d7be36ed823309c686cbc18bc77c43cbcc7dfeb383f0a77
+
+package:
+  name: ty-vscode
+  version: ${{ version }}
+
+source:
+  url: https://open-vsx.org/api/astral-sh/ty/win32-x64/${{ version }}/file/astral-sh.ty-${{ version }}@win32-x64.vsix
+  sha256: ${{ sha256 }}
+
+build:
+  number: 0
+  script:
+  - robocopy . "%LIBRARY_PREFIX%\opt\vscodium\bootstrap\extensions" astral-sh.ty-${{ version }}@win32-x64.vsix
+  - if errorlevel 2 exit %ERRORLEVEL%
+  - if not errorlevel 1 exit 1
+  skip:
+  - not win
+
+requirements:
+  run:
+  - vscodium >=1.103.15539
+  run_constraints:
+  - vscode-pyright <0a0
+
+about:
+  license: MIT
+  license_family: MIT
+  summary: A Visual Studio Code extension with support for the ty type checker and language server
