@@ -14,6 +14,10 @@ source:
 
 build:
   number: 0
+  script:
+  - cmake -B build -DJERRY_CMDLINE=OFF -DJERRY_EXT=OFF %CMAKE_ARGS%
+  - cmake --build build --config Release
+  - cmake --install build
   skip:
   - not win
   - build_platform != target_platform

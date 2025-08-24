@@ -8,6 +8,22 @@ recipe:
 
 build:
   number: 0
+  script:
+  - if: win
+    then:
+    - if exist "%LIBRARY_BIN%\pixi-build-cmake.exe" ( exit /b 0 )
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-cmake --root "%LIBRARY_PREFIX%"
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-mojo --root "%LIBRARY_PREFIX%"
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-python --root "%LIBRARY_PREFIX%"
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rattler-build --root "%LIBRARY_PREFIX%"
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rust --root "%LIBRARY_PREFIX%"
+    else:
+    - if [ -f "$PREFIX/bin/pixi-build-cmake" ]; then exit 0; fi
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-cmake --root "$PREFIX"
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-mojo --root "$PREFIX"
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-python --root "$PREFIX"
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rattler-build --root "$PREFIX"
+    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rust --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))

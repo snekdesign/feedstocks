@@ -15,11 +15,11 @@ source:
 build:
   number: 0
   script:
-  - robocopy . "%LIBRARY_PREFIX%\opt\vscodium\bootstrap\extensions" detachhead.basedpyright-${{ version }}.vsix
-  - if errorlevel 2 exit %ERRORLEVEL%
-  - if not errorlevel 1 exit 1
+  - md "%LIBRARY_PREFIX%\opt\vscodium\bootstrap\extensions"
+  - mklink /H "%LIBRARY_PREFIX%\opt\vscodium\bootstrap\extensions\detachhead.basedpyright-${{ version }}.vsix" detachhead.basedpyright-${{ version }}.vsix
   skip:
   - not win
+  - build_platform != target_platform
 
 requirements:
   run:

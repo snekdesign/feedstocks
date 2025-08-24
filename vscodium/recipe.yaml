@@ -62,8 +62,12 @@ source:
 
 build:
   number: 0
+  script:
+  - md "%LIBRARY_PREFIX%\opt"
+  - cp -al vscodium "%LIBRARY_PREFIX%\opt"
   skip:
   - not win
+  - build_platform != target_platform
 
 requirements:
   host:

@@ -7,6 +7,9 @@ package:
 
 build:
   number: 0
+  script:
+  - copy "%RECIPE_DIR%\klaus.cmd" "%LIBRARY_BIN%"
+  - copy "%RECIPE_DIR%\_klaus_full.py" "%SP_DIR%"
   skip:
   - not win
 

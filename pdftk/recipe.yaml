@@ -15,6 +15,19 @@ source:
 
 build:
   number: 0
+  script:
+  - if: win
+    then:
+    - md "%LIBRARY_BIN%" "%LIBRARY_PREFIX%\share\java\pdftk" "%LIBRARY_PREFIX%\share\man\man1"
+    - mklink /H "%LIBRARY_BIN%\pdftk.cmd" "%RECIPE_DIR%\pdftk.cmd"
+    - mklink /H "%LIBRARY_PREFIX%\share\java\pdftk\pdftk-all.jar" pdftk-all.jar
+    - mklink /H "%LIBRARY_PREFIX%\share\man\man1\pdftk.1" pdftk.1
+    else:
+    - mkdir -p "$PREFIX/bin" "$PREFIX/share/java/pdftk" "$PREFIX/share/man/man1"
+    - ln "$RECIPE_DIR/pdftk" "$PREFIX/bin"
+    - chmod +x "$PREFIX/bin/pdftk"
+    - ln pdftk-all.jar "$PREFIX/share/java/pdftk"
+    - ln pdftk.1 "$PREFIX/share/man/man1"
   skip:
   - not (win or linux)
   - build_platform != target_platform

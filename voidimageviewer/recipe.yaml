@@ -15,6 +15,10 @@ source:
 
 build:
   number: 0
+  script:
+  - cmake -B build
+  - cmake --build build --config Release
+  - cmake --install build --prefix "%LIBRARY_PREFIX%"
   skip:
   - not win
   - build_platform != target_platform

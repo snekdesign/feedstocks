@@ -24,6 +24,19 @@ source:
 
 build:
   number: 0
+  script:
+  - if: win
+    then:
+    - mklink /H License.txt DOC\License.txt
+    - cd CPP\7zip\Bundles\Alone2
+    - nmake MY_DYNAMIC_LINK=1 PLATFORM=x64
+    - mklink /H "%LIBRARY_BIN%\7zz.exe" x64\7zz.exe
+    - cd ..\SFXWin
+    - nmake PLATFORM=x64
+    - mklink /H "%LIBRARY_BIN%\7z.sfx" x64\7z.sfx
+    else:
+    - mkdir -p "$PREFIX/bin"
+    - ln 7zz "$PREFIX/bin"
   skip:
   - not (win or linux)
   - build_platform != target_platform

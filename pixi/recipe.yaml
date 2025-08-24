@@ -47,6 +47,14 @@ source:
 
 build:
   number: 0
+  script:
+  - if: win
+    then:
+    - set "VC_LTL=%SRC_DIR%\vc_ltl"
+    - set "YY_THUNKS=%SRC_DIR%\yy_thunks"
+    - cargo install --config target.x86_64-pc-windows-msvc.linker=\"link\" --features performance --locked --no-track --path pixi --profile dist --root "%LIBRARY_PREFIX%"
+    else:
+    - cargo install --features performance --locked --no-track --path pixi --profile dist --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
