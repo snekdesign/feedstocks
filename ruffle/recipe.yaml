@@ -1,8 +1,8 @@
 context:
   year: 2025
   month: '08'
-  day: 26
-  sha256: 1b99c3ad530380cf91345d538361970fd73e6844be593993abde15ee9fa24a0b
+  day: 31
+  sha256: 9bc7415989516d01976c65074f085c5f4e471a676f284cbc30b1966b50021c58
 
 package:
   name: ruffle
