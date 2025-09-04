@@ -61,7 +61,7 @@ requirements:
   - ${{ compiler('c') }}
   - libclang13
   - openjdk
-  - rust
+  - rust >=1.89.0
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
   run:

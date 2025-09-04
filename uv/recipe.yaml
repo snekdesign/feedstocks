@@ -52,7 +52,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust >=1.86.0
+  - rust >=1.89.0
   - if: linux
     then: diffutils
   - if: microarch_level|int > 0
