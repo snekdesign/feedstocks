@@ -1,6 +1,6 @@
 context:
-  version: 0.51.0
-  sha256: 42346913e069751f22d4187953ba2fce8894c61b2da4b1f5798453d9c94ff5e8
+  version: 0.54.2
+  sha256: 6a9c0d8b623ffa3e978d82e9db369d4ace0b850c12f5ecfc1117025a4e720df5
 
 package:
   name: pixi
@@ -12,8 +12,8 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.34.11
-  sha256: 3604d719eeedff09aec71d7c64669a034c1d9f654955cd2673fb15a21e3a7641
+- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.37.0
+  sha256: d0d6b9b0166d176eab5c3c361acb37c943dc8be4ed0dccabd88b1edc9910a435
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
@@ -52,9 +52,9 @@ build:
     then:
     - set "VC_LTL=%SRC_DIR%\vc_ltl"
     - set "YY_THUNKS=%SRC_DIR%\yy_thunks"
-    - cargo install --config target.x86_64-pc-windows-msvc.linker=\"link\" --features performance --locked --no-track --path pixi --profile dist --root "%LIBRARY_PREFIX%"
+    - cargo install --config target.x86_64-pc-windows-msvc.linker=\"link\" --features performance --locked --no-track --path pixi/crates/pixi --profile dist --root "%LIBRARY_PREFIX%"
     else:
-    - cargo install --features performance --locked --no-track --path pixi --profile dist --root "$PREFIX"
+    - cargo install --features performance --locked --no-track --path pixi/crates/pixi --profile dist --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
