@@ -1,6 +1,6 @@
 context:
-  version: 1.103.25610
-  sha256: f98957642d79556c6682b1384c98a94ee6da037b163cd1b80e29420af5be69d8
+  version: 1.104.06114
+  sha256: 5d66a73d867f59cc6a4390da1f6680ac75ca1e10032b83be4dd405b34a51d596
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.4.0
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -10,19 +10,19 @@ context:
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
   clangd_sha256: a7dd3b3c8cb40f84a1b7889e54f5cdf28d220682d213f9f8d4909e23b79af017
   # https://api.github.com/repos/mathworks/MATLAB-extension-for-vscode/releases/latest
-  matlab_version: 1.3.4
-  matlab_sha256: 60bbb68683da14545b38a27bba925a6d1161c7244a7e2ee90f894ffb3c29355d
+  matlab_version: 1.3.5
+  matlab_sha256: 1be720c234deb896f3e1d0cc482e187a54441a2b81fad0462e8dc6d325eabc40
   # https://open-vsx.org/api/ms-python/python/versions?size=1
-  python_version: 2025.4.0
+  python_version: 2025.12.0
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
-  python_sha256: 31b22cdb399b0aaeb7705e8e38665e0c33ac3dacd13852a1a8b7fb151c728b72
+  python_sha256: c738a9960bf45d0d8e5209e4cc09f5bd9d4eda93bfa7fa2e85bc1fe44e7a6021
   # https://api.github.com/repos/ktnrg45/vs-code-cython/releases/latest
   cython_version: 1.0.3
   cython_sha256: 68ad4e17045ce6c90ba24b8416266419582a688db63d35c6175135e9cc741034
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/versions?size=1
-  ruff_version: 2025.24.0
+  ruff_version: 2025.26.0
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
-  ruff_sha256: c0eae4abdb4ad0827c3fc41a2859ff9de3f7940d9b11bb23ab623993dff958e9
+  ruff_sha256: ac3ab4357ea7a539768683823c9ca3e5d27c83941dab9f3ce0f5f889c7ed6ff0
   # https://open-vsx.org/api/tamasfe/even-better-toml/versions?size=1
   toml_version: 0.21.2
   # https://open-vsx.org/api/tamasfe/even-better-toml/latest/file/sha256
