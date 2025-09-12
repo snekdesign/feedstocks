@@ -41,8 +41,8 @@ source:
     target_directory: vc_ltl
 - if: win
   then:
-  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.7/YY-Thunks-Objs.zip
-    sha256: c3066f3f074ebc2a89b2def5f427bdea238dee17349d2bab579af519781691ab
+  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.8/YY-Thunks-Objs.zip
+    sha256: 2c5ef3c2e8a3abc366ed1ab233f46e60951eb1250a5f1a5b1527ed6983bf4e74
     target_directory: yy_thunks
 
 build:
