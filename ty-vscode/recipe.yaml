@@ -1,8 +1,8 @@
 context:
   # curl https://open-vsx.org/api/astral-sh/ty/win32-x64/versions?size=1
-  version: 2025.41.12461352
+  version: 2025.43.12620731
   # curl -L https://open-vsx.org/api/astral-sh/ty/win32-x64/latest/file/sha256
-  sha256: aa157b327463afae0b47143687e78fe0c1a4640076df689db9236cb23faf6f61
+  sha256: 4dc53ee54038d6307a692b0e2fa8a0ee3f2bb318e938a6c9d69b1577ce241ab2
 
 package:
   name: ty-vscode
