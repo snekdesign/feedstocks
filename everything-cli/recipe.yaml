@@ -1,6 +1,6 @@
 context:
-  version: 1.1.0.30
-  sha256: f8f78be9682b32941794510c05eb7b91211b5e5daf3e810d2a5e12b934373a81
+  version: 1.1.0.33
+  sha256: a4a0e08aa17fff51c655652fbe7ca5a08a0dc52efc9991f030e898e6c8e133a2
 
 package:
   name: everything-cli
@@ -10,13 +10,14 @@ source:
   url: https://codeload.github.com/voidtools/ES/tar.gz/${{ version }}
   sha256: ${{ sha256 }}
   patches:
-  - changes.patch
+  - 0001-conda-build.patch
 
 build:
   number: 0
   script:
-  - cd src
-  - cl -DUNICODE -Fe"%LIBRARY_BIN%\es.exe" -GL -MD -O2 cli.c shlwapi.lib user32.lib
+  - cd vs2019
+  - msbuild -p:Configuration=Release;Platform=x64
+  - mklink /H "%LIBRARY_BIN%\es.exe" x64\Release\es.exe
   skip:
   - not win
   - build_platform != target_platform
