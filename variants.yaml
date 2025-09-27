@@ -11,7 +11,7 @@ c_compiler:
 
 c_compiler_version:
 - if: osx
-  then: '20.1'
+  then: '21.1'
   else: '15.1'
 - if: win
   then: '2022.12'
@@ -25,7 +25,7 @@ cxx_compiler:
 
 cxx_compiler_version:
 - if: osx
-  then: '20.1'
+  then: '21.1'
   else: '15.1'
 - if: win
   then: '2022.12'

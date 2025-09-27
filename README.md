@@ -1,7 +1,8 @@
 # feedstocks
 ## Dependencies
-- [pixi][1] >=0.39.0
+- [Pixi][1] >=0.55.0
 - MSVC 17.12.* [LTSC][2] (Windows only)
+- Xcode or Xcode Command Line Tools (macOS only)
 ## Usage
 ```
 [sudo] pixi run build <package-name>

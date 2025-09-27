@@ -1,7 +1,8 @@
-[project]
+[workspace]
 name = 'feedstocks'
 channels = ['conda-forge']
 platforms = ['linux-64', 'osx-64', 'win-64']
+requires-pixi = '>=0.55.0'
 
 authors = ['snekdesign']
 license-file = 'LICENSE'
@@ -9,7 +10,7 @@ readme = 'README.md'
 repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
-rattler-build = '>=0.46.0'
+rattler-build = '>=0.47.0'
 
 [tasks.build]
 cmd = [
@@ -21,9 +22,6 @@ cmd = [
     '--recipe-dir',
 ]
 
-[tasks.build.env]
-PIXI_HOME = '~/.pixi'
-
 [tasks.debug]
 cmd = [
     'rattler-build',
@@ -31,6 +29,3 @@ cmd = [
     '--config-file', '$PIXI_HOME/config.toml',
     '--recipe',
 ]
-
-[tasks.debug.env]
-PIXI_HOME = '~/.pixi'
