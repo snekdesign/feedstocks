@@ -4,18 +4,18 @@ Date: Thu, 20 Feb 2025 18:55:09 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                                    | 29 ++++----
+ Cargo.toml                                    | 32 +++++-----
  crates/pixi-build-backend/Cargo.toml          |  2 +
- .../src/intermediate_backend.rs               | 60 +++++++++++++++++
+ .../src/intermediate_backend.rs               | 52 +++++++++++++++++
  crates/pixi-build-rattler-build/Cargo.toml    |  2 +
- .../pixi-build-rattler-build/src/protocol.rs  | 66 +++++++++++++++++--
- 5 files changed, 137 insertions(+), 22 deletions(-)
+ .../pixi-build-rattler-build/src/protocol.rs  | 58 ++++++++++++++++---
+ 5 files changed, 124 insertions(+), 22 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 564b5fb..6628a0c 100644
+index f34ab30..cb966d9 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -48,16 +48,18 @@ jsonrpc-stdio-server = "18.0.0"
+@@ -55,16 +55,18 @@ jsonrpc-stdio-server = "18.0.0"
  jsonrpc-http-server = "18.0.0"
  jsonrpc-core = "18.0.0"
  
@@ -24,18 +24,18 @@ index 564b5fb..6628a0c 100644
    "rustls-tls",
  ] }
  
- rattler_conda_types = { version = "0.37.0", default-features = false }
-+rattler_config = { version = "0.2.5", default-features = false }
+ rattler_conda_types = { version = "0.39.0", default-features = false }
++rattler_config = { version = "0.2.8", default-features = false }
  rattler_digest = { version = "1.1.5", default-features = false }
- rattler_package_streaming = { version = "0.22.42", default-features = false }
- rattler_virtual_packages = { version = "2.0.16", default-features = false }
+ rattler_package_streaming = { version = "0.23.1", default-features = false }
+ rattler_virtual_packages = { version = "2.1.3", default-features = false }
  
  pixi_build_types = { version = "*" }
 +pixi_config = { version = "*" }
  pixi_consts = { version = "*" }
  pixi_manifest = { version = "*" }
  pixi_spec = { version = "*" }
-@@ -70,17 +72,12 @@ recipe-stage0 = { path = "crates/recipe-stage0" }
+@@ -77,17 +79,15 @@ recipe-stage0 = { path = "crates/recipe-stage0" }
  
  
  [patch.crates-io]
@@ -56,12 +56,15 @@ index 564b5fb..6628a0c 100644
 +pixi_manifest = { path = "../pixi/crates/pixi_manifest" }
 +pixi_spec = { path = "../pixi/crates/pixi_spec" }
 +pixi_build_type_conversions = { path = "../pixi/crates/pixi_build_type_conversions" }
++reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware" }
++reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
++version-ranges = { path = "../pubgrub/version-ranges" }
  
  #rattler_cache = { path = "../rattler/crates/rattler_cache" }
  #rattler_conda_types = { path = "../rattler/crates/rattler_conda_types" }
-@@ -89,9 +86,11 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
- #rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway" }
- #simple_spawn_blocking = { path = "../rattler/crates/simple_spawn_blocking" }
+@@ -99,9 +99,11 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
+ #[patch."https://github.com/prefix-dev/rattler-build"]
+ #rattler-build = { path = "../rattler-build/" }
  
 -[profile.dev.package]
 -insta.opt-level = 3
@@ -75,10 +78,10 @@ index 564b5fb..6628a0c 100644
  [profile.ci]
  codegen-units = 16
 diff --git a/crates/pixi-build-backend/Cargo.toml b/crates/pixi-build-backend/Cargo.toml
-index 38a49c0..5d2cca9 100644
+index e364de4..ae169a8 100644
 --- a/crates/pixi-build-backend/Cargo.toml
 +++ b/crates/pixi-build-backend/Cargo.toml
-@@ -17,6 +17,7 @@ miette = { workspace = true }
+@@ -18,6 +18,7 @@ miette = { workspace = true }
  minijinja = { workspace = true }
  parking_lot = { workspace = true }
  rattler_conda_types = { workspace = true }
@@ -86,7 +89,7 @@ index 38a49c0..5d2cca9 100644
  rattler_package_streaming = { workspace = true }
  rattler_virtual_packages = { workspace = true }
  rattler-build = { workspace = true }
-@@ -37,6 +38,7 @@ pathdiff = { workspace = true }
+@@ -39,6 +40,7 @@ pathdiff = { workspace = true }
  thiserror = { workspace = true }
  
  pixi_build_types = { workspace = true }
@@ -95,10 +98,10 @@ index 38a49c0..5d2cca9 100644
  pixi_manifest = { workspace = true }
  pixi_spec = { workspace = true }
 diff --git a/crates/pixi-build-backend/src/intermediate_backend.rs b/crates/pixi-build-backend/src/intermediate_backend.rs
-index 4f53b95..b28756c 100644
+index f3b3e7a..77030b1 100644
 --- a/crates/pixi-build-backend/src/intermediate_backend.rs
 +++ b/crates/pixi-build-backend/src/intermediate_backend.rs
-@@ -342,6 +342,35 @@ where
+@@ -342,6 +342,31 @@ where
              &selector_config_for_variants,
          )?;
  
@@ -115,13 +118,9 @@ index 4f53b95..b28756c 100644
 +                    })
 +                })
 +            );
-+            let common = rattler_build::opt::CommonData::new(
-+                None,
-+                false,
-+                None,
++            let common = rattler_build::opt::CommonData::from_opts_and_config(
++                rattler_build::opt::CommonOpts::default(),
 +                config_base,
-+                None,
-+                None,
 +            );
 +            rattler_build::tool_configuration::reqwest_client_from_auth_storage(
 +                None,
@@ -134,7 +133,7 @@ index 4f53b95..b28756c 100644
          // Build the tool configuration
          let tool_config = Arc::new(
              Configuration::builder()
-@@ -350,6 +379,7 @@ where
+@@ -350,6 +375,7 @@ where
                  .with_channel_config(channel_config)
                  .with_testing(false)
                  .with_keep_build(true)
@@ -142,7 +141,7 @@ index 4f53b95..b28756c 100644
                  .finish(),
          );
  
-@@ -643,6 +673,35 @@ where
+@@ -644,6 +670,31 @@ where
              &selector_config_for_variants,
          )?;
  
@@ -159,13 +158,9 @@ index 4f53b95..b28756c 100644
 +                    })
 +                })
 +            );
-+            let common = rattler_build::opt::CommonData::new(
-+                None,
-+                false,
-+                None,
++            let common = rattler_build::opt::CommonData::from_opts_and_config(
++                rattler_build::opt::CommonOpts::default(),
 +                config_base,
-+                None,
-+                None,
 +            );
 +            rattler_build::tool_configuration::reqwest_client_from_auth_storage(
 +                None,
@@ -178,7 +173,7 @@ index 4f53b95..b28756c 100644
          // Build the tool configuration
          let tool_config = Arc::new(
              Configuration::builder()
-@@ -651,6 +710,7 @@ where
+@@ -652,6 +703,7 @@ where
                  .with_channel_config(channel_config)
                  .with_testing(false)
                  .with_keep_build(true)
@@ -187,7 +182,7 @@ index 4f53b95..b28756c 100644
          );
  
 diff --git a/crates/pixi-build-rattler-build/Cargo.toml b/crates/pixi-build-rattler-build/Cargo.toml
-index c21bf96..66175b0 100644
+index 5ede731..6a18c2a 100644
 --- a/crates/pixi-build-rattler-build/Cargo.toml
 +++ b/crates/pixi-build-rattler-build/Cargo.toml
 @@ -8,6 +8,7 @@ async-trait = { workspace = true }
@@ -207,19 +202,19 @@ index c21bf96..66175b0 100644
  
  [dev-dependencies]
 diff --git a/crates/pixi-build-rattler-build/src/protocol.rs b/crates/pixi-build-rattler-build/src/protocol.rs
-index 9527743..d5afe52 100644
+index b6e445c..96ffc7c 100644
 --- a/crates/pixi-build-rattler-build/src/protocol.rs
 +++ b/crates/pixi-build-rattler-build/src/protocol.rs
 @@ -48,7 +48,7 @@ use rattler_build::{
-         DependencyInfo, FinalizedDependencies, FinalizedRunDependencies, ResolvedDependencies,
      },
+     render::resolved_dependencies::DependencyInfo,
      selectors::SelectorConfig,
 -    tool_configuration::{BaseClient, Configuration},
 +    tool_configuration::{Configuration, reqwest_client_from_auth_storage},
      variant_config::{ParseErrors, VariantConfig},
  };
  use rattler_conda_types::{
-@@ -120,7 +120,7 @@ impl Protocol for RattlerBuildBackend {
+@@ -118,7 +118,7 @@ impl Protocol for RattlerBuildBackend {
  
          let channels = params
              .channel_base_urls
@@ -228,7 +223,7 @@ index 9527743..d5afe52 100644
  
          let discovered_outputs =
              rattler_build_tool.discover_outputs(&params.variant_configuration)?;
-@@ -150,8 +150,34 @@ impl Protocol for RattlerBuildBackend {
+@@ -148,8 +148,30 @@ impl Protocol for RattlerBuildBackend {
              build_platform,
          )?;
  
@@ -247,13 +242,9 @@ index 9527743..d5afe52 100644
 +                    })
 +                })
 +            );
-+            let common = rattler_build::opt::CommonData::new(
-+                None,
-+                false,
-+                None,
++            let common = rattler_build::opt::CommonData::from_opts_and_config(
++                rattler_build::opt::CommonOpts::default(),
 +                config_base,
-+                None,
-+                None,
 +            );
 +            reqwest_client_from_auth_storage(
 +                None,
@@ -265,7 +256,7 @@ index 9527743..d5afe52 100644
  
          let tool_config = Configuration::builder()
              .with_opt_cache_dir(self.cache_dir.clone())
-@@ -507,7 +533,7 @@ impl Protocol for RattlerBuildBackend {
+@@ -519,7 +541,7 @@ impl Protocol for RattlerBuildBackend {
  
          let channels = params
              .channel_base_urls
@@ -274,7 +265,7 @@ index 9527743..d5afe52 100644
  
          let rattler_build_tool = RattlerBuild::new(
              self.recipe_source.clone(),
-@@ -543,8 +569,34 @@ impl Protocol for RattlerBuildBackend {
+@@ -555,8 +577,30 @@ impl Protocol for RattlerBuildBackend {
  
          let mut built = vec![];
  
@@ -293,13 +284,9 @@ index 9527743..d5afe52 100644
 +                    })
 +                })
 +            );
-+            let common = rattler_build::opt::CommonData::new(
-+                None,
-+                false,
-+                None,
++            let common = rattler_build::opt::CommonData::from_opts_and_config(
++                rattler_build::opt::CommonOpts::default(),
 +                config_base,
-+                None,
-+                None,
 +            );
 +            reqwest_client_from_auth_storage(
 +                None,

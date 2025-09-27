@@ -5,14 +5,15 @@ Subject: [PATCH] conda build
 
 ---
  Cargo.toml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ src/opt.rs | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index aa7f6da..e5da61c 100644
+index b8cbd6a..ca54961 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -182,8 +182,8 @@ retry-policies = "0.5.1"
- strum = "0.27.1"
+@@ -185,8 +185,8 @@ retry-policies = "0.5.1"
+ strum = "0.27.2"
  unicode-normalization = "0.1.24"
  line-ending = "1.5.1"
 -diffy = { git = "https://github.com/prefix-dev/diffy.git", branch = "master" }
@@ -22,6 +23,20 @@ index aa7f6da..e5da61c 100644
    "reqwest-sync",
    "rustls-tls",
  ] }
+diff --git a/src/opt.rs b/src/opt.rs
+index 212d5c6..7de34af 100644
+--- a/src/opt.rs
++++ b/src/opt.rs
+@@ -301,7 +301,8 @@ impl CommonData {
+         }
+     }
+ 
+-    fn from_opts_and_config(value: CommonOpts, config: Config) -> Self {
++    #[allow(missing_docs)]
++    pub fn from_opts_and_config(value: CommonOpts, config: Config) -> Self {
+         Self::new(
+             value.output_dir,
+             value.experimental,
 -- 
 2.49.0.windows.1
 

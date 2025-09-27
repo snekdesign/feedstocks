@@ -1,6 +1,6 @@
 context:
-  version: 0.3.2
-  sha256: a53c7c5d96306ef1a182012bbd7d3cd1e03d5a1031a4a09f237b5b58439b7d51
+  version: 0.3.3
+  sha256: 889c0c5a7cab676afb76d3aa6e9e2801bdd41e46d991049d21fedd695a3e151b
 
 recipe:
   name: pixi-build-backends
@@ -8,22 +8,6 @@ recipe:
 
 build:
   number: 0
-  script:
-  - if: win
-    then:
-    - if exist "%LIBRARY_BIN%\pixi-build-cmake.exe" ( exit /b 0 )
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-cmake --root "%LIBRARY_PREFIX%"
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-mojo --root "%LIBRARY_PREFIX%"
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-python --root "%LIBRARY_PREFIX%"
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rattler-build --root "%LIBRARY_PREFIX%"
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rust --root "%LIBRARY_PREFIX%"
-    else:
-    - if [ -f "$PREFIX/bin/pixi-build-cmake" ]; then exit 0; fi
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-cmake --root "$PREFIX"
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-mojo --root "$PREFIX"
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-python --root "$PREFIX"
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rattler-build --root "$PREFIX"
-    - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rust --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
@@ -35,20 +19,33 @@ cache:
     target_directory: pixi-build-backends
     patches:
     - 0001-customize.patch
-  - url: https://codeload.github.com/prefix-dev/pixi/tar.gz/3484c4f8771b322b7a5a5546af3c785de2cd68b3
-    sha256: 1d1646829e12ac85a93f86b7a556b575a1e29919d6bcecbb037766c89cf483fe
+  - url: https://codeload.github.com/prefix-dev/pixi/tar.gz/a331c4ad5f7a494def4b88ba3bed33acb363bb6d
+    sha256: 81ea95a0e5713c5d82c581ffcbefcdf8ec89511e974483130b845eac376e3ad3
     target_directory: pixi
-  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/8c42c38cfd0fc5a75e8fdba0c8cbe6d87831f912
-    sha256: a6d56cf2b61cd470fdb10827f13aa3e28672baf37e10c12d5fba36ae3f983b67
+    patches:
+    - 0001-pixi.patch
+  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/1405f70a5e0bbb371fefcf05c1f95a098febd3d3
+    sha256: bfa06b93df4466c9500429ea858f87a6cba2e888b0771b98737ffd84f23e4366
     target_directory: rattler-build
     patches:
     - 0001-conda-build.patch
-  - url: https://codeload.github.com/prefix-dev/diffy/tar.gz/da81bf4ceb4a5b9e6f9c43616a4a74aabf50a29b
-    sha256: 59e7cbd560c4b1a247ff8ad9efc8d11bed9571554b30db9da4a966a32baba0e0
+  - url: https://codeload.github.com/prefix-dev/diffy/tar.gz/f916e25c31a8d9e7483116c9e8aa6a36e20f947a
+    sha256: 9d87db96611374ac9b677d99080ca5ae87fba38f9511ac2e5df541ddccdf8395
     target_directory: diffy
   - url: https://codeload.github.com/pka/http-range-client/tar.gz/b3ab3efd54b657f728686189495b1afa75d38fb7
     sha256: 2e390fcf523277cfc1a835d184ca917930044a1b96995a39992229e98fc96a20
     target_directory: http-range-client
+  - url: https://codeload.github.com/astral-sh/pubgrub/tar.gz/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db
+    sha256: 7c39356749ea0084a75ef64f59890b2ce395d5f4492cb32474573650b7e52685
+    target_directory: pubgrub
+  - url: https://codeload.github.com/astral-sh/reqwest-middleware/tar.gz/ad8b9d332d1773fde8b4cd008486de5973e0a3f8
+    sha256: 5ff23bcb5f724323cb2c7d6a9b597a9a05ce06295b1a7e2c667d378099f1a8d7
+    target_directory: reqwest-middleware
+  - url: https://codeload.github.com/astral-sh/uv/tar.gz/0.8.5
+    sha256: 611e2ad9b20f2462bf30632d2d2dc0eae865046e058c8c8f7180ddb0cd4e2b26
+    target_directory: uv
+    patches:
+    - 0001-uv.patch
   requirements:
     build:
     - ${{ compiler('c') }}
@@ -57,6 +54,21 @@ cache:
       then: diffutils
     - if: microarch_level|int > 0
       then: x86_64-microarch-level ==${{ microarch_level }}
+  build:
+    script:
+    - if: win
+      then:
+      - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-cmake --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi-build-backends/crates/pixi-build-mojo --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi-build-backends/crates/pixi-build-python --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi-build-backends/crates/pixi-build-rattler-build --root "%LIBRARY_PREFIX%"
+      - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rust --root "%LIBRARY_PREFIX%"
+      else:
+      - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-cmake --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi-build-backends/crates/pixi-build-mojo --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi-build-backends/crates/pixi-build-python --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi-build-backends/crates/pixi-build-rattler-build --root "$PREFIX"
+      - cargo install --locked --no-track --path pixi-build-backends/crates/pixi-build-rust --root "$PREFIX"
 
 outputs:
 - package:
