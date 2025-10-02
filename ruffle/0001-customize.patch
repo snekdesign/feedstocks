@@ -21,7 +21,7 @@ index af6cbe3f..25b55d33 100644
 +++ b/Cargo.toml
 @@ -48,16 +48,19 @@ license = "MIT OR Apache-2.0"
  repository = "https://github.com/ruffle-rs/ruffle"
- version = "0.2.0-nightly.2025.8.26"
+ version = "0.2.0-nightly.2025.10.2"
  
 +[patch.crates-io]
 +clang-sys = { path = "../clang-sys" }
