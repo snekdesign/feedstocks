@@ -1,6 +1,6 @@
 context:
-  version: 0.54.2
-  sha256: 6a9c0d8b623ffa3e978d82e9db369d4ace0b850c12f5ecfc1117025a4e720df5
+  version: 0.55.0
+  sha256: fcf3dc002573980780b27e92d2f10e1b23f82bbb0df3c127bbfdabe0813dfa75
 
 package:
   name: pixi
@@ -12,8 +12,8 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.37.0
-  sha256: d0d6b9b0166d176eab5c3c361acb37c943dc8be4ed0dccabd88b1edc9910a435
+- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.37.3
+  sha256: 935818530950ba962ec1ae06fbe670e1378f98c5b6c32b6b01838609ca1c267f
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
@@ -65,6 +65,8 @@ requirements:
   - rust >=1.89.0
   - if: linux
     then: diffutils
+  - if: linux
+    then: make
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
   - if: win
