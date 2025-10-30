@@ -1,6 +1,6 @@
 context:
-  version: 0.8.5
-  sha256: 611e2ad9b20f2462bf30632d2d2dc0eae865046e058c8c8f7180ddb0cd4e2b26
+  version: 0.9.5
+  sha256: 9fd1dd030b37b51dcf79b582ea77a911eeb4015a00669bd3047d3b6adea37ba8
 
 package:
   name: uv
@@ -12,18 +12,6 @@ source:
   target_directory: uv
   patches:
   - 0001-customize.patch
-- url: https://codeload.github.com/astral-sh/rs-async-zip/tar.gz/c909fda63fcafe4af496a07bfda28a5aae97e58d
-  sha256: 8fc71e219a505af64d9c616f7940d24c1b38dc1f54c03d32cb34ba84930f3e1d
-  target_directory: rs-async-zip
-- url: https://codeload.github.com/astral-sh/pubgrub/tar.gz/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db
-  sha256: 7c39356749ea0084a75ef64f59890b2ce395d5f4492cb32474573650b7e52685
-  target_directory: pubgrub
-- url: https://codeload.github.com/astral-sh/reqwest-middleware/tar.gz/ad8b9d332d1773fde8b4cd008486de5973e0a3f8
-  sha256: 5ff23bcb5f724323cb2c7d6a9b597a9a05ce06295b1a7e2c667d378099f1a8d7
-  target_directory: reqwest-middleware
-- url: https://codeload.github.com/astral-sh/tl/tar.gz/6e25b2ee2513d75385101a8ff9f591ef51f314ec
-  sha256: e838bca7cb205e373cd801ce19476a808534a6090fc261aa2ea74dfd9cea68b0
-  target_directory: tl
 - if: win
   then:
   - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.2.2/VC-LTL-Binary.7z
@@ -42,9 +30,9 @@ build:
     then:
     - set "VC_LTL=%SRC_DIR%\vc_ltl"
     - set "YY_THUNKS=%SRC_DIR%\yy_thunks"
-    - cargo install --config target.x86_64-pc-windows-msvc.linker=\"link\" --features windows-gui-bin --locked --no-track --path uv\crates\uv --profile minimal-size --root "%LIBRARY_PREFIX%"
+    - cargo install --config target.x86_64-pc-windows-msvc.linker=\"link\" --features windows-gui-bin --locked --no-track --path uv\crates\uv --root "%LIBRARY_PREFIX%"
     else:
-    - cargo install --locked --no-track --path uv/crates/uv --profile minimal-size --root "$PREFIX"
+    - cargo install --locked --no-track --path uv/crates/uv --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))

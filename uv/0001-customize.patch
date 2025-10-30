@@ -4,12 +4,12 @@ Date: Fri, 4 Apr 2025 21:39:34 +0800
 Subject: [PATCH] customize
 
 ---
- .cargo/config.toml   |  2 --
- Cargo.lock           |  7 +++++++
- Cargo.toml           | 18 +++++++++---------
- crates/uv/Cargo.toml |  3 +++
- crates/uv/build.rs   |  3 +++
- 5 files changed, 22 insertions(+), 11 deletions(-)
+ .cargo/config.toml   | 2 --
+ Cargo.lock           | 7 +++++++
+ Cargo.toml           | 2 ++
+ crates/uv/Cargo.toml | 3 +++
+ crates/uv/build.rs   | 3 +++
+ 5 files changed, 15 insertions(+), 2 deletions(-)
  create mode 100644 crates/uv/build.rs
 
 diff --git a/.cargo/config.toml b/.cargo/config.toml
@@ -23,10 +23,10 @@ index bc7bfd6..12c0484 100644
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
 diff --git a/Cargo.lock b/Cargo.lock
-index adc9e2b..7926cdd 100644
+index 1744e2f..dbc751e 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -4076,6 +4076,12 @@ dependencies = [
+@@ -4638,6 +4638,12 @@ dependencies = [
   "cfg-if",
  ]
  
@@ -39,87 +39,32 @@ index adc9e2b..7926cdd 100644
  [[package]]
  name = "tikv-jemalloc-sys"
  version = "0.6.0+5.3.0-1-ge13ca993e8ccb9ba9847cc330696e02839f328f7"
-@@ -4700,6 +4706,7 @@ dependencies = [
+@@ -5302,6 +5308,7 @@ dependencies = [
   "tempfile",
   "textwrap",
-  "thiserror 2.0.12",
+  "thiserror 2.0.17",
 + "thunk-rs",
   "tokio",
+  "tokio-util",
   "toml",
-  "toml_edit",
 diff --git a/Cargo.toml b/Cargo.toml
-index 1447172..1204765 100644
+index 7b7749f..02ae189 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -82,7 +82,7 @@ async-channel = { version = "2.3.1" }
- async-compression = { version = "0.4.12", features = ["bzip2", "gzip", "xz", "zstd"] }
- async-trait = { version = "0.1.82" }
- async_http_range_reader = { version = "0.9.1" }
--async_zip = { git = "https://github.com/astral-sh/rs-async-zip", rev = "c909fda63fcafe4af496a07bfda28a5aae97e58d", features = ["bzip2", "deflate", "lzma", "tokio", "xz", "zstd"] }
-+async_zip = { path = "../rs-async-zip", features = ["bzip2", "deflate", "lzma", "tokio", "xz", "zstd"] }
- axoupdater = { version = "0.9.0", default-features = false }
- backon = { version = "1.3.0" }
- base64 = { version = "0.22.1" }
-@@ -138,7 +138,7 @@ percent-encoding = { version = "2.3.1" }
- petgraph = { version = "0.8.0" }
- proc-macro2 = { version = "1.0.86" }
- procfs = { version = "0.17.0", default-features = false, features = ["flate2"] }
--pubgrub = { git = "https://github.com/astral-sh/pubgrub", rev = "06ec5a5f59ffaeb6cf5079c6cb184467da06c9db" }
-+pubgrub = { path = "../pubgrub" }
- quote = { version = "1.0.37" }
- rayon = { version = "1.10.0" }
- ref-cast = { version = "1.0.24" }
-@@ -146,8 +146,8 @@ reflink-copy = { version = "0.1.19" }
- regex = { version = "1.10.6" }
- regex-automata = { version = "0.4.8", default-features = false, features = ["dfa-build", "dfa-search", "perf", "std", "syntax"] }
- reqwest = { version = "0.12.22", default-features = false, features = ["json", "gzip", "deflate", "zstd", "stream", "rustls-tls", "rustls-tls-native-roots", "socks", "multipart", "http2", "blocking"] }
--reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8", features = ["multipart"] }
--reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8" }
-+reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware", features = ["multipart"] }
-+reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
- rkyv = { version = "0.8.8", features = ["bytecheck"] }
- rmp-serde = { version = "1.3.0" }
- rust-netrc = { version = "0.1.2" }
-@@ -170,7 +170,7 @@ target-lexicon = { version = "0.13.0" }
- tempfile = { version = "3.14.0" }
- textwrap = { version = "0.16.1" }
- thiserror = { version = "2.0.0" }
--tl = { git = "https://github.com/astral-sh/tl.git", rev = "6e25b2ee2513d75385101a8ff9f591ef51f314ec" }
-+tl = { path = "../tl" }
- tokio = { version = "1.40.0", features = ["fs", "io-util", "macros", "process", "rt", "signal", "sync"] }
- tokio-stream = { version = "0.1.16" }
- tokio-util = { version = "0.7.12", features = ["compat", "io"] }
-@@ -184,7 +184,7 @@ tracing-tree = { version = "0.4.0" }
- unicode-width = { version = "0.2.0" }
- unscanny = { version = "0.1.0" }
- url = { version = "2.5.2", features = ["serde"] }
--version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "06ec5a5f59ffaeb6cf5079c6cb184467da06c9db" }
-+version-ranges = { path = "../pubgrub/version-ranges" }
- walkdir = { version = "2.5.0" }
- which = { version = "8.0.0", features = ["regex"] }
- windows = { version = "0.59.0", features = ["Win32_Globalization", "Win32_System_Console", "Win32_System_Kernel", "Win32_System_Diagnostics_Debug", "Win32_Storage_FileSystem"] }
-@@ -309,7 +309,7 @@ strip = "debuginfo"
- # Profile to build a minimally sized binary for uv-build
- [profile.minimal-size]
- inherits = "release"
--opt-level = "z"
+@@ -269,6 +269,8 @@ large_stack_arrays = "allow"
+ [profile.release]
+ strip = true
+ lto = "fat"
 +opt-level = 3
- # This will still show a panic message, we only skip the unwind
- panic = "abort"
- codegen-units = 1
-@@ -319,5 +319,5 @@ codegen-units = 1
- inherits = "release"
++codegen-units = 1
  
- [patch.crates-io]
--reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8" }
--reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "ad8b9d332d1773fde8b4cd008486de5973e0a3f8" }
-+reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware" }
-+reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
+ # This profile is meant to mimic the `release` profile as closely as
+ # possible, but using settings that are more beneficial for iterative
 diff --git a/crates/uv/Cargo.toml b/crates/uv/Cargo.toml
-index 28d2e2a..012c23e 100644
+index cd56430..af5cd7b 100644
 --- a/crates/uv/Cargo.toml
 +++ b/crates/uv/Cargo.toml
-@@ -188,6 +188,9 @@ test-ecosystem = []
+@@ -203,6 +203,9 @@ test-ecosystem = []
  # Build uvw binary on Windows
  windows-gui-bin = []
  
