@@ -1,0 +1,56 @@
+context:
+  version: '0.0'
+  sha256: 23d55bf7ef8793389aa87fc64adf5b196ed84e9b0385a0a8d6c6e060bc766bbc
+
+package:
+  name: poisson-etest
+  version: ${{ version }}
+
+source:
+  url: https://codeload.github.com/nolanbconaway/poisson-etest/tar.gz/v${{ version }}
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-pytest.patch
+
+build:
+  number: 0
+  script: pip install .
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - ${{ compiler('fortran') }}
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
+  host:
+  - libflang ==11.0.1
+  - numpy ==2.2.6
+  - pip
+  - python 3.10.*
+  - setuptools ==73.0.1
+  - wheel >=0.37.0
+  run:
+  - libflang ==11.0.1
+  ignore_run_exports:
+    from_package:
+    - ${{ compiler('fortran') }}
+
+tests:
+- script:
+  - pytest test_etest.py
+  requirements:
+    run:
+    - pytest
+  files:
+    source:
+    - test_etest.py
+- python:
+    imports:
+    - poisson_etest.poisson_etest_fortran
+
+about:
+  summary: A Poisson E-test for Python

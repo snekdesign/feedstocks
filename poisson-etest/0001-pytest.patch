@@ -1,0 +1,25 @@
+From 151eb336eb80a37c891c8b074d0d4e7f769c833b Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Thu, 30 Oct 2025 18:46:52 +0800
+Subject: [PATCH] pytest
+
+---
+ test_etest.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test_etest.py b/test_etest.py
+index 166d693..5bbfdb8 100644
+--- a/test_etest.py
++++ b/test_etest.py
+@@ -16,7 +16,7 @@ from poisson_etest import poisson_etest
+     ],
+ )
+ def test_replicate_original_fortan_code(test_args, expected):
+-    assert pytest.approx(expected, poisson_etest(*test_args))
++    assert expected == pytest.approx(poisson_etest(*test_args))
+ 
+ 
+ def test_valuerror_0_n():
+-- 
+2.51.1.windows.1
+
