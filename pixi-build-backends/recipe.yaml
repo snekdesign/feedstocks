@@ -1,6 +1,6 @@
 context:
-  version: 0.3.4
-  sha256: 87b6f7d1e592a352ae7079a29510d94fb80e74f7c3b9978c88591f7bc956db9d
+  version: 0.3.5
+  sha256: 8eb123d9f4fbab792304cc7974bb0a6b2295050d70128cb38251fe35de287807
 
 recipe:
   name: pixi-build-backends
@@ -14,38 +14,16 @@ build:
 
 cache:
   source:
-  - url: https://codeload.github.com/prefix-dev/pixi-build-backends/tar.gz/pixi-build-rattler-build-v${{ version }}
+  - url: https://codeload.github.com/prefix-dev/pixi-build-backends/tar.gz/pixi-build-cmake-v${{ version }}
     sha256: ${{ sha256 }}
     target_directory: pixi-build-backends
     patches:
     - 0001-customize.patch
-  - url: https://codeload.github.com/prefix-dev/pixi/tar.gz/7ec3155994043c8af39ca22962153f63657e75ed
-    sha256: f939320ac4fe980d3319be51330b805a57df149338dfcb3ca3e93c8cfe8883b4
-    target_directory: pixi
-    patches:
-    - 0001-pixi.patch
   - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/d4d9a38a7197e9e64408d8dfd24a8a28773f5cae
     sha256: 0f69052775ad7a157ba6d818d4970f6871a73342ec6ba9ca2b9932cbb74d2ca5
     target_directory: rattler-build
     patches:
     - 0001-conda-build.patch
-  - url: https://codeload.github.com/prefix-dev/diffy/tar.gz/f916e25c31a8d9e7483116c9e8aa6a36e20f947a
-    sha256: 9d87db96611374ac9b677d99080ca5ae87fba38f9511ac2e5df541ddccdf8395
-    target_directory: diffy
-  - url: https://codeload.github.com/pka/http-range-client/tar.gz/fccfa852dbe7e875a50802c55ee6c5f69c634827
-    sha256: 993e09294bf01a0839a7eb34c18f60f398640c86ae7c94835aefd3f958ed130b
-    target_directory: http-range-client
-  - url: https://codeload.github.com/astral-sh/pubgrub/tar.gz/06ec5a5f59ffaeb6cf5079c6cb184467da06c9db
-    sha256: 7c39356749ea0084a75ef64f59890b2ce395d5f4492cb32474573650b7e52685
-    target_directory: pubgrub
-  - url: https://codeload.github.com/astral-sh/reqwest-middleware/tar.gz/ad8b9d332d1773fde8b4cd008486de5973e0a3f8
-    sha256: 5ff23bcb5f724323cb2c7d6a9b597a9a05ce06295b1a7e2c667d378099f1a8d7
-    target_directory: reqwest-middleware
-  - url: https://codeload.github.com/astral-sh/uv/tar.gz/0.8.5
-    sha256: 611e2ad9b20f2462bf30632d2d2dc0eae865046e058c8c8f7180ddb0cd4e2b26
-    target_directory: uv
-    patches:
-    - 0001-uv.patch
   requirements:
     build:
     - ${{ compiler('c') }}

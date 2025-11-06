@@ -4,15 +4,15 @@ Date: Thu, 20 Feb 2025 18:55:09 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                                    | 32 ++++++++++---------
+ Cargo.toml                                    | 13 ++++++---
  crates/pixi-build-backend/Cargo.toml          |  2 ++
- .../src/intermediate_backend.rs               | 26 +++++++++++++++
+ .../src/intermediate_backend.rs               | 26 +++++++++++++++++
  crates/pixi-build-rattler-build/Cargo.toml    |  2 ++
- .../pixi-build-rattler-build/src/protocol.rs  | 28 +++++++++++++++-
- 5 files changed, 74 insertions(+), 16 deletions(-)
+ .../pixi-build-rattler-build/src/protocol.rs  | 28 ++++++++++++++++++-
+ 5 files changed, 66 insertions(+), 5 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index edcb1c8..effb308 100644
+index 68bcfcc..a934667 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -51,15 +51,17 @@ jsonrpc-stdio-server = "18.0.0"
@@ -32,36 +32,17 @@ index edcb1c8..effb308 100644
  pixi_build_types = { version = "*" }
 +pixi_config = { version = "*" }
  pixi_consts = { version = "*" }
- pixi_manifest = { version = "*" }
  pixi_spec = { version = "*" }
-@@ -72,17 +74,15 @@ recipe-stage0 = { path = "crates/recipe-stage0" }
- 
+ pixi_build_type_conversions = { version = "*" }
+@@ -72,6 +74,7 @@ recipe-stage0 = { path = "crates/recipe-stage0" }
  
  [patch.crates-io]
--pixi_build_types = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
--pixi_consts = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
--pixi_manifest = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
--pixi_spec = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
--pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
--
--#pixi_build_types = { path = "../pixi/crates/pixi_build_types" }
--#pixi_consts = { path = "../pixi/crates/pixi_consts" }
--#pixi_manifest = { path = "../pixi/crates/pixi_manifest" }
--#pixi_spec = { path = "../pixi/crates/pixi_spec" }
--#pixi_build_type_conversions = { path = "../pixi/crates/pixi_build_type_conversions" }
-+pixi_build_types = { path = "../pixi/crates/pixi_build_types" }
-+pixi_config = { path = "../pixi/crates/pixi_config" }
-+pixi_consts = { path = "../pixi/crates/pixi_consts" }
-+pixi_manifest = { path = "../pixi/crates/pixi_manifest" }
-+pixi_spec = { path = "../pixi/crates/pixi_spec" }
-+pixi_build_type_conversions = { path = "../pixi/crates/pixi_build_type_conversions" }
-+reqwest-middleware = { path = "../reqwest-middleware/reqwest-middleware" }
-+reqwest-retry = { path = "../reqwest-middleware/reqwest-retry" }
-+version-ranges = { path = "../pubgrub/version-ranges" }
- 
- #rattler_cache = { path = "../rattler/crates/rattler_cache" }
- #rattler_conda_types = { path = "../rattler/crates/rattler_conda_types" }
-@@ -94,9 +94,11 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
+ pixi_build_types = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
++pixi_config = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+ pixi_consts = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+ pixi_spec = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", branch = "main" }
+@@ -91,9 +94,11 @@ pixi_build_type_conversions = { git = "https://github.com/prefix-dev/pixi", bran
  # [patch."https://github.com/prefix-dev/rattler-build"]
  # rattler-build = { path = "../rattler-build/" }
  
@@ -77,7 +58,7 @@ index edcb1c8..effb308 100644
  [profile.ci]
  codegen-units = 16
 diff --git a/crates/pixi-build-backend/Cargo.toml b/crates/pixi-build-backend/Cargo.toml
-index a483086..e26fb59 100644
+index 49b82ef..b5bb666 100644
 --- a/crates/pixi-build-backend/Cargo.toml
 +++ b/crates/pixi-build-backend/Cargo.toml
 @@ -29,6 +29,7 @@ miette = { workspace = true }
@@ -93,16 +74,16 @@ index a483086..e26fb59 100644
  
  pixi_build_types = { workspace = true }
 +pixi_config = { workspace = true }
- pixi_manifest = { workspace = true }
  pixi_spec = { workspace = true }
  pixi_build_type_conversions = { workspace = true }
+ 
 diff --git a/crates/pixi-build-backend/src/intermediate_backend.rs b/crates/pixi-build-backend/src/intermediate_backend.rs
-index 5554bda..35aea53 100644
+index 72ffec1..b4015eb 100644
 --- a/crates/pixi-build-backend/src/intermediate_backend.rs
 +++ b/crates/pixi-build-backend/src/intermediate_backend.rs
-@@ -603,10 +603,36 @@ where
-         .await
-         .into_diagnostic()?;
+@@ -665,10 +665,36 @@ where
+             .await
+             .into_diagnostic()?;
  
 +        let base_client = {
 +            let config = pixi_config::Config::load_global();
@@ -138,7 +119,7 @@ index 5554bda..35aea53 100644
              .with_keep_build(true)
              // This indicates that the environments are externally managed, e.g. they are already
 diff --git a/crates/pixi-build-rattler-build/Cargo.toml b/crates/pixi-build-rattler-build/Cargo.toml
-index 9409ebd..4dabd0c 100644
+index 4d7e3eb..eb62d1e 100644
 --- a/crates/pixi-build-rattler-build/Cargo.toml
 +++ b/crates/pixi-build-rattler-build/Cargo.toml
 @@ -13,6 +13,7 @@ async-trait = { workspace = true }
@@ -155,10 +136,10 @@ index 9409ebd..4dabd0c 100644
  pixi_build_types = { workspace = true }
 +pixi_config = { workspace = true }
  chrono = "0.4.41"
+ tracing.workspace = true
  
- [dev-dependencies]
 diff --git a/crates/pixi-build-rattler-build/src/protocol.rs b/crates/pixi-build-rattler-build/src/protocol.rs
-index 2fc6ebd..a022d4b 100644
+index d3f2728..a914426 100644
 --- a/crates/pixi-build-rattler-build/src/protocol.rs
 +++ b/crates/pixi-build-rattler-build/src/protocol.rs
 @@ -32,7 +32,7 @@ use rattler_build::{
@@ -170,7 +151,7 @@ index 2fc6ebd..a022d4b 100644
      types::{PackageIdentifier, PackagingSettings},
      variant_config::{ParseErrors, VariantConfig},
  };
-@@ -324,10 +324,36 @@ impl Protocol for RattlerBuildBackend {
+@@ -321,10 +321,36 @@ impl Protocol for RattlerBuildBackend {
              self.recipe_source.path.clone(),
          );
  

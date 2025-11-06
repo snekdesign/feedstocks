@@ -4,25 +4,9 @@ Date: Mon, 23 Jun 2025 19:53:00 +0800
 Subject: [PATCH] conda build
 
 ---
- Cargo.toml | 4 ++--
  src/opt.rs | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Cargo.toml b/Cargo.toml
-index b8cbd6a..ca54961 100644
---- a/Cargo.toml
-+++ b/Cargo.toml
-@@ -185,8 +185,8 @@ retry-policies = "0.5.1"
- strum = "0.27.2"
- unicode-normalization = "0.1.24"
- line-ending = "1.5.1"
--diffy = { git = "https://github.com/prefix-dev/diffy.git", branch = "master" }
--http-range-client = { git = "https://github.com/pka/http-range-client.git", default-features = false, features = [
-+diffy = { path = "../diffy" }
-+http-range-client = { path = "../http-range-client", default-features = false, features = [
-   "reqwest-sync",
-   "rustls-tls",
- ] }
 diff --git a/src/opt.rs b/src/opt.rs
 index 212d5c6..7de34af 100644
 --- a/src/opt.rs
