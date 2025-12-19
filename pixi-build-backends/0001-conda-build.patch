@@ -8,16 +8,16 @@ Subject: [PATCH] conda build
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/opt.rs b/src/opt.rs
-index 212d5c6..7de34af 100644
+index 45681f8..5a6bdb1 100644
 --- a/src/opt.rs
 +++ b/src/opt.rs
-@@ -301,7 +301,8 @@ impl CommonData {
+@@ -348,7 +348,8 @@ impl CommonData {
          }
      }
  
--    fn from_opts_and_config(value: CommonOpts, config: Config) -> Self {
+-    fn from_opts_and_config(value: CommonOpts, config: ConfigBase<()>) -> Self {
 +    #[allow(missing_docs)]
-+    pub fn from_opts_and_config(value: CommonOpts, config: Config) -> Self {
++    pub fn from_opts_and_config(value: CommonOpts, config: ConfigBase<()>) -> Self {
          Self::new(
              value.output_dir,
              value.experimental,
