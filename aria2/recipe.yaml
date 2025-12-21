@@ -1,7 +1,7 @@
 context:
   version: 1.37.0
   sha256: 60a420ad7085eb616cb6e2bdf0a7206d68ff3d37fb5a956dc44242eb2f79b66b
-  sqlite_version: 3.49.2
+  sqlite_version: 3.51.1
 
 package:
   name: aria2
@@ -12,11 +12,11 @@ source:
   sha256: ${{ sha256 }}
   patches:
   - 0001-customize.patch
-- url: https://mirror.msys2.org/mingw/ucrt64/mingw-w64-ucrt-x86_64-gettext-tools-0.25-1-any.pkg.tar.zst
-  sha256: b8ddd07fc0e541b09b710f316aed3a13f598f31ff4a8c386bdcbcff255f07764
+- url: https://mirror.msys2.org/mingw/ucrt64/mingw-w64-ucrt-x86_64-gettext-tools-0.26-2-any.pkg.tar.zst
+  sha256: 5ed444cb95c78f76a39faecc7b2ccc6dbed6502dc0160938a45c0a7ec0c54f0c
 
 build:
-  number: 4
+  number: 5
   script:
     content:
     - bash -el "%RECIPE_DIR%\build.sh"
@@ -44,7 +44,7 @@ requirements:
   - liblzma-devel
   - libsqlite ==${{ sqlite_version }}
   - libssh2
-  - libxml2
+  - libxml2-devel
   - openssl
   - xz-tools
   - zlib

@@ -4,11 +4,11 @@ Date: Thu, 16 Nov 2023 19:20:05 +0800
 Subject: [PATCH] customize
 
 ---
- src/OptionHandlerFactory.cc | 86 ++++++++++++++++++++++++++-----------
- 1 file changed, 62 insertions(+), 24 deletions(-)
+ src/OptionHandlerFactory.cc | 84 +++++++++++++++++++++++++++----------
+ 1 file changed, 61 insertions(+), 23 deletions(-)
 
 diff --git a/src/OptionHandlerFactory.cc b/src/OptionHandlerFactory.cc
-index 2cd2c43..ef6db4e 100644
+index 2cd2c43..f072894 100644
 --- a/src/OptionHandlerFactory.cc
 +++ b/src/OptionHandlerFactory.cc
 @@ -33,6 +33,12 @@
@@ -195,14 +195,5 @@ index 2cd2c43..ef6db4e 100644
      op->addTag(TAG_BITTORRENT);
      op->setInitialOption(true);
      op->setChangeGlobalOption(true);
-@@ -1769,7 +1807,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
-   }
-   {
-     OptionHandler* op(new BooleanOptionHandler(
--        PREF_ENABLE_DHT, TEXT_ENABLE_DHT, A2_V_TRUE, OptionHandler::OPT_ARG));
-+        PREF_ENABLE_DHT, TEXT_ENABLE_DHT, A2_V_FALSE, OptionHandler::OPT_ARG));
-     op->addTag(TAG_BASIC);
-     op->addTag(TAG_BITTORRENT);
-     handlers.push_back(op);
 -- 
 
