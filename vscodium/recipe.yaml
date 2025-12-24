@@ -1,6 +1,6 @@
 context:
-  version: 1.106.37943
-  sha256: a3cda25b6aab1e6689f73461bf6725cb659559423882a320e8450fbcd15a55a2
+  version: 1.107.18605
+  sha256: ccf7e8a90278195926677dd942b850d62b6d33676a557cc4586c0f825d74a9f2
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.4.0
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -13,16 +13,16 @@ context:
   matlab_version: 1.3.7
   matlab_sha256: 1e3cff7a113d976f57550c6503b122e8669e5de9a5641df52282c2b9c8bfb3d5
   # https://open-vsx.org/api/ms-python/python/versions?size=1
-  python_version: 2025.16.0
+  python_version: 2025.20.1
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
-  python_sha256: 5f637008811eb0b08a8d152ffe8c3787a72e209bd1994652c3490d749ab9dbbf
-  # https://api.github.com/repos/ktnrg45/vs-code-cython/releases/latest
-  cython_version: 1.0.3
-  cython_sha256: 68ad4e17045ce6c90ba24b8416266419582a688db63d35c6175135e9cc741034
+  python_sha256: 477e53d249b7534f85c990c5bd14892db51d7a9dc9285b0b289f8ec0daa2d1d5
+  # https://api.github.com/repos/whoami730/cython-enhanced/releases/latest
+  cython_version: 1.0.5
+  cython_sha256: 423715d7efbac30a5db53eb0eb64afe08b9ec7d462613b3622b96ccec3bfa54b
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/versions?size=1
-  ruff_version: 2025.30.0
+  ruff_version: 2025.32.0
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
-  ruff_sha256: 7ad1da1b0539c73bd82c44d77b01f5f77170e3e43602657bc46bca4c067cb97d
+  ruff_sha256: 4d7bae7697a0d3e63988317e80403bf504c5d038e122aa33d7b9dea4d709200b
   # https://open-vsx.org/api/tamasfe/even-better-toml/versions?size=1
   toml_version: 0.21.2
   # https://open-vsx.org/api/tamasfe/even-better-toml/latest/file/sha256
@@ -50,7 +50,7 @@ source:
 - url: https://open-vsx.org/api/ms-python/python/${{ python_version }}/file/ms-python.python-${{ python_version }}.vsix
   sha256: ${{ python_sha256 }}
   target_directory: vscodium/bootstrap/extensions
-- url: https://github.com/ktnrg45/vs-code-cython/releases/download/${{ cython_version }}/vscode-cython.vsix
+- url: https://github.com/whoami730/cython-enhanced/releases/download/${{ cython_version }}/cython-enhanced.vsix
   sha256: ${{ cython_sha256 }}
   target_directory: vscodium/bootstrap/extensions
 - url: https://open-vsx.org/api/charliermarsh/ruff/win32-x64/${{ ruff_version }}/file/charliermarsh.ruff-${{ ruff_version }}@win32-x64.vsix
