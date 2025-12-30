@@ -1,6 +1,6 @@
 context:
-  version: 0.60.0
-  sha256: a8db25102a5203d0175e0cee0144d8cd7c525bf6a8556ad90ad07c54361667d6
+  version: 0.62.2
+  sha256: dba8db9c836a3bf3c6054588f4334150fe3bb7b4960c778e76f4001a18fa8e2f
 
 package:
   name: pixi
@@ -12,8 +12,8 @@ source:
   target_directory: pixi
   patches:
   - 0001-customize.patch
-- url: https://codeload.github.com/conda/rattler/tar.gz/rattler_lock-v0.26.7
-  sha256: f0056554c19766d1b19fdee808d6c12c7000e0a628a8e55343bc540b8a8ba676
+- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.39.6
+  sha256: 459d42e5c8ee49295bdda8d1cf42b79467b7e68e9b46ab874a2e49705ce0399c
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
