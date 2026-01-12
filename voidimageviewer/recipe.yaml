@@ -1,6 +1,6 @@
 context:
-  version: 1.0.0.14
-  sha256: 6e978fad04f0f070aac509fd116a51fead6d4885181931837c723b82bd9c3e67
+  version: 1.0.0.15
+  sha256: 9f8ecc8a1778332d7d358bee544e778be07a4b071abc22dc1962db843c2eaed7
 
 package:
   name: voidimageviewer
