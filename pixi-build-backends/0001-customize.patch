@@ -4,22 +4,22 @@ Date: Thu, 20 Feb 2025 18:55:09 +0800
 Subject: [PATCH] customize
 
 ---
- Cargo.toml                                     | 14 +++++++++-----
- crates/pixi-build-backend/Cargo.toml           |  2 ++
- .../src/intermediate_backend.rs                | 18 +++++++++++++++++-
- crates/pixi-build-rattler-build/Cargo.toml     |  2 ++
- .../pixi-build-rattler-build/src/protocol.rs   | 18 +++++++++++++++++-
- 5 files changed, 47 insertions(+), 7 deletions(-)
+ Cargo.toml                                    | 14 +++++++-----
+ crates/pixi-build-backend/Cargo.toml          |  2 ++
+ .../src/intermediate_backend.rs               | 18 ++++++++++++++-
+ crates/pixi-build-rattler-build/Cargo.toml    |  2 ++
+ .../pixi-build-rattler-build/src/protocol.rs  | 22 ++++++++++++++++---
+ 5 files changed, 49 insertions(+), 9 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 2ef11c4..3de73e5 100644
+index 4043e30..815b954 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -57,12 +57,14 @@ rattler-build = { git = "https://github.com/prefix-dev/rattler-build", branch =
+@@ -60,12 +60,14 @@ rattler-build = { git = "https://github.com/prefix-dev/rattler-build", branch =
  # Rattler crates
  file_url = "0.2.5"
  rattler_conda_types = { version = "0.42.0", default-features = false }
-+rattler_config = { version = "0.2.22", default-features = false }
++rattler_config = { version = "0.2.21", default-features = false }
  rattler_digest = { version = "1.2.0", default-features = false }
  rattler_package_streaming = { version = "0.23.1", default-features = false }
  rattler_virtual_packages = { version = "2.3.2", default-features = false }
@@ -30,7 +30,7 @@ index 2ef11c4..3de73e5 100644
  
  # Workspace crates
  pixi-build-backend = { path = "crates/pixi-build-backend" }
-@@ -81,12 +83,14 @@ reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware",
+@@ -85,12 +87,14 @@ reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware",
  #rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway" }
  #simple_spawn_blocking = { path = "../rattler/crates/simple_spawn_blocking" }
  
@@ -51,7 +51,7 @@ index 2ef11c4..3de73e5 100644
  [profile.ci]
  codegen-units = 16
 diff --git a/crates/pixi-build-backend/Cargo.toml b/crates/pixi-build-backend/Cargo.toml
-index 0f1cd16..eb3ddb5 100644
+index abb9c2b..15ca41c 100644
 --- a/crates/pixi-build-backend/Cargo.toml
 +++ b/crates/pixi-build-backend/Cargo.toml
 @@ -22,6 +22,7 @@ itertools = { workspace = true }
@@ -71,7 +71,7 @@ index 0f1cd16..eb3ddb5 100644
  jsonrpc-stdio-server = { workspace = true }
  jsonrpc-http-server = { workspace = true }
 diff --git a/crates/pixi-build-backend/src/intermediate_backend.rs b/crates/pixi-build-backend/src/intermediate_backend.rs
-index b63eae6..a61d08b 100644
+index b7f60af..8d96c86 100644
 --- a/crates/pixi-build-backend/src/intermediate_backend.rs
 +++ b/crates/pixi-build-backend/src/intermediate_backend.rs
 @@ -29,7 +29,7 @@ use rattler_build::{
@@ -83,7 +83,7 @@ index b63eae6..a61d08b 100644
      types::{Directories, PackageIdentifier, PackagingSettings},
      variant_config::{DiscoveredOutput, ParseErrors, VariantConfig},
  };
-@@ -689,10 +689,26 @@ where
+@@ -688,10 +688,26 @@ where
              .await
              .into_diagnostic()?;
  
@@ -111,18 +111,18 @@ index b63eae6..a61d08b 100644
              .with_keep_build(true)
              // This indicates that the environments are externally managed, e.g. they are already
 diff --git a/crates/pixi-build-rattler-build/Cargo.toml b/crates/pixi-build-rattler-build/Cargo.toml
-index a5b9000..11d8533 100644
+index 27bb956..c8c5556 100644
 --- a/crates/pixi-build-rattler-build/Cargo.toml
 +++ b/crates/pixi-build-rattler-build/Cargo.toml
-@@ -13,6 +13,7 @@ async-trait = { workspace = true }
- fs-err = { workspace = true }
+@@ -12,6 +12,7 @@ native-tls = ["pixi-build-backend/native-tls", "rattler-build/native-tls"]
+ async-trait = { workspace = true }
  miette = { workspace = true }
  rattler_conda_types = { workspace = true }
 +rattler_config = { workspace = true }
- rattler_virtual_packages = { workspace = true }
  rattler-build = { workspace = true }
  serde = { workspace = true, features = ["derive"] }
-@@ -26,6 +27,7 @@ itertools = { workspace = true }
+ serde_json = { workspace = true }
+@@ -22,6 +23,7 @@ pathdiff = { workspace = true }
  pixi-build-backend = { workspace = true }
  
  pixi_build_types = { workspace = true }
@@ -131,19 +131,37 @@ index a5b9000..11d8533 100644
  tracing.workspace = true
  
 diff --git a/crates/pixi-build-rattler-build/src/protocol.rs b/crates/pixi-build-rattler-build/src/protocol.rs
-index bf419b3..e8a018e 100644
+index ab95632..2c48da6 100644
 --- a/crates/pixi-build-rattler-build/src/protocol.rs
 +++ b/crates/pixi-build-rattler-build/src/protocol.rs
 @@ -35,7 +35,7 @@ use rattler_build::{
      metadata::{BuildConfiguration, Debug, Output, PlatformWithVirtualPackages},
-     recipe::{Jinja, ParsingError, Recipe, parser::find_outputs_from_src},
+     recipe::{ParsingError, Recipe, parser::find_outputs_from_src},
      selectors::SelectorConfig,
 -    tool_configuration::Configuration,
 +    tool_configuration::{Configuration, reqwest_client_from_auth_storage},
      types::{PackageIdentifier, PackagingSettings},
      variant_config::{ParseErrors, VariantConfig},
  };
-@@ -343,10 +343,26 @@ impl Protocol for RattlerBuildBackend {
+@@ -72,7 +72,7 @@ impl Protocol for RattlerBuildBackend {
+             build_platform,
+             hash: None,
+             variant: Default::default(),
+-            experimental: self.config.experimental.unwrap_or(false),
++            experimental: true,
+             allow_undefined: false,
+             recipe_path: Some(self.recipe_source.path.clone()),
+         };
+@@ -312,7 +312,7 @@ impl Protocol for RattlerBuildBackend {
+             build_platform,
+             hash: None,
+             variant: Default::default(),
+-            experimental: self.config.experimental.unwrap_or(false),
++            experimental: true,
+             allow_undefined: false,
+             recipe_path: Some(self.recipe_source.path.clone()),
+         };
+@@ -334,10 +334,26 @@ impl Protocol for RattlerBuildBackend {
              self.recipe_source.path.clone(),
          );
  
