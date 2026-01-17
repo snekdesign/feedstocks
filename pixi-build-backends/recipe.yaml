@@ -1,6 +1,6 @@
 context:
-  version: 0.3.7
-  sha256: 25cadd0551e18d6bc1f279a94038d8f2e36eb2cd5f6f7d0c727400d4426dcfbe
+  version: 0.3.8
+  sha256: 2bff698af1ccd4c396a27e1013731fb69510f85734ff2f4982c09560f54991a7
 
 recipe:
   name: pixi-build-backends
@@ -19,8 +19,8 @@ cache:
     target_directory: pixi-build-backends
     patches:
     - 0001-customize.patch
-  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/5d1ec04ea015e1fe2917b38a4491dbdffa29ec18
-    sha256: 8f2105733869d96c07db2a8f68a4755ecfcf2fc5d5c9620df45cd56b173d02f5
+  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/7045bf32abf1f186a5853a32bcb020965fbf419b
+    sha256: a3b170d41adab60e647ea322272369bd5de0481a2e78ed0de057c8f5dd43ce76
     target_directory: rattler-build
     patches:
     - 0001-conda-build.patch
@@ -98,5 +98,5 @@ outputs:
 about:
   license: BSD-3-Clause
   license_family: BSD
-  license_file: LICENSE
+  license_file: pixi-build-backends/LICENSE
   summary: Backend implementations to build Pixi projects from source
