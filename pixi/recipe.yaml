@@ -1,63 +1,119 @@
 context:
-  version: 0.62.2
-  sha256: dba8db9c836a3bf3c6054588f4334150fe3bb7b4960c778e76f4001a18fa8e2f
+  version: 0.63.2
+  sha256: 197d576d68e3bf1b0545744a98974b4b519393f2b223b7fb7270015f97381e83
 
-package:
+recipe:
   name: pixi
   version: ${{ version }}
 
-source:
-- url: https://codeload.github.com/prefix-dev/pixi/tar.gz/v${{ version }}
-  sha256: ${{ sha256 }}
-  target_directory: pixi
-  patches:
-  - 0001-customize.patch
-- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.39.6
-  sha256: 459d42e5c8ee49295bdda8d1cf42b79467b7e68e9b46ab874a2e49705ce0399c
-  target_directory: rattler
-  patches:
-  - 0001-strip-dquotes.patch
-- if: win
-  then:
-  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.3.1/VC-LTL-Binary.7z
-    sha256: 7a18799ed3aa84a225610a5447a56bc534c5c98ccb8dec05caba0e3f633431ad
-    target_directory: vc_ltl
-- if: win
-  then:
-  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.9/YY-Thunks-Objs.zip
-    sha256: c53b87f83a3a1322de22195ee43fca590e757369b713304a4ce4fcaad532f8b7
-    target_directory: yy_thunks
-
 build:
   number: 0
-  script:
-  - if: win
-    then:
-    - set "VC_LTL=%SRC_DIR%\vc_ltl"
-    - set "YY_THUNKS=%SRC_DIR%\yy_thunks"
-    - cargo install --features performance --locked --no-track --path pixi/crates/pixi --profile dist --root "%LIBRARY_PREFIX%"
-    else:
-    - cargo install --features performance --locked --no-track --path pixi/crates/pixi --profile dist --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
 
-requirements:
-  build:
-  - ${{ compiler('c') }}
-  - rust >=1.89.0
-  - if: linux
-    then: diffutils
-  - if: linux
-    then: make
-  - if: microarch_level|int > 0
-    then: x86_64-microarch-level ==${{ microarch_level }}
-  - if: win
-    then: 7zip
+cache:
+  source:
+  - url: https://codeload.github.com/prefix-dev/pixi/tar.gz/v${{ version }}
+    sha256: ${{ sha256 }}
+    target_directory: pixi
+    patches:
+    - 0001-customize.patch
+  - url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.39.7
+    sha256: ad72b22419ae231b468300874877c0964fe40a8a88c64767c216fe49163a226e
+    target_directory: rattler
+    patches:
+    - 0001-strip-dquotes.patch
+  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/86ffb08d00b4a32dc45caaa3d545f58fa050e43f
+    sha256: cb9ff7fd451ed66ffa9bca1f16a29d848d91628d458238e74cd99a0f35723fee
+    target_directory: rattler-build
+    patches:
+    - 0001-conda-build.patch
 
-tests:
-- script:
-  - pixi -V
+  build:
+    script:
+    - if: win
+      then:
+      - cargo install --features performance --locked --no-track --path pixi/crates/pixi --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --locked --no-track --path pixi/crates/pixi-build-cmake --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi/crates/pixi-build-mojo --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi/crates/pixi-build-python --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi/crates/pixi-build-rattler-build --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi/crates/pixi-build-rust --profile dist --root "%LIBRARY_PREFIX%"
+      else:
+      - cargo install --features performance --locked --no-track --path pixi/crates/pixi --profile dist --root "$PREFIX"
+      - cargo install --locked --no-track --path pixi/crates/pixi-build-cmake --profile dist --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi/crates/pixi-build-mojo --profile dist --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi/crates/pixi-build-python --profile dist --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi/crates/pixi-build-rattler-build --profile dist --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi/crates/pixi-build-rust --profile dist --root "$PREFIX"
+
+  requirements:
+    build:
+    - ${{ compiler('c') }}
+    - rust >=1.89.0
+    - if: linux
+      then: diffutils
+    - if: linux
+      then: make
+    - if: microarch_level|int > 0
+      then: x86_64-microarch-level ==${{ microarch_level }}
+
+outputs:
+- package:
+    name: pixi
+  build:
+    files:
+    - bin/pixi
+    - Library/bin/pixi.exe
+  tests:
+  - script:
+    - pixi -V
+- package:
+    name: pixi-build-cmake
+  build:
+    files:
+    - bin/pixi-build-cmake
+    - Library/bin/pixi-build-cmake.exe
+  tests:
+  - script:
+    - pixi-build-cmake help
+- package:
+    name: pixi-build-mojo
+  build:
+    files:
+    - bin/pixi-build-mojo
+    - Library/bin/pixi-build-mojo.exe
+  tests:
+  - script:
+    - pixi-build-mojo help
+- package:
+    name: pixi-build-python
+  build:
+    files:
+    - bin/pixi-build-python
+    - Library/bin/pixi-build-python.exe
+  tests:
+  - script:
+    - pixi-build-python help
+- package:
+    name: pixi-build-rattler-build
+  build:
+    files:
+    - bin/pixi-build-rattler-build
+    - Library/bin/pixi-build-rattler-build.exe
+  tests:
+  - script:
+    - pixi-build-rattler-build help
+- package:
+    name: pixi-build-rust
+  build:
+    files:
+    - bin/pixi-build-rust
+    - Library/bin/pixi-build-rust.exe
+  tests:
+  - script:
+    - pixi-build-rust help
 
 about:
   license: BSD-3-Clause
