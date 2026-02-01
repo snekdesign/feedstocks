@@ -1,8 +1,8 @@
 context:
   # curl https://open-vsx.org/api/detachhead/basedpyright/versions?size=1
-  version: 1.37.2
+  version: 1.37.3
   # curl -L https://open-vsx.org/api/detachhead/basedpyright/latest/file/sha256
-  sha256: e59902f38f76e0965ee7711c5c71ca78cc3ce343ba0c8163c9d77acd3d50ccb4
+  sha256: d939aabb9883977851d756d176e3d6fb084e63e31a29b07e6af07f2b77224380
 
 package:
   name: vscode-pyright
