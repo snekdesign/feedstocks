@@ -1,6 +1,6 @@
 context:
-  version: 0.63.2
-  sha256: 197d576d68e3bf1b0545744a98974b4b519393f2b223b7fb7270015f97381e83
+  version: 0.64.0
+  sha256: 854448c9736366c32103536bc9220543a65bdae6850ab9250fb39a9fb0897160
 
 recipe:
   name: pixi
@@ -19,13 +19,13 @@ cache:
     target_directory: pixi
     patches:
     - 0001-customize.patch
-  - url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.39.7
-    sha256: ad72b22419ae231b468300874877c0964fe40a8a88c64767c216fe49163a226e
+  - url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.39.12
+    sha256: c3c124cbe4860b71684a4997199e4915641ef4c656c8b27629b09d12b2120306
     target_directory: rattler
     patches:
     - 0001-strip-dquotes.patch
-  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/86ffb08d00b4a32dc45caaa3d545f58fa050e43f
-    sha256: cb9ff7fd451ed66ffa9bca1f16a29d848d91628d458238e74cd99a0f35723fee
+  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/d144acdd068b00d9a6bac5fcbd418f34b796fdf9
+    sha256: cff329b2ea82f7cd3a5cb4eae842b25c04924a846adfc082ad622c98308f17d6
     target_directory: rattler-build
     patches:
     - 0001-conda-build.patch
@@ -35,23 +35,23 @@ cache:
     - if: win
       then:
       - cargo install --features performance --locked --no-track --path pixi/crates/pixi --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --locked --no-track --path pixi/crates/pixi-build-cmake --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path pixi/crates/pixi-build-mojo --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path pixi/crates/pixi-build-python --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path pixi/crates/pixi-build-rattler-build --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path pixi/crates/pixi-build-rust --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --locked --no-track --path pixi/crates/pixi_build_cmake --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi/crates/pixi_build_mojo --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi/crates/pixi_build_python --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path pixi/crates/pixi_build_rattler_build --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --locked --no-track --path pixi/crates/pixi_build_rust --profile dist --root "%LIBRARY_PREFIX%"
       else:
       - cargo install --features performance --locked --no-track --path pixi/crates/pixi --profile dist --root "$PREFIX"
-      - cargo install --locked --no-track --path pixi/crates/pixi-build-cmake --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path pixi/crates/pixi-build-mojo --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path pixi/crates/pixi-build-python --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path pixi/crates/pixi-build-rattler-build --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path pixi/crates/pixi-build-rust --profile dist --root "$PREFIX"
+      - cargo install --locked --no-track --path pixi/crates/pixi_build_cmake --profile dist --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi/crates/pixi_build_mojo --profile dist --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi/crates/pixi_build_python --profile dist --root "$PREFIX"
+      - cargo install --frozen --no-track --path pixi/crates/pixi_build_rattler_build --profile dist --root "$PREFIX"
+      - cargo install --locked --no-track --path pixi/crates/pixi_build_rust --profile dist --root "$PREFIX"
 
   requirements:
     build:
     - ${{ compiler('c') }}
-    - rust >=1.89.0
+    - rust >=1.90.0
     - if: linux
       then: diffutils
     - if: linux
