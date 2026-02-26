@@ -6,30 +6,42 @@ recipe:
   name: pixi
   version: ${{ version }}
 
+source:
+- url: https://codeload.github.com/prefix-dev/pixi/tar.gz/v${{ version }}
+  sha256: ${{ sha256 }}
+  target_directory: pixi
+  patches:
+  - 0001-customize.patch
+- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.39.12
+  sha256: c3c124cbe4860b71684a4997199e4915641ef4c656c8b27629b09d12b2120306
+  target_directory: rattler
+  patches:
+  - 0001-strip-dquotes.patch
+- url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/d144acdd068b00d9a6bac5fcbd418f34b796fdf9
+  sha256: cff329b2ea82f7cd3a5cb4eae842b25c04924a846adfc082ad622c98308f17d6
+  target_directory: rattler-build
+  patches:
+  - 0001-conda-build.patch
+
 build:
   number: 0
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
 
-cache:
-  source:
-  - url: https://codeload.github.com/prefix-dev/pixi/tar.gz/v${{ version }}
-    sha256: ${{ sha256 }}
-    target_directory: pixi
-    patches:
-    - 0001-customize.patch
-  - url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.39.12
-    sha256: c3c124cbe4860b71684a4997199e4915641ef4c656c8b27629b09d12b2120306
-    target_directory: rattler
-    patches:
-    - 0001-strip-dquotes.patch
-  - url: https://codeload.github.com/prefix-dev/rattler-build/tar.gz/d144acdd068b00d9a6bac5fcbd418f34b796fdf9
-    sha256: cff329b2ea82f7cd3a5cb4eae842b25c04924a846adfc082ad622c98308f17d6
-    target_directory: rattler-build
-    patches:
-    - 0001-conda-build.patch
-
+outputs:
+- staging:
+    name: pixi-build
+  requirements:
+    build:
+    - ${{ compiler('c') }}
+    - rust >=1.90.0
+    - if: linux
+      then: diffutils
+    - if: linux
+      then: make
+    - if: microarch_level|int > 0
+      then: x86_64-microarch-level ==${{ microarch_level }}
   build:
     script:
     - if: win
@@ -47,21 +59,9 @@ cache:
       - cargo install --frozen --no-track --path pixi/crates/pixi_build_python --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path pixi/crates/pixi_build_rattler_build --profile dist --root "$PREFIX"
       - cargo install --locked --no-track --path pixi/crates/pixi_build_rust --profile dist --root "$PREFIX"
-
-  requirements:
-    build:
-    - ${{ compiler('c') }}
-    - rust >=1.90.0
-    - if: linux
-      then: diffutils
-    - if: linux
-      then: make
-    - if: microarch_level|int > 0
-      then: x86_64-microarch-level ==${{ microarch_level }}
-
-outputs:
 - package:
     name: pixi
+  inherit: pixi-build
   build:
     files:
     - bin/pixi
@@ -71,6 +71,7 @@ outputs:
     - pixi -V
 - package:
     name: pixi-build-cmake
+  inherit: pixi-build
   build:
     files:
     - bin/pixi-build-cmake
@@ -80,6 +81,7 @@ outputs:
     - pixi-build-cmake help
 - package:
     name: pixi-build-mojo
+  inherit: pixi-build
   build:
     files:
     - bin/pixi-build-mojo
@@ -89,6 +91,7 @@ outputs:
     - pixi-build-mojo help
 - package:
     name: pixi-build-python
+  inherit: pixi-build
   build:
     files:
     - bin/pixi-build-python
@@ -98,6 +101,7 @@ outputs:
     - pixi-build-python help
 - package:
     name: pixi-build-rattler-build
+  inherit: pixi-build
   build:
     files:
     - bin/pixi-build-rattler-build
@@ -107,6 +111,7 @@ outputs:
     - pixi-build-rattler-build help
 - package:
     name: pixi-build-rust
+  inherit: pixi-build
   build:
     files:
     - bin/pixi-build-rust

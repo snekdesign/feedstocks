@@ -6,6 +6,12 @@ recipe:
   name: libcmd
   version: ${{ version }}
 
+source:
+  url: https://codeload.github.com/reactos/reactos/tar.gz/${{ version }}-release
+  sha256: ${{ sha256 }}
+  patches:
+  - 0001-cmd.dll.patch
+
 build:
   number: 0
   skip:
@@ -13,12 +19,9 @@ build:
   - build_platform != target_platform
   - not (compiler('cxx') is startingwith('vs'))
 
-cache:
-  source:
-    url: https://codeload.github.com/reactos/reactos/tar.gz/${{ version }}-release
-    sha256: ${{ sha256 }}
-    patches:
-    - 0001-cmd.dll.patch
+outputs:
+- staging:
+    name: libcmd-build
   requirements:
     build:
     - cmake >=3.17.0,<4
@@ -36,15 +39,15 @@ cache:
     - md "%LIBRARY_INC%" "%LIBRARY_LIB%"
     - mklink /H "%LIBRARY_LIB%\cmd.lib" cmd.lib
     - copy "%RECIPE_DIR%\cmd.h" "%LIBRARY_INC%"
-
-outputs:
 - package:
     name: libcmd
+  inherit: libcmd-build
   build:
     files:
     - Library/bin/cmd.dll
 - package:
     name: libcmd-devel
+  inherit: libcmd-build
   requirements:
     run:
     - ${{ pin_subpackage('libcmd', exact=True) }}
