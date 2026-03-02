@@ -1,0 +1,17 @@
+package:
+  name: nodejs-bin
+  version: 2026.3.2
+
+build:
+  number: 0
+  script:
+  - (robocopy "%RECIPE_DIR%" "%PREFIX%\bin" node.cmd) ^& if %ERRORLEVEL% LEQ 1 exit 0
+  skip:
+  - not win
+
+requirements:
+  run:
+  - nodejs
+
+about:
+  license: GPL-2.0-only
