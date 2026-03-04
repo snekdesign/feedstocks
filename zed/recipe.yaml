@@ -1,0 +1,47 @@
+context:
+  license: GPL-3.0-or-later
+  version: 0.225.13
+  sha256: 1168c2d3a731edfe3cd6551f9e8f8de6f1adeaacbd3e8a7ee3706021f9cfb869
+
+package:
+  name: zed
+  version: ${{ version }}
+
+source:
+- url: https://codeload.github.com/zed-industries/zed/tar.gz/v${{ version }}
+  sha256: ${{ sha256 }}
+  patches:
+  - changes.patch
+- url: https://github.com/livekit/rust-sdks/releases/download/webrtc-b99fd2c-6/webrtc-win-x64-release.zip
+  sha256: eb7dcc30bc7c3f331acd8648495b420e7f2445f5d8d49ddb755026b2b572495d
+  target_directory: webrtc
+
+build:
+  number: 0
+  script:
+    content:
+    - set "LK_CUSTOM_WEBRTC=%SRC_DIR%\webrtc"
+    - cargo fetch
+    - cargo install --frozen --no-default-features --no-track --path crates\zed --root "%LIBRARY_PREFIX%"
+    env:
+      ZED_UPDATE_EXPLANATION: Please use your package manager to update zed from conda-forge
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - cmake >=3.12.0
+  - ${{ compiler('c') }}
+  - rust >=1.93.0
+  host:
+  - icu 78.*
+  run:
+  - openconsole ==1.23.13503
+
+about:
+  license: ${{ license }}
+  license_family: GPL
+  license_file: LICENSE-GPL
+  summary: Code at the speed of thought

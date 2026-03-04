@@ -1,0 +1,283 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -623,6 +623,8 @@
+ pulldown-cmark = { version = "0.13.0", default-features = false }
+ quote = "1.0.9"
+ rand = "0.9"
++rattler_conda_types = { version = "0.43.5", default-features = false }
++rattler_shell = { version = "0.26.2", default-features = false }
+ rayon = "1.8"
+ regex = "1.5"
+ # WARNING: If you change this, you must also publish a new version of zed-reqwest to crates.io
+@@ -747,6 +749,7 @@
+ which = "6.0.0"
+ wgpu = { git = "https://github.com/zed-industries/wgpu", rev = "e0f83a6cedc5e0b97da1ebe2d638ad103672e0a2" }
+ windows-core = "0.61"
++windows-link = "0.2"
+ yawc = "0.2.5"
+ zeroize = "1.8"
+ zstd = "0.11"
+@@ -875,13 +878,11 @@
+ zed_actions = { codegen-units = 1 }
+
+ [profile.release]
+-debug = "limited"
+-lto = "thin"
++lto = true
+ codegen-units = 1
++opt-level = 3
++strip = true
+
+-[profile.release.package]
+-zed = { codegen-units = 16 }
+-
+ [profile.release-fast]
+ inherits = "release"
+ debug = "full"
+--- a/crates/explorer_command_injector/Cargo.toml
++++ b/crates/explorer_command_injector/Cargo.toml
+@@ -22,6 +22,7 @@
+ [target.'cfg(target_os = "windows")'.dependencies]
+ windows.workspace = true
+ windows-core.workspace = true
++windows-link.workspace = true
+ windows-registry = "0.5"
+
+ [dependencies]
+--- a/crates/explorer_command_injector/src/explorer_command_injector.rs
++++ b/crates/explorer_command_injector/src/explorer_command_injector.rs
+@@ -8,7 +8,6 @@
+             CLASS_E_CLASSNOTAVAILABLE, E_FAIL, E_INVALIDARG, E_NOTIMPL, ERROR_INSUFFICIENT_BUFFER,
+             GetLastError, HINSTANCE, MAX_PATH,
+         },
+-        Globalization::u_strlen,
+         System::{
+             Com::{IBindCtx, IClassFactory, IClassFactory_Impl},
+             LibraryLoader::GetModuleFileNameW,
+@@ -171,7 +170,10 @@
+         buf = vec![0u16; buf.len() * 2];
+         unsafe { GetModuleFileNameW(Some(DLL_INSTANCE.into()), &mut buf) };
+     }
+-    let len = unsafe { u_strlen(buf.as_ptr()) };
++    let len = unsafe {
++        windows_link::link!("icuuc78.dll" "C" fn u_strlen_78(s : *const u16) -> i32);
++        u_strlen_78(buf.as_ptr())
++    };
+     let path: PathBuf = std::ffi::OsString::from_wide(&buf[..len as usize])
+         .into_string()
+         .ok()?
+--- a/crates/gpui/Cargo.toml
++++ b/crates/gpui/Cargo.toml
+@@ -218,6 +218,7 @@
+ rand.workspace = true
+ windows.workspace = true
+ windows-core.workspace = true
++windows-link.workspace = true
+ windows-numerics = "0.2"
+ windows-registry = "0.5"
+
+--- a/crates/gpui/src/platform/windows/destination_list.rs
++++ b/crates/gpui/src/platform/windows/destination_list.rs
+@@ -5,7 +5,6 @@
+ use windows::{
+     Win32::{
+         Foundation::PROPERTYKEY,
+-        Globalization::u_strlen,
+         System::Com::{CLSCTX_INPROC_SERVER, CoCreateInstance, StructuredStorage::PROPVARIANT},
+         UI::{
+             Controls::INFOTIPSIZE,
+@@ -66,7 +65,9 @@
+     dock_menus: &[(SharedString, SharedString)],
+ ) -> anyhow::Result<Vec<SmallVec<[PathBuf; 2]>>> {
+     let (list, removed) = create_destination_list()?;
+-    add_recent_folders(&list, recent_workspaces, removed.as_ref())?;
++    if let Err(err) = add_recent_folders(&list, recent_workspaces, removed.as_ref()) {
++        log::warn!("Failed to add recent folders: {err}");
++    }
+     add_dock_menu(&list, dock_menus)?;
+     unsafe { list.CommitList() }?;
+     Ok(removed)
+@@ -100,7 +101,10 @@
+             // see https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getdescription
+             let mut buffer = [0u16; INFOTIPSIZE as usize];
+             unsafe { shell_link.GetDescription(&mut buffer)? };
+-            let len = unsafe { u_strlen(buffer.as_ptr()) };
++            let len = unsafe {
++                windows_link::link!("icuuc78.dll" "C" fn u_strlen_78(s : *const u16) -> i32);
++                u_strlen_78(buffer.as_ptr())
++            };
+             String::from_utf16_lossy(&buffer[..len as usize])
+         };
+         let args = description.split('\n').map(PathBuf::from).collect();
+--- a/crates/zed/build.rs
++++ b/crates/zed/build.rs
+@@ -53,120 +53,6 @@
+             println!("cargo:rustc-link-arg=/stack:{}", 8 * 1024 * 1024);
+         }
+
+-        if cfg!(target_arch = "x86_64") || cfg!(target_arch = "aarch64") {
+-            let out_dir = std::env::var("OUT_DIR").unwrap();
+-            let out_dir: &std::path::Path = out_dir.as_ref();
+-            let target_dir = std::path::Path::new(&out_dir)
+-                .parent()
+-                .and_then(|p| p.parent())
+-                .and_then(|p| p.parent())
+-                .expect("Failed to find target directory");
+-
+-            let conpty_dll_target = target_dir.join("conpty.dll");
+-            let open_console_target = target_dir.join("OpenConsole.exe");
+-
+-            let conpty_url = "https://github.com/microsoft/terminal/releases/download/v1.23.13503.0/Microsoft.Windows.Console.ConPTY.1.23.251216003.nupkg";
+-            let nupkg_path = out_dir.join("conpty.nupkg.zip");
+-            let extract_dir = out_dir.join("conpty");
+-
+-            let download_script = format!(
+-                "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '{}' -OutFile '{}'",
+-                conpty_url,
+-                nupkg_path.display()
+-            );
+-
+-            let download_result = Command::new("powershell")
+-                .args([
+-                    "-NoProfile",
+-                    "-NonInteractive",
+-                    "-Command",
+-                    &download_script,
+-                ])
+-                .output();
+-
+-            match download_result {
+-                Ok(output) if output.status.success() => {
+-                    println!("Downloaded conpty nupkg successfully");
+-
+-                    let extract_script = format!(
+-                        "$ProgressPreference = 'SilentlyContinue'; Expand-Archive -Path '{}' -DestinationPath '{}' -Force",
+-                        nupkg_path.display(),
+-                        extract_dir.display()
+-                    );
+-
+-                    let extract_result = Command::new("powershell")
+-                        .args(["-NoProfile", "-NonInteractive", "-Command", &extract_script])
+-                        .output();
+-
+-                    match extract_result {
+-                        Ok(output) if output.status.success() => {
+-                            let (conpty_dll_source, open_console_source) =
+-                                if cfg!(target_arch = "x86_64") {
+-                                    (
+-                                        extract_dir.join("runtimes/win-x64/native/conpty.dll"),
+-                                        extract_dir
+-                                            .join("build/native/runtimes/x64/OpenConsole.exe"),
+-                                    )
+-                                } else {
+-                                    (
+-                                        extract_dir.join("runtimes/win-arm64/native/conpty.dll"),
+-                                        extract_dir
+-                                            .join("build/native/runtimes/arm64/OpenConsole.exe"),
+-                                    )
+-                                };
+-
+-                            match std::fs::copy(&conpty_dll_source, &conpty_dll_target) {
+-                                Ok(_) => {
+-                                    println!("Copied conpty.dll to {}", conpty_dll_target.display())
+-                                }
+-                                Err(e) => println!(
+-                                    "cargo::warning=Failed to copy conpty.dll from {}: {}",
+-                                    conpty_dll_source.display(),
+-                                    e
+-                                ),
+-                            }
+-
+-                            match std::fs::copy(&open_console_source, &open_console_target) {
+-                                Ok(_) => println!(
+-                                    "Copied OpenConsole.exe to {}",
+-                                    open_console_target.display()
+-                                ),
+-                                Err(e) => println!(
+-                                    "cargo::warning=Failed to copy OpenConsole.exe from {}: {}",
+-                                    open_console_source.display(),
+-                                    e
+-                                ),
+-                            }
+-                        }
+-                        Ok(output) => {
+-                            println!(
+-                                "cargo::warning=Failed to extract conpty nupkg: {}",
+-                                String::from_utf8_lossy(&output.stderr)
+-                            );
+-                        }
+-                        Err(e) => {
+-                            println!(
+-                                "cargo::warning=Failed to run PowerShell for extraction: {}",
+-                                e
+-                            );
+-                        }
+-                    }
+-                }
+-                Ok(output) => {
+-                    println!(
+-                        "cargo::warning=Failed to download conpty nupkg: {}",
+-                        String::from_utf8_lossy(&output.stderr)
+-                    );
+-                }
+-                Err(e) => {
+-                    println!(
+-                        "cargo::warning=Failed to run PowerShell for download: {}",
+-                        e
+-                    );
+-                }
+-            }
+-        }
+-
+         let release_channel = option_env!("RELEASE_CHANNEL").unwrap_or("dev");
+         let icon = match release_channel {
+             "stable" => "resources/windows/app-icon.ico",
+--- a/crates/zed/Cargo.toml
++++ b/crates/zed/Cargo.toml
+@@ -173,6 +173,8 @@
+ project_symbols.workspace = true
+ prompt_store.workspace = true
+ proto.workspace = true
++rattler_conda_types.workspace = true
++rattler_shell.workspace = true
+ recent_projects.workspace = true
+ release_channel.workspace = true
+ remote.workspace = true
+--- a/crates/zed/src/main.rs
++++ b/crates/zed/src/main.rs
+@@ -36,6 +36,7 @@
+ use parking_lot::Mutex;
+ use project::{project_settings::ProjectSettings, trusted_worktrees};
+ use proto;
++use rattler_shell::activation::{ActivationVariables, Activator};
+ use recent_projects::{RemoteSettings, open_remote_project};
+ use release_channel::{AppCommitSha, AppVersion, ReleaseChannel};
+ use session::{AppSession, Session};
+@@ -295,7 +296,26 @@
+     );
+
+     #[cfg(windows)]
+-    check_for_conpty_dll();
++    {
++        if let Ok(before_env) = ActivationVariables::from_env()
++            && before_env.conda_prefix.is_none()
++            && let Ok(mut path_buf) = env::current_exe()
++            && path_buf.pop()
++            && path_buf.pop()
++            && let Some(target_prefix) = path_buf.parent()
++            && let Ok(activator) = Activator::from_path(
++                target_prefix,
++                rattler_shell::shell::ShellEnum::default(),
++                rattler_conda_types::Platform::current(),
++            )
++            && let Ok(after_env) = activator.run_activation(before_env, None)
++        {
++            for (key, val) in after_env.iter() {
++                unsafe { env::set_var(key, val); }
++            }
++        }
++        check_for_conpty_dll();
++    }
+
+     let app = Application::new().with_assets(Assets);
+
