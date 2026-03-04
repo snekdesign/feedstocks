@@ -1,6 +1,6 @@
 context:
-  version: 1.23.12371
-  sha256: ee48769365c1081d3d8eb592049ed5341afdb3896ffa26a2dded48b40949c755
+  version: 1.23.13503
+  sha256: 8e3b874094be702870266a86b56f2772b598a0feb53309f6f60e91e3c0b528be
 
 package:
   name: openconsole
@@ -21,7 +21,9 @@ build:
   script:
   - set "SolutionDir=%SRC_DIR%\"
   - msbuild src\host\exe\Host.EXE.vcxproj -p:Configuration=Release;Platform=x64
+  - msbuild src\winconpty\dll\winconptydll.vcxproj -p:Configuration=Release;Platform=x64
   - mklink /H "%LIBRARY_BIN%\OpenConsole.exe" bin\x64\Release\OpenConsole.exe
+  - mklink /H "%LIBRARY_BIN%\conpty.dll" bin\x64\Release\conpty.dll
   skip:
   - not win
   - build_platform != target_platform
@@ -32,7 +34,7 @@ requirements:
   - ${{ compiler('cxx') }}
   host:
   - fmt
-  - icu 75.*
+  - icu 78.*
   - mingw-w64-ucrt-x86_64-crt-git
   - wil
 
