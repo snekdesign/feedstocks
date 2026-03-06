@@ -39,7 +39,7 @@ index ec14337..fc62baa 100644
 -  <Import Project="$(VcpkgRoot)/scripts/buildsystems/msbuild/vcpkg.targets" Condition="'$(MSBuildProjectExtension)'=='.vcxproj'" />
  </Project>
 diff --git a/src/common.build.pre.props b/src/common.build.pre.props
-index 4e2346e..56b5641 100644
+index b3f57bf..a9c818d 100644
 --- a/src/common.build.pre.props
 +++ b/src/common.build.pre.props
 @@ -75,7 +75,7 @@
@@ -56,7 +56,7 @@ index 4e2346e..56b5641 100644
        -->
        <DisableSpecificWarnings>4201;4312;4467;5105;26434;26445;26456;26478;26494;%(DisableSpecificWarnings)</DisableSpecificWarnings>
 -      <PreprocessorDefinitions>_WINDOWS;EXTERNAL_BUILD;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <PreprocessorDefinitions>_WINDOWS;EXTERNAL_BUILD;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;uregex_close=uregex_close_78;uregex_end64=uregex_end64_78;uregex_find=uregex_find_78;uregex_findNext=uregex_findNext_78;uregex_open=uregex_open_78;uregex_setStackLimit=uregex_setStackLimit_78;uregex_setTimeLimit=uregex_setTimeLimit_78;uregex_setUText=uregex_setUText_78;uregex_start64=uregex_start64_78;utext_close=utext_close_78;utext_setup=utext_setup_78;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_WINDOWS;EXTERNAL_BUILD;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;ubrk_close=ubrk_close_78;ubrk_next=ubrk_next_78;ubrk_open=ubrk_open_78;uregex_close=uregex_close_78;uregex_end64=uregex_end64_78;uregex_find=uregex_find_78;uregex_findNext=uregex_findNext_78;uregex_open=uregex_open_78;uregex_setStackLimit=uregex_setStackLimit_78;uregex_setTimeLimit=uregex_setTimeLimit_78;uregex_setUText=uregex_setUText_78;uregex_start64=uregex_start64_78;utext_close=utext_close_78;utext_setup=utext_setup_78;%(PreprocessorDefinitions)</PreprocessorDefinitions>
        <SDLCheck>true</SDLCheck>
        <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
        <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -65,14 +65,14 @@ index 4e2346e..56b5641 100644
        <MultiProcessorCompilation>true</MultiProcessorCompilation>
        <MinimalRebuild>false</MinimalRebuild>
        <RuntimeTypeInfo>false</RuntimeTypeInfo>
-@@ -296,5 +296,4 @@
+@@ -298,5 +298,4 @@
      <VCPkgLocalAppDataDisabled>true</VCPkgLocalAppDataDisabled>
    </PropertyGroup>
  
 -  <Import Project="$(VcpkgRoot)/scripts/buildsystems/msbuild/vcpkg.props" Condition="'$(MSBuildProjectExtension)'=='.vcxproj'" />
  </Project>
 diff --git a/src/common.nugetversions.targets b/src/common.nugetversions.targets
-index fc2ee14..277e3e3 100644
+index 186f933..a253ff3 100644
 --- a/src/common.nugetversions.targets
 +++ b/src/common.nugetversions.targets
 @@ -95,7 +95,6 @@

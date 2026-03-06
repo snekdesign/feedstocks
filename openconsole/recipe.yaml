@@ -1,6 +1,6 @@
 context:
-  version: 1.23.13503
-  sha256: 8e3b874094be702870266a86b56f2772b598a0feb53309f6f60e91e3c0b528be
+  version: 1.24.10621
+  sha256: 09d68525eb05c5bd867181ae42dfa80e4a35aad2c4642f65252d7e13049de6f9
 
 package:
   name: openconsole
