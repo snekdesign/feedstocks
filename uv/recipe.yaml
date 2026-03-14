@@ -1,38 +1,25 @@
 context:
-  version: 0.9.5
-  sha256: 9fd1dd030b37b51dcf79b582ea77a911eeb4015a00669bd3047d3b6adea37ba8
+  version: 0.10.10
+  sha256: ba4082c92c97e0cc5ac0bc48a2783bc5026c8a14a768ecfb5f7012223a5e90ac
 
 package:
   name: uv
   version: ${{ version }}
 
 source:
-- url: https://codeload.github.com/astral-sh/uv/tar.gz/${{ version }}
+  url: https://codeload.github.com/astral-sh/uv/tar.gz/${{ version }}
   sha256: ${{ sha256 }}
-  target_directory: uv
   patches:
-  - 0001-customize.patch
-- if: win
-  then:
-  - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.3.1/VC-LTL-Binary.7z
-    sha256: 7a18799ed3aa84a225610a5447a56bc534c5c98ccb8dec05caba0e3f633431ad
-    target_directory: vc_ltl
-- if: win
-  then:
-  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.9/YY-Thunks-Objs.zip
-    sha256: c53b87f83a3a1322de22195ee43fca590e757369b713304a4ce4fcaad532f8b7
-    target_directory: yy_thunks
+  - changes.patch
 
 build:
   number: 0
   script:
   - if: win
     then:
-    - set "VC_LTL=%SRC_DIR%\vc_ltl"
-    - set "YY_THUNKS=%SRC_DIR%\yy_thunks"
-    - cargo install --config target.x86_64-pc-windows-msvc.linker=\"link\" --features windows-gui-bin --locked --no-track --path uv\crates\uv --root "%LIBRARY_PREFIX%"
+    - cargo install --features windows-gui-bin --locked --no-track --path crates\uv --root "%LIBRARY_PREFIX%"
     else:
-    - cargo install --locked --no-track --path uv/crates/uv --root "$PREFIX"
+    - cargo install --locked --no-track --path crates/uv --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
@@ -40,13 +27,11 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust >=1.89.0
+  - rust >=1.91.0
   - if: linux
     then: diffutils
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
-  - if: win
-    then: 7zip
 
 tests:
 - script:
@@ -55,6 +40,6 @@ tests:
 about:
   license: Apache-2.0 OR MIT
   license_file:
-  - uv/LICENSE-APACHE
-  - uv/LICENSE-MIT
+  - LICENSE-APACHE
+  - LICENSE-MIT
   summary: An extremely fast Python package installer and resolver, written in Rust.

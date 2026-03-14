@@ -1,0 +1,149 @@
+--- a/.cargo/config.toml
++++ b/.cargo/config.toml
+@@ -5,5 +5,3 @@
+ # that shared/dynamic library.
+ #
+ # See: https://github.com/astral-sh/ruff/issues/11503
+-[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
+-rustflags = ["-C", "target-feature=+crt-static"]
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -377,6 +377,8 @@
+ [profile.release]
+ strip = true
+ lto = "fat"
++opt-level = 3
++codegen-units = 1
+
+ # This profile is meant to mimic the `release` profile as closely as
+ # possible, but using settings that are more beneficial for iterative
+--- a/crates/uv-distribution/Cargo.toml
++++ b/crates/uv-distribution/Cargo.toml
+@@ -35,6 +35,7 @@
+ uv-platform-tags = { workspace = true }
+ uv-pypi-types = { workspace = true }
+ uv-redacted = { workspace = true }
++uv-static = { workspace = true }
+ uv-types = { workspace = true }
+ uv-workspace = { workspace = true }
+
+--- a/crates/uv-distribution/src/source/mod.rs
++++ b/crates/uv-distribution/src/source/mod.rs
+@@ -37,7 +37,10 @@
+ };
+ use uv_extract::hash::Hasher;
+ use uv_fs::{Simplified, rename_with_retry, write_atomic};
+-use uv_git::{GIT_LFS, GitError};
++use uv_git::{
++    GIT_LFS, GitError,
++    rate_limit::{GITHUB_RATE_LIMIT_STATUS, is_github_rate_limited},
++};
+ use uv_git_types::{GitHubRepository, GitOid};
+ use uv_metadata::read_archive_metadata;
+ use uv_normalize::PackageName;
+@@ -2076,6 +2079,10 @@
+         resource: &GitSourceUrl<'_>,
+         client: &ManagedClient<'_>,
+     ) -> Result<Option<ResolutionMetadata>, Error> {
++        if std::env::var_os(uv_static::EnvVars::UV_NO_GITHUB_FAST_PATH).is_some() {
++            return Ok(None);
++        }
++
+         let GitSourceUrl {
+             git, subdirectory, ..
+         } = resource;
+@@ -2094,7 +2101,12 @@
+
+         // Fetch the `pyproject.toml` from the resolved commit.
+         let url =
+-            format!("https://raw.githubusercontent.com/{owner}/{repo}/{commit}/pyproject.toml");
++            format!("https://api.github.com/repos/{owner}/{repo}/contents/pyproject.toml?ref={commit}");
++
++        if GITHUB_RATE_LIMIT_STATUS.is_active() {
++            debug!("Rate-limited by GitHub. Skipping GitHub fast path attempt for: {url}");
++            return Ok(None);
++        }
+
+         debug!("Attempting to fetch `pyproject.toml` from: {url}");
+
+@@ -2103,6 +2115,8 @@
+                 let response = client
+                     .uncached_client(git.repository())
+                     .get(&url)
++                    .header("Accept", "application/vnd.github.raw+json")
++                    .header("X-GitHub-Api-Version", "2026-03-10")
+                     .send()
+                     .await?;
+
+@@ -2110,7 +2124,19 @@
+                 if response.status() == StatusCode::NOT_FOUND {
+                     return Ok::<Option<String>, Error>(None);
+                 }
+-                response.error_for_status_ref()?;
++                response.error_for_status_ref().map_err(|err| {
++                    debug!(
++                        "GitHub API request failed for: {url} ({})",
++                        response.status()
++                    );
++
++                    if is_github_rate_limited(&response) {
++                        // Mark that we are being rate-limited by GitHub
++                        GITHUB_RATE_LIMIT_STATUS.activate();
++                    }
++
++                    err
++                })?;
+
+                 let content = response.text().await?;
+                 Ok::<Option<String>, Error>(Some(content))
+--- a/crates/uv-git/src/lib.rs
++++ b/crates/uv-git/src/lib.rs
+@@ -7,6 +7,6 @@
+
+ mod credentials;
+ mod git;
+-mod rate_limit;
++pub mod rate_limit;
+ mod resolver;
+ mod source;
+--- a/crates/uv-git/src/rate_limit.rs
++++ b/crates/uv-git/src/rate_limit.rs
+@@ -3,7 +3,7 @@
+
+ /// A global state on whether we are being rate-limited by GitHub's REST API.
+ /// If we are, avoid "fast-path" attempts.
+-pub(crate) static GITHUB_RATE_LIMIT_STATUS: GitHubRateLimitStatus = GitHubRateLimitStatus::new();
++pub static GITHUB_RATE_LIMIT_STATUS: GitHubRateLimitStatus = GitHubRateLimitStatus::new();
+
+ /// GitHub REST API rate limit status tracker.
+ ///
+@@ -12,7 +12,7 @@
+ /// The rate limit timeout duration is much longer than the runtime of a `uv` command.
+ /// And so we do not need to invalidate this state based on `x-ratelimit-reset`.
+ #[derive(Debug)]
+-pub(crate) struct GitHubRateLimitStatus(AtomicBool);
++pub struct GitHubRateLimitStatus(AtomicBool);
+
+ impl GitHubRateLimitStatus {
+     const fn new() -> Self {
+@@ -19,17 +19,17 @@
+         Self(AtomicBool::new(false))
+     }
+
+-    pub(crate) fn activate(&self) {
++    pub fn activate(&self) {
+         self.0.store(true, Ordering::Relaxed);
+     }
+
+-    pub(crate) fn is_active(&self) -> bool {
++    pub fn is_active(&self) -> bool {
+         self.0.load(Ordering::Relaxed)
+     }
+ }
+
+ /// Determine if GitHub is applying rate-limiting based on the response
+-pub(crate) fn is_github_rate_limited(response: &Response) -> bool {
++pub fn is_github_rate_limited(response: &Response) -> bool {
+     // HTTP 403 and 429 are possible status codes in the event of a primary or secondary rate limit.
+     // Source: https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api?apiVersion=2022-11-28#rate-limit-errors
+     let status_code = response.status();
