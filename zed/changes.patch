@@ -1,6 +1,6 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -623,6 +623,8 @@
+@@ -647,6 +647,8 @@
  pulldown-cmark = { version = "0.13.0", default-features = false }
  quote = "1.0.9"
  rand = "0.9"
@@ -9,15 +9,15 @@
  rayon = "1.8"
  regex = "1.5"
  # WARNING: If you change this, you must also publish a new version of zed-reqwest to crates.io
-@@ -747,6 +749,7 @@
- which = "6.0.0"
- wgpu = { git = "https://github.com/zed-industries/wgpu", rev = "e0f83a6cedc5e0b97da1ebe2d638ad103672e0a2" }
+@@ -772,6 +774,7 @@
+ web-time = "1.1.0"
+ wgpu = { git = "https://github.com/zed-industries/wgpu", rev = "6e0c2546d99dad72ce6ffb5b04349e6a4ce96e6d" }
  windows-core = "0.61"
 +windows-link = "0.2"
  yawc = "0.2.5"
  zeroize = "1.8"
  zstd = "0.11"
-@@ -875,13 +878,11 @@
+@@ -906,13 +909,11 @@
  zed_actions = { codegen-units = 1 }
 
  [profile.release]
@@ -54,7 +54,7 @@
          System::{
              Com::{IBindCtx, IClassFactory, IClassFactory_Impl},
              LibraryLoader::GetModuleFileNameW,
-@@ -171,7 +170,10 @@
+@@ -168,7 +167,10 @@
          buf = vec![0u16; buf.len() * 2];
          unsafe { GetModuleFileNameW(Some(DLL_INSTANCE.into()), &mut buf) };
      }
@@ -66,18 +66,18 @@
      let path: PathBuf = std::ffi::OsString::from_wide(&buf[..len as usize])
          .into_string()
          .ok()?
---- a/crates/gpui/Cargo.toml
-+++ b/crates/gpui/Cargo.toml
-@@ -218,6 +218,7 @@
- rand.workspace = true
+--- a/crates/gpui_windows/Cargo.toml
++++ b/crates/gpui_windows/Cargo.toml
+@@ -35,6 +35,7 @@
+ uuid.workspace = true
  windows.workspace = true
  windows-core.workspace = true
 +windows-link.workspace = true
  windows-numerics = "0.2"
  windows-registry = "0.5"
 
---- a/crates/gpui/src/platform/windows/destination_list.rs
-+++ b/crates/gpui/src/platform/windows/destination_list.rs
+--- a/crates/gpui_windows/src/destination_list.rs
++++ b/crates/gpui_windows/src/destination_list.rs
 @@ -5,7 +5,6 @@
  use windows::{
      Win32::{
@@ -109,9 +109,23 @@
              String::from_utf16_lossy(&buffer[..len as usize])
          };
          let args = description.split('\n').map(PathBuf::from).collect();
+--- a/crates/text/src/text.rs
++++ b/crates/text/src/text.rs
+@@ -3429,11 +3429,7 @@
+
+ impl Default for LineEnding {
+     fn default() -> Self {
+-        #[cfg(unix)]
+         return Self::Unix;
+-
+-        #[cfg(not(unix))]
+-        return Self::Windows;
+     }
+ }
+
 --- a/crates/zed/build.rs
 +++ b/crates/zed/build.rs
-@@ -53,120 +53,6 @@
+@@ -72,120 +72,6 @@
              println!("cargo:rustc-link-arg=/stack:{}", 8 * 1024 * 1024);
          }
 
@@ -234,7 +248,7 @@
              "stable" => "resources/windows/app-icon.ico",
 --- a/crates/zed/Cargo.toml
 +++ b/crates/zed/Cargo.toml
-@@ -173,6 +173,8 @@
+@@ -171,6 +171,8 @@
  project_symbols.workspace = true
  prompt_store.workspace = true
  proto.workspace = true
@@ -245,7 +259,7 @@
  remote.workspace = true
 --- a/crates/zed/src/main.rs
 +++ b/crates/zed/src/main.rs
-@@ -36,6 +36,7 @@
+@@ -37,6 +37,7 @@
  use parking_lot::Mutex;
  use project::{project_settings::ProjectSettings, trusted_worktrees};
  use proto;
@@ -253,7 +267,7 @@
  use recent_projects::{RemoteSettings, open_remote_project};
  use release_channel::{AppCommitSha, AppVersion, ReleaseChannel};
  use session::{AppSession, Session};
-@@ -295,7 +296,26 @@
+@@ -320,7 +321,26 @@
      );
 
      #[cfg(windows)]
@@ -279,5 +293,5 @@
 +        check_for_conpty_dll();
 +    }
 
-     let app = Application::new().with_assets(Assets);
-
+     let app =
+         Application::with_platform(gpui_platform::current_platform(false)).with_assets(Assets);

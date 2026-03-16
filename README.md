@@ -21,4 +21,4 @@ violated.
 [3]: LICENSE#L1-L339
 [4]: LICENSE#L343-L388
 [5]: zed
-[6]: https://github.com/zed-industries/zed/blob/v0.225.13/crates/zed/Cargo.toml#L7
+[6]: https://github.com/zed-industries/zed/blob/v0.227.1/crates/zed/Cargo.toml#L7
