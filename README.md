@@ -1,7 +1,7 @@
 # feedstocks
 ## Dependencies
-- [Pixi][1] >=0.59.0
-- MSVC 17.12.* [LTSC][2] (Windows only)
+- [Pixi][1] >=0.63.0
+- MSVC 17.14.* [LTSC][2] (Windows only)
 - Xcode or Xcode Command Line Tools (macOS only)
 ## Usage
 ```

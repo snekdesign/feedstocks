@@ -14,7 +14,7 @@ c_compiler_version:
   then: '21.1'
   else: '15.2'
 - if: win
-  then: '2022.12'
+  then: '2022.14'
 
 cxx_compiler:
 - if: osx
@@ -28,7 +28,7 @@ cxx_compiler_version:
   then: '21.1'
   else: '15.2'
 - if: win
-  then: '2022.12'
+  then: '2022.14'
 
 cdt_name:
 - cos7
