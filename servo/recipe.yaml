@@ -1,0 +1,56 @@
+context:
+  version: 0.0.5
+  sha256: e0a23a1bc56f7aeff3f7e0faac6b08bdd76f129cf62f587d533bcda2b7fd46c8
+
+package:
+  name: servo
+  version: ${{ version }}
+
+source:
+- url: https://codeload.github.com/servo/servo/tar.gz/v${{ version }}
+  sha256: ${{ sha256 }}
+  patches:
+  - changes.patch
+- url: https://codeload.github.com/KyleMayes/clang-sys/tar.gz/v1.8.1
+  sha256: f3571b3033fc6ff32f86326de724ece3ced7867f2016ccf7cdb36284d3f9c9b8
+  target_directory: clang-sys
+  patches:
+  - 0001-conda-build.patch
+# https://book.servo.org/building/building-offline.html#prebuilt-spidermonkey-artifacts
+- url: https://github.com/servo/mozjs/releases/download/mozjs-sys-v0.140.5-10/libmozjs-x86_64-pc-windows-msvc.tar.gz
+  sha256: 573cfb125e82dbc6ebb948678c71288b45a38c9a52286524719fef9b59cc81d9
+  file_name: libmozjs.tar.gz
+
+build:
+  number: 0
+  script: build.py
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('cxx') is startingwith('vs'))
+
+requirements:
+  build:
+  - ${{ compiler('cxx') }}
+  - libclang13
+  - pkg-config
+  - python >=3.14.0
+  - rust >=1.86.0
+  host:
+  - glib
+  - gst-libav >=1.18.0
+  - gst-plugins-bad >=1.18.0
+  - gst-plugins-base >=1.18.0
+  - gst-plugins-good >=1.18.0
+  - gstreamer >=1.18.0
+  - m2-coreutils
+  - zlib
+
+tests:
+- script:
+  - servo -V
+
+about:
+  license: MPL-2.0
+  license_file: LICENSE
+  summary: Servo aims to empower developers with a lightweight, high-performance alternative for embedding web technologies in applications.

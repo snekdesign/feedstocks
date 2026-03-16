@@ -1,0 +1,24 @@
+From 51f29e784a219df57a7ecb863bb85cc2006f5d6a Mon Sep 17 00:00:00 2001
+From: snekdesign <104812819+snekdesign@users.noreply.github.com>
+Date: Mon, 17 Feb 2025 20:27:13 +0800
+Subject: [PATCH] conda build
+
+---
+ build/dynamic.rs | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/dynamic.rs b/build/dynamic.rs
+index d24490f..de5fe3e 100644
+--- a/build/dynamic.rs
++++ b/build/dynamic.rs
+@@ -151,6 +151,7 @@ fn search_libclang_directories(runtime: bool) -> Result<Vec<(PathBuf, String, Ve
+         // The official LLVM build uses `libclang.dll` on Windows instead of
+         // `clang.dll`. However, unofficial builds such as MinGW use `clang.dll`.
+         files.push("libclang.dll".into());
++        files.push("libclang-*.dll".into());
+     }
+ 
+     // Find and validate `libclang` shared libraries and collect the versions.
+-- 
+2.48.1.windows.1
+
