@@ -1,0 +1,10 @@
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -253,7 +253,6 @@
+   link_args: link_args,
+   link_depends: link_depends,
+   gnu_symbol_visibility: 'hidden',
+-  name_prefix: 'lib'
+ )
+
+ libplacebo = declare_dependency(

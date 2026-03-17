@@ -1,0 +1,50 @@
+context:
+  version: 7.360.1
+  sha256: d05fdf90bea2f629eaa2d115e909fd356388ac639e54f77b87a018a6d76224bd
+
+package:
+  name: libplacebo
+  version: ${{ version }}
+
+source:
+  url: https://codeload.github.com/haasn/libplacebo/tar.gz/refs/tags/v${{ version }}
+  sha256: ${{ sha256 }}
+  patches:
+  - changes.patch
+
+build:
+  number: 0
+  script:
+  - meson setup --buildtype release --prefix "%LIBRARY_PREFIX%" -D demos=false build
+  - cd build
+  - meson compile
+  - meson install
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('cxx') is startingwith('vs'))
+
+requirements:
+  build:
+  - clangxx_win-64 >=22.1.0
+  - ${{ compiler('cxx') }}
+  - glad2
+  - jinja2
+  - meson
+  - pkg-config
+  host:
+  - fast_float
+  - libvulkan-headers
+  - libvulkan-loader
+  - shaderc
+  - xxhash
+  run_exports:
+  - ${{ pin_subpackage('libplacebo', upper_bound='x.x.x') }}
+  ignore_run_exports:
+    from_package:
+    - xxhash
+
+about:
+  license: LGPL-2.1-or-later
+  license_file: LICENSE
+  summary: Core rendering algorithms and ideas from mpv as an independent library
