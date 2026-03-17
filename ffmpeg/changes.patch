@@ -1,17 +1,28 @@
-From 0352c85a01fd50a78ef868ee9fd1b67706f42ff4 Mon Sep 17 00:00:00 2001
-From: snekdesign <104812819+snekdesign@users.noreply.github.com>
-Date: Sat, 11 Nov 2023 19:18:51 +0800
-Subject: [PATCH] customize
+--- a/configure
++++ b/configure
+@@ -3531,7 +3531,7 @@
 
----
- fftools/ffplay.c | 31 ++++++++++---------------------
- 1 file changed, 10 insertions(+), 21 deletions(-)
+ ddagrab_filter_deps="d3d11va IDXGIOutput1 DXGI_OUTDUPL_FRAME_INFO"
+ gfxcapture_filter_deps="cxx17 threads d3d11va IGraphicsCaptureItemInterop __x_ABI_CWindows_CGraphics_CCapture_CIGraphicsCaptureSession3"
+-gfxcapture_filter_extralibs="-lstdc++"
++gfxcapture_filter_extralibs=
+ scale_d3d11_filter_deps="d3d11va"
+ scale_d3d12_filter_deps="d3d12va ID3D12VideoProcessor"
+ deinterlace_d3d12_filter_deps="d3d12va ID3D12VideoProcessor"
+--- a/ffbuild/common.mak
++++ b/ffbuild/common.mak
+@@ -27,7 +27,7 @@
+ ifndef V
+ Q      = @
+ ECHO   = printf "$(1)\t%s\n" $(2)
+-BRIEF  = CC CXX OBJCC HOSTCC HOSTLD AS X86ASM AR LD LDXX STRIP CP WINDRES GLSLC NVCC BIN2C METALCC METALLIB
++BRIEF  = CC CXX OBJCC HOSTCC HOSTLD AS X86ASM LD LDXX STRIP CP WINDRES GLSLC NVCC BIN2C METALCC METALLIB
+ SILENT = DEPCC DEPCXX DEPHOSTCC DEPAS DEPX86ASM RANLIB RM
 
-diff --git a/fftools/ffplay.c b/fftools/ffplay.c
-index 2a572fc..43a0068 100644
+ MSG    = $@
 --- a/fftools/ffplay.c
 +++ b/fftools/ffplay.c
-@@ -3088,7 +3088,7 @@ static int read_thread(void *arg)
+@@ -3145,7 +3145,7 @@
              (!is->video_st || (is->viddec.finished == is->videoq.serial && frame_queue_nb_remaining(&is->pictq) == 0))) {
              if (loop != 1 && (!loop || --loop)) {
                  stream_seek(is, start_time != AV_NOPTS_VALUE ? start_time : 0, 0, 0);
@@ -20,7 +31,7 @@ index 2a572fc..43a0068 100644
                  ret = AVERROR_EOF;
                  goto fail;
              }
-@@ -3392,12 +3392,6 @@ static void event_loop(VideoState *cur_stream)
+@@ -3472,12 +3472,6 @@
              case SDLK_9:
                  update_volume(cur_stream, -1, SDL_VOLUME_STEP);
                  break;
@@ -33,7 +44,7 @@ index 2a572fc..43a0068 100644
              case SDLK_v:
                  stream_cycle_channel(cur_stream, AVMEDIA_TYPE_VIDEO);
                  break;
-@@ -3409,15 +3403,6 @@ static void event_loop(VideoState *cur_stream)
+@@ -3489,15 +3483,6 @@
              case SDLK_t:
                  stream_cycle_channel(cur_stream, AVMEDIA_TYPE_SUBTITLE);
                  break;
@@ -49,7 +60,7 @@ index 2a572fc..43a0068 100644
              case SDLK_PAGEUP:
                  if (cur_stream->ic->nb_chapters <= 1) {
                      incr = 600.0;
-@@ -3433,15 +3418,19 @@ static void event_loop(VideoState *cur_stream)
+@@ -3513,15 +3498,19 @@
                  seek_chapter(cur_stream, -1);
                  break;
              case SDLK_LEFT:
@@ -69,7 +80,7 @@ index 2a572fc..43a0068 100644
                  incr = -60.0;
              do_seek:
                      if (seek_by_bytes) {
-@@ -3739,14 +3728,11 @@ void show_help_default(const char *opt, const char *arg)
+@@ -3820,14 +3809,11 @@
             "m                   toggle mute\n"
             "9, 0                decrease and increase volume respectively\n"
             "/, *                decrease and increase volume respectively\n"
@@ -79,14 +90,14 @@ index 2a572fc..43a0068 100644
             "c                   cycle program\n"
 -           "w                   cycle video filters or show modes\n"
 -           "s                   activate frame-step mode\n"
--           "left/right          seek backward/forward 10 seconds or to custom interval if -seek_interval is set\n"
+-           "left/right          seek backward/forward by 10 seconds or a custom interval if -seek_interval is set\n"
 -           "down/up             seek backward/forward 1 minute\n"
-+           "a, left/d, right    seek backward/forward 10 seconds or to custom interval if -seek_interval is set\n"
++           "a, left/d, right    seek backward/forward by 10 seconds or a custom interval if -seek_interval is set\n"
 +           "s, down/w, up       seek backward/forward 1 minute\n"
-            "page down/page up   seek backward/forward 10 minutes\n"
+            "page down/page up   seek to previous/next chapter or backward/forward 10 minutes if no chapters\n"
             "right mouse click   seek to percentage in file corresponding to fraction of width\n"
             "left double-click   toggle full screen\n"
-@@ -3801,6 +3787,9 @@ int main(int argc, char **argv)
+@@ -3882,6 +3868,9 @@
      }
      if (display_disable)
          flags &= ~SDL_INIT_VIDEO;
@@ -96,6 +107,3 @@ index 2a572fc..43a0068 100644
      if (SDL_Init (flags)) {
          av_log(NULL, AV_LOG_FATAL, "Could not initialize SDL - %s\n", SDL_GetError());
          av_log(NULL, AV_LOG_FATAL, "(Did you set the DISPLAY variable?)\n");
--- 
-2.42.0.windows.1
-
