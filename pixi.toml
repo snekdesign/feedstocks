@@ -22,11 +22,10 @@ cmd = [
     '--recipe-dir',
 ]
 
-[tasks.debug]
+[tasks.diff]
 cmd = [
     'rattler-build',
     'debug',
-    'setup',
-    '--config-file', '$PIXI_HOME/config.toml',
-    '--recipe',
+    'create-patch',
+    '-d',
 ]
