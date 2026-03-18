@@ -1,17 +1,17 @@
 context:
-  version: 0.65.0
-  sha256: 1f81b7fab90e355605f88cfd43e75d22bd269b970048d9f7c4055eebf98dc9df
+  version: 0.66.0
+  sha256: 37be89e8b089b78b5f65356688258771f34434c545bcccaafde7948d59c2bccd
 
 recipe:
   name: pixi
   version: ${{ version }}
 
 source:
-- url: https://codeload.github.com/prefix-dev/pixi/tar.gz/3c677030bcdff8519a3426857e329d741b9ce5ac
+- url: https://codeload.github.com/prefix-dev/pixi/tar.gz/v${{ version }}
   sha256: ${{ sha256 }}
   target_directory: pixi
   patches:
-  - 0001-customize.patch
+  - changes.patch
 - url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.39.15
   sha256: 1591422aec4c86cd89289da2ffc53909b4abe75e9e491a3678c5dabc53060a87
   target_directory: rattler
@@ -47,6 +47,7 @@ outputs:
       - cargo install --frozen --no-track --path crates/pixi_build_cmake --profile dist --root "%LIBRARY_PREFIX%"
       - cargo install --frozen --no-track --path crates/pixi_build_mojo --profile dist --root "%LIBRARY_PREFIX%"
       - cargo install --frozen --no-track --path crates/pixi_build_python --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path crates/pixi_build_r --profile dist --root "%LIBRARY_PREFIX%"
       - cargo install --frozen --no-track --path crates/pixi_build_rattler_build --profile dist --root "%LIBRARY_PREFIX%"
       - cargo install --frozen --no-track --path crates/pixi_build_rust --profile dist --root "%LIBRARY_PREFIX%"
       else:
@@ -54,6 +55,7 @@ outputs:
       - cargo install --frozen --no-track --path crates/pixi_build_cmake --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path crates/pixi_build_mojo --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path crates/pixi_build_python --profile dist --root "$PREFIX"
+      - cargo install --frozen --no-track --path crates/pixi_build_r --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path crates/pixi_build_rattler_build --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path crates/pixi_build_rust --profile dist --root "$PREFIX"
 - package:
@@ -96,6 +98,16 @@ outputs:
   tests:
   - script:
     - pixi-build-python help
+- package:
+    name: pixi-build-r
+  inherit: pixi-build
+  build:
+    files:
+    - bin/pixi-build-r
+    - Library/bin/pixi-build-r.exe
+  tests:
+  - script:
+    - pixi-build-r help
 - package:
     name: pixi-build-rattler-build
   inherit: pixi-build

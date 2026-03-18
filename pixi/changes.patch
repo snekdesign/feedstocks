@@ -1,27 +1,9 @@
-From 6915516b939358e952b5bfbe10e178eff6359da9 Mon Sep 17 00:00:00 2001
-From: snekdesign <104812819+snekdesign@users.noreply.github.com>
-Date: Tue, 20 Aug 2024 20:44:27 +0800
-Subject: [PATCH] customize
-
----
- .cargo/config.toml                            |  4 ---
- Cargo.toml                                    | 35 ++++++++++++++++---
- crates/pixi_build_backend/Cargo.toml          |  3 ++
- .../src/intermediate_backend.rs               | 28 ++++++++++++++-
- crates/pixi_build_rattler_build/Cargo.toml    |  3 ++
- .../pixi_build_rattler_build/src/protocol.rs  | 32 +++++++++++++++--
- crates/pixi_global/src/install.rs             |  2 +-
- .../src/project/parsed_manifest.rs            |  6 +---
- 8 files changed, 94 insertions(+), 19 deletions(-)
-
-diff --git a/.cargo/config.toml b/.cargo/config.toml
-index 79d92ed..eca8c8d 100644
 --- a/.cargo/config.toml
 +++ b/.cargo/config.toml
-@@ -4,10 +4,6 @@ xtask = "run -p xtask --"
+@@ -4,10 +4,6 @@
  [target.x86_64-pc-windows-msvc]
  linker = "rust-lld"
- 
+
 -# Statically link the C runtime so the executable does not depend on the MSVC runtime DLLs.
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
@@ -29,11 +11,9 @@ index 79d92ed..eca8c8d 100644
  [target.'cfg(all(windows, debug_assertions))']
  rustflags = [
    # increase the stack size to prevent overflowing the stack in debug
-diff --git a/Cargo.toml b/Cargo.toml
-index 8ef70c3..4e1ee1b 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -225,6 +225,7 @@ rattler_cache = { version = "0.6.14", default-features = false }
+@@ -225,6 +225,7 @@
  rattler_conda_types = { version = "0.43.5", default-features = false, features = [
    "rayon",
  ] }
@@ -41,9 +21,9 @@ index 8ef70c3..4e1ee1b 100644
  rattler_digest = { version = "1.2.2", default-features = false }
  rattler_lock = { version = "0.26.16", default-features = false }
  rattler_menuinst = { version = "0.2.49", default-features = false }
-@@ -243,15 +244,39 @@ rattler_virtual_packages = { version = "2.3.11", default-features = false }
+@@ -243,15 +244,39 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
- 
+
  # Rattler build crates
 -rattler_build_core = { version = "0.1.0", default-features = false, features = [
 +rattler-build = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0", default-features = false, features = [
@@ -60,7 +40,7 @@ index 8ef70c3..4e1ee1b 100644
 +rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0" }
 +rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0" }
 +rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0" }
- 
+
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
 +file_url = { path = "../rattler/crates/file_url" }
@@ -86,11 +66,9 @@ index 8ef70c3..4e1ee1b 100644
  # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
  reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "7650ed76215a962a96d94a79be71c27bffde7ab2" }
  reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "7650ed76215a962a96d94a79be71c27bffde7ab2" }
-diff --git a/crates/pixi_build_backend/Cargo.toml b/crates/pixi_build_backend/Cargo.toml
-index 2827f78..f61b917 100644
 --- a/crates/pixi_build_backend/Cargo.toml
 +++ b/crates/pixi_build_backend/Cargo.toml
-@@ -23,12 +23,14 @@ miette = { workspace = true }
+@@ -23,6 +23,7 @@
  minijinja = { workspace = true }
  ordermap = { workspace = true }
  pathdiff = { workspace = true }
@@ -98,6 +76,7 @@ index 2827f78..f61b917 100644
  rattler_build_core = { workspace = true }
  rattler_build_jinja = { workspace = true }
  rattler_build_recipe = { workspace = true }
+@@ -29,6 +30,7 @@
  rattler_build_types = { workspace = true }
  rattler_build_variant_config = { workspace = true }
  rattler_conda_types = { workspace = true }
@@ -105,19 +84,17 @@ index 2827f78..f61b917 100644
  rattler_digest = { workspace = true }
  rattler_virtual_packages = { workspace = true }
  serde = { workspace = true, features = ["derive"] }
-@@ -42,6 +44,7 @@ tracing-subscriber = { workspace = true }
+@@ -42,6 +44,7 @@
  url = { workspace = true }
- 
+
  pixi_build_types = { workspace = true }
 +pixi_config = { workspace = true }
- 
+
  jsonrpc-core = { workspace = true }
  jsonrpc-http-server = { workspace = true }
-diff --git a/crates/pixi_build_backend/src/intermediate_backend.rs b/crates/pixi_build_backend/src/intermediate_backend.rs
-index a45ed16..8b2f90d 100644
 --- a/crates/pixi_build_backend/src/intermediate_backend.rs
 +++ b/crates/pixi_build_backend/src/intermediate_backend.rs
-@@ -25,7 +25,7 @@ use rattler_build_core::{
+@@ -25,7 +25,7 @@
      build::{WorkingDirectoryBehavior, run_build},
      console_utils::LoggingOutputHandler,
      metadata::{BuildConfiguration, Debug, Output, PlatformWithVirtualPackages},
@@ -126,10 +103,10 @@ index a45ed16..8b2f90d 100644
      types::{Directories, PackageIdentifier, PackagingSettings},
  };
  use rattler_build_recipe::variant_render::RenderConfig;
-@@ -734,10 +734,36 @@ where
+@@ -734,10 +734,36 @@
              .await
              .into_diagnostic()?;
- 
+
 +        let base_client = {
 +            let config = pixi_config::Config::load_global();
 +            let mut config_base = rattler_config::config::ConfigBase::default();
@@ -163,11 +140,9 @@ index a45ed16..8b2f90d 100644
              // Pixi is incremental so keep the build
              .with_keep_build(true)
              // This indicates that the environments are externally managed, e.g. they are already
-diff --git a/crates/pixi_build_rattler_build/Cargo.toml b/crates/pixi_build_rattler_build/Cargo.toml
-index dc3f85a..ea78607 100644
 --- a/crates/pixi_build_rattler_build/Cargo.toml
 +++ b/crates/pixi_build_rattler_build/Cargo.toml
-@@ -22,10 +22,12 @@ fs-err = { workspace = true }
+@@ -22,10 +22,12 @@
  indexmap = { workspace = true }
  miette = { workspace = true }
  pathdiff = { workspace = true }
@@ -180,19 +155,17 @@ index dc3f85a..ea78607 100644
  serde = { workspace = true, features = ["derive"] }
  serde_json = { workspace = true }
  tempfile = { workspace = true }
-@@ -35,6 +37,7 @@ pixi_build_backend = { workspace = true }
- 
+@@ -35,6 +37,7 @@
+
  chrono = "0.4.41"
  pixi_build_types = { workspace = true }
 +pixi_config = { workspace = true }
  tracing.workspace = true
- 
+
  [dev-dependencies]
-diff --git a/crates/pixi_build_rattler_build/src/protocol.rs b/crates/pixi_build_rattler_build/src/protocol.rs
-index 14c99e3..c866252 100644
 --- a/crates/pixi_build_rattler_build/src/protocol.rs
 +++ b/crates/pixi_build_rattler_build/src/protocol.rs
-@@ -33,7 +33,7 @@ use rattler_build_core::{
+@@ -33,7 +33,7 @@
      build::{WorkingDirectoryBehavior, run_build},
      console_utils::LoggingOutputHandler,
      metadata::{BuildConfiguration, Debug, Output, PlatformWithVirtualPackages},
@@ -201,28 +174,28 @@ index 14c99e3..c866252 100644
      types::{PackageIdentifier, PackagingSettings},
  };
  use rattler_build_recipe::{stage1::Source as RecipeSource, variant_render::RenderConfig};
-@@ -90,7 +90,7 @@ impl Protocol for RattlerBuildBackend {
+@@ -90,7 +90,7 @@
              .with_target_platform(params.host_platform)
              .with_build_platform(build_platform)
              .with_host_platform(params.host_platform)
 -            .with_experimental(self.config.experimental.unwrap_or(false))
 +            .with_experimental(true)
              .with_recipe_path(&self.recipe_source.path);
- 
+
          // Render recipe with variant config
-@@ -341,7 +341,7 @@ impl Protocol for RattlerBuildBackend {
+@@ -341,7 +341,7 @@
              .with_target_platform(host_platform)
              .with_build_platform(build_platform)
              .with_host_platform(host_platform)
 -            .with_experimental(self.config.experimental.unwrap_or(false))
 +            .with_experimental(true)
              .with_recipe_path(&self.recipe_source.path);
- 
+
          // Render recipe with variant config
-@@ -393,10 +393,36 @@ impl Protocol for RattlerBuildBackend {
+@@ -393,10 +393,36 @@
              self.recipe_source.path.clone(),
          );
- 
+
 +        let base_client = {
 +            let config = pixi_config::Config::load_global();
 +            let mut config_base = rattler_config::config::ConfigBase::default();
@@ -256,11 +229,9 @@ index 14c99e3..c866252 100644
              // Pixi is incremental so keep the build
              .with_keep_build(true)
              // This indicates that the environments are externally managed, e.g. they are already
-diff --git a/crates/pixi_global/src/install.rs b/crates/pixi_global/src/install.rs
-index 65c7367..a678bff 100644
 --- a/crates/pixi_global/src/install.rs
 +++ b/crates/pixi_global/src/install.rs
-@@ -54,7 +54,7 @@ pub(crate) fn script_exec_mapping<'a>(
+@@ -54,7 +54,7 @@
              } else {
                  false
              }
@@ -269,13 +240,11 @@ index 65c7367..a678bff 100644
      } else {
          matching_executables.first()
      };
-diff --git a/crates/pixi_global/src/project/parsed_manifest.rs b/crates/pixi_global/src/project/parsed_manifest.rs
-index 40fe657..02601a1 100644
 --- a/crates/pixi_global/src/project/parsed_manifest.rs
 +++ b/crates/pixi_global/src/project/parsed_manifest.rs
-@@ -391,11 +391,7 @@ impl FromStr for ExposedName {
+@@ -391,11 +391,7 @@
      type Err = ExposedNameError;
- 
+
      fn from_str(value: &str) -> Result<Self, Self::Err> {
 -        if value == pixi_utils::executable_name() {
 -            Err(ExposedNameError::PixiBinParseError)
@@ -285,6 +254,3 @@ index 40fe657..02601a1 100644
 +        Ok(ExposedName(value.to_string()))
      }
  }
- 
--- 
-
