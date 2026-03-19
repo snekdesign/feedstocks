@@ -1,7 +1,7 @@
 context:
   license: GPL-3.0-or-later
-  version: 0.227.1
-  sha256: 15f22913fa15aa7c7d2e6b386925856b70a679b709b9df485294c615d924eab7
+  version: 0.228.0
+  sha256: 12c0385514ca0615eb9b8f4ec81b7a2e5ecc124f3b528130c663da7e07a08822
 
 package:
   name: zed
@@ -12,8 +12,8 @@ source:
   sha256: ${{ sha256 }}
   patches:
   - changes.patch
-- url: https://github.com/livekit/rust-sdks/releases/download/webrtc-0001d84-2/webrtc-win-x64-release.zip
-  sha256: 16ebb2f7dc15db943313bd80b81bbd9689fa4cbf4bf65f3c407a93cc33d8afe8
+- url: https://github.com/zed-industries/livekit-rust-sdks/releases/download/webrtc-0001d84-4/webrtc-win-x64-release.zip
+  sha256: b16f68e1fef8bd8089b9c7fc46c3c9b43ad5257c84460794a3668ec5accc1f13
   target_directory: webrtc
 
 build:
@@ -39,6 +39,10 @@ requirements:
   - icu 78.*
   run:
   - openconsole ==1.23.13503
+
+tests:
+- script:
+  - zed --system-specs
 
 about:
   license: ${{ license }}

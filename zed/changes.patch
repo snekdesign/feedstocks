@@ -1,23 +1,23 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -647,6 +647,8 @@
+@@ -657,6 +657,8 @@
  pulldown-cmark = { version = "0.13.0", default-features = false }
  quote = "1.0.9"
  rand = "0.9"
-+rattler_conda_types = { version = "0.43.5", default-features = false }
-+rattler_shell = { version = "0.26.2", default-features = false }
++rattler_conda_types = { version = "0.44.1", default-features = false }
++rattler_shell = { version = "0.26.4", default-features = false }
  rayon = "1.8"
  regex = "1.5"
  # WARNING: If you change this, you must also publish a new version of zed-reqwest to crates.io
-@@ -772,6 +774,7 @@
+@@ -782,6 +784,7 @@
  web-time = "1.1.0"
- wgpu = { git = "https://github.com/zed-industries/wgpu", rev = "6e0c2546d99dad72ce6ffb5b04349e6a4ce96e6d" }
+ wgpu = { git = "https://github.com/zed-industries/wgpu", rev = "465557eccfe77c840a9b4936f1408da9503372c4" }
  windows-core = "0.61"
 +windows-link = "0.2"
  yawc = "0.2.5"
  zeroize = "1.8"
  zstd = "0.11"
-@@ -906,13 +909,11 @@
+@@ -915,13 +918,11 @@
  zed_actions = { codegen-units = 1 }
 
  [profile.release]
@@ -125,7 +125,7 @@
 
 --- a/crates/zed/build.rs
 +++ b/crates/zed/build.rs
-@@ -72,120 +72,6 @@
+@@ -88,120 +88,6 @@
              println!("cargo:rustc-link-arg=/stack:{}", 8 * 1024 * 1024);
          }
 
@@ -248,7 +248,7 @@
              "stable" => "resources/windows/app-icon.ico",
 --- a/crates/zed/Cargo.toml
 +++ b/crates/zed/Cargo.toml
-@@ -171,6 +171,8 @@
+@@ -167,6 +167,8 @@
  project_symbols.workspace = true
  prompt_store.workspace = true
  proto.workspace = true
@@ -267,6 +267,15 @@
  use recent_projects::{RemoteSettings, open_remote_project};
  use release_channel::{AppCommitSha, AppVersion, ReleaseChannel};
  use session::{AppSession, Session};
+@@ -236,7 +237,7 @@
+     unsafe {
+         use windows::Win32::System::Console::{ATTACH_PARENT_PROCESS, AttachConsole};
+
+-        if args.foreground {
++        if args.foreground || args.system_specs {
+             let _ = AttachConsole(ATTACH_PARENT_PROCESS);
+         }
+     }
 @@ -320,7 +321,26 @@
      );
 
