@@ -1,10 +1,10 @@
 context:
-  version: 1.110.11607
-  sha256: 355fd1d18b4f96ffcdaaab9e04f82536ca26788c99e98ed9faffce3222759acf
+  version: 1.112.01907
+  sha256: 6dcfc1e7f2a74ad236f1622eed673b9777bec7451282fee0c5a2731bcf296445
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
-  cmake_version: 0.4.0
+  cmake_version: 0.7.1
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
-  cmake_sha256: d4e40b3d59040ee57065104747e5a4b67144be053cfffaf79d3a3fb8a270e2eb
+  cmake_sha256: 4ff4b7fd7919799c6e48a1ebca6ad8f4f9bee8a1615c125aa8fab14680861aec
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/versions?size=1
   clangd_version: 0.4.0
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
@@ -13,20 +13,20 @@ context:
   # matlab_version: 1.3.8
   # matlab_sha256: 58e4c73b48a4eb3c5926b833c0164360977b8eddd38afeeaa3a7bf0eb1ad4d3f
   # https://open-vsx.org/api/ms-python/python/versions?size=1
-  python_version: 2026.2.0
+  python_version: 2026.4.0
   # https://open-vsx.org/api/ms-python/python/latest/file/sha256
-  python_sha256: f958e2df01d4eb4cdd4455728afd0576c0de9a8bd892e1a5e2603f612d1004f6
+  python_sha256: 232aeafb01f069824fdd92d3e628c1c442bbcfa1d3cc945ff97076340bb2b4a6
   # https://api.github.com/repos/whoami730/cython-enhanced/releases/latest
   cython_version: 1.0.5
   cython_sha256: 423715d7efbac30a5db53eb0eb64afe08b9ec7d462613b3622b96ccec3bfa54b
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/versions?size=1
-  ruff_version: 2026.36.0
+  ruff_version: 2026.38.0
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
-  ruff_sha256: 34ce5789217c92228e0e88e2f41478e53a3e77197e6aac4f03ade164f9965d19
+  ruff_sha256: 05b310206dd124d8af70316667c046f07899ec7da6a511a6b5ae91a252efc3be
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/versions?size=1
-  toml_version: 0.9.3
+  toml_version: 0.9.9
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/latest/file/sha256
-  toml_sha256: dbca02ad21a1fdab2658d401f867b83276e2b184e31e9b0d8fe03623bdd8a832
+  toml_sha256: 738fe99d1912bb6c282e2d8f7a24b5a71379e4aaf798f5a0c48cc14964111b90
 
 package:
   name: vscodium
