@@ -1,6 +1,6 @@
 context:
-  version: 0.10.10
-  sha256: ba4082c92c97e0cc5ac0bc48a2783bc5026c8a14a768ecfb5f7012223a5e90ac
+  version: 0.11.0
+  sha256: d61c168d4a3b0dad3c2c2a73c591fe7a2bbad96ea5a5e15f857d03308e15ca50
 
 package:
   name: uv
@@ -17,6 +17,7 @@ build:
   script:
   - if: win
     then:
+    - set AWS_LC_SYS_PREBUILT_NASM=0
     - cargo install --features windows-gui-bin --locked --no-track --path crates\uv --root "%LIBRARY_PREFIX%"
     else:
     - cargo install --locked --no-track --path crates/uv --root "$PREFIX"
@@ -30,6 +31,8 @@ requirements:
   - rust >=1.91.0
   - if: linux
     then: diffutils
+  - if: win
+    then: nasm
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
 
