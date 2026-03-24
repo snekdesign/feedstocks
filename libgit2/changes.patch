@@ -1,0 +1,8 @@
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -15,3 +15,5 @@
+ else()
+ 	target_link_libraries(lg2 libgit2package pthread)
+ endif()
++
++install(TARGETS lg2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
