@@ -1,15 +1,3 @@
-From ca54a316cd98724460b9cfce53707546a96faac3 Mon Sep 17 00:00:00 2001
-From: snekdesign <104812819+snekdesign@users.noreply.github.com>
-Date: Mon, 10 Jun 2024 17:30:13 +0800
-Subject: [PATCH] conda build
-
----
- Config.vcxproj     | 2 +-
- source/script2.cpp | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/Config.vcxproj b/Config.vcxproj
-index d1c66a7..225a54e 100644
 --- a/Config.vcxproj
 +++ b/Config.vcxproj
 @@ -38,7 +38,7 @@
@@ -21,15 +9,13 @@ index d1c66a7..225a54e 100644
        
      </ClCompile>
    </ItemDefinitionGroup>
-diff --git a/source/script2.cpp b/source/script2.cpp
-index 502ee6b..b46be4b 100644
 --- a/source/script2.cpp
 +++ b/source/script2.cpp
-@@ -546,6 +546,11 @@ bool FindAutoHotkeyUtil(LPTSTR aFile, bool &aFoundOurs)
- 
+@@ -546,6 +546,11 @@
+
  void LaunchAutoHotkeyUtil(LPTSTR aFile, bool aIsScript)
  {
-+	TCHAR prefix[22] = _T("..\\etc\\");
++	TCHAR prefix[35] = _T("..\\share\\autohotkey\\");
 +	size_t n = _tcslen(g_script.mOurEXE);
 +	if (n >= 29 && !_tcsicmp(g_script.mOurEXE+(n-27), _T("\\Library\\bin\\AutoHotkey.exe"))) {
 +		aFile = _tcscat(prefix, aFile);
@@ -37,6 +23,3 @@ index 502ee6b..b46be4b 100644
  	LPTSTR file = aFile, args = _T("");
  	bool our_file, result = false;
  	if (!FindAutoHotkeyUtil(aFile, our_file))
--- 
-2.45.0.windows.1
-

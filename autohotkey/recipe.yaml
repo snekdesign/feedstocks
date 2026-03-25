@@ -1,7 +1,7 @@
 context:
-  version: 2.0.21
-  sha256_src: 6bb4332a202d40efda86d1b466b817a4d109040831b3af5f54b3740a276e4905
-  sha256_bin: 7386f45be928f0825ffbe78811187636d72efcbd264e2fd406e7e045d681a626
+  version: 2.0.22
+  sha256_src: 953cfc18c1c62848f6327941a969f5c3d816c8f90dd70008d0e1ba3b03d6fa92
+  sha256_bin: 9cd93e5793404d8c2585b73f15be244872cc4deccf5fa8b6f1f7b2a549fbbfd4
 
 package:
   name: autohotkey
@@ -11,7 +11,7 @@ source:
 - url: https://codeload.github.com/AutoHotkey/AutoHotkey/tar.gz/v${{ version }}
   sha256: ${{ sha256_src }}
   patches:
-  - 0001-conda-build.patch
+  - changes.patch
 - url: https://github.com/AutoHotkey/AutoHotkey/releases/download/v${{ version }}/AutoHotkey_${{ version }}.zip
   sha256: ${{ sha256_bin }}
   target_directory: bin
@@ -19,12 +19,12 @@ source:
 build:
   number: 0
   script:
-  - md "%LIBRARY_PREFIX%\etc\inc"
+  - md "%LIBRARY_PREFIX%\share\autohotkey\inc"
   - msbuild AutoHotkeyx.vcxproj -p:Configuration=Release;Platform=x64
   - mklink /H "%LIBRARY_BIN%\AutoHotkey.exe" bin\AutoHotkey64.exe
-  - mklink /H "%LIBRARY_PREFIX%\etc\AutoHotkey.chm" bin\AutoHotkey.chm
-  - mklink /H "%LIBRARY_PREFIX%\etc\WindowSpy.ahk" bin\UX\WindowSpy.ahk
-  - mklink /H "%LIBRARY_PREFIX%\etc\inc\spy.ico" bin\UX\inc\spy.ico
+  - mklink /H "%LIBRARY_PREFIX%\share\autohotkey\AutoHotkey.chm" bin\AutoHotkey.chm
+  - mklink /H "%LIBRARY_PREFIX%\share\autohotkey\WindowSpy.ahk" bin\UX\WindowSpy.ahk
+  - mklink /H "%LIBRARY_PREFIX%\share\autohotkey\inc\spy.ico" bin\UX\inc\spy.ico
   skip:
   - not win
   - build_platform != target_platform
