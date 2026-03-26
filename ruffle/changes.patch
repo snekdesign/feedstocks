@@ -1,0 +1,91 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -129,6 +129,9 @@
+                                  # we overwrite an empty item. And sometimes it can even be a footgun
+                                  # by keeping big allocations alive.
+
++[patch.crates-io]
++clang-sys = { path = "clang-sys" }
++
+ # Don't optimize build scripts and macros.
+ [profile.release.build-override]
+ opt-level = 0
+@@ -137,7 +140,11 @@
+ panic = "unwind"
+
+ [profile.release]
++codegen-units = 1
++lto = true
++opt-level = 3
+ panic = "abort"
++strip = true
+
+ [profile.dev.package.h263-rs]
+ opt-level = 3
+--- a/core/src/avm1/globals.rs
++++ b/core/src/avm1/globals.rs
+@@ -360,9 +360,7 @@
+         .get(0)
+         .unwrap_or(&Value::Undefined)
+         .coerce_to_i32(activation)?;
+-    if !activation.context.timers.remove(id) {
+-        tracing::info!("clearInterval: Timer {} does not exist", id);
+-    }
++    activation.context.timers.remove(id);
+
+     Ok(Value::Undefined)
+ }
+--- a/core/src/tag_utils.rs
++++ b/core/src/tag_utils.rs
+@@ -82,7 +82,7 @@
+                 }
+                 Ok(ControlFlow::Continue) => {}
+             }
+-        } else {
++        } else if tag_code != 253 && tag_code != 255 {
+             tracing::warn!("Unknown tag code: {:?}", tag_code);
+         }
+
+--- a/desktop/Cargo.toml
++++ b/desktop/Cargo.toml
+@@ -7,6 +7,10 @@
+ repository.workspace = true
+ version.workspace = true
+
++[[bin]]
++name = "ruffle"
++path = "src/main.rs"
++
+ [lints]
+ workspace = true
+
+@@ -74,7 +78,7 @@
+ CompanyName = "Ruffle LLC"
+ LegalCopyright = "Copyright © 2018 Ruffle LLC and Ruffle contributors"
+ # InternalName should be the same as the module name
+-InternalName = "ruffle_desktop"
++InternalName = "ruffle"
+ OriginalFilename = "ruffle.exe"
+
+ [features]
+--- a/desktop/src/backends/ui.rs
++++ b/desktop/src/backends/ui.rs
+@@ -299,7 +299,7 @@
+         let is_italic = query.is_italic;
+
+         let query = fontdb::Query {
+-            families: &[Family::Name(name)],
++            families: &[Family::Name(name.strip_suffix("_GB2312").unwrap_or(name))],
+             weight: if is_bold {
+                 fontdb::Weight::BOLD
+             } else {
+--- a/video/external/src/decoder/openh264.rs
++++ b/video/external/src/decoder/openh264.rs
+@@ -52,6 +52,7 @@
+
+         let local_filenames = match OS {
+             "linux" => ["libopenh264.so.7", "libopenh264.so.2.4.1", "libopenh264.so"].as_slice(),
++            "windows" => ["openh264-7.dll"].as_slice(),
+             // TODO: investigate other OSes
+             _ => [].as_slice(),
+         };
