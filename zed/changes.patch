@@ -1,15 +1,15 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -657,6 +657,8 @@
+@@ -658,6 +658,8 @@
  pulldown-cmark = { version = "0.13.0", default-features = false }
  quote = "1.0.9"
  rand = "0.9"
-+rattler_conda_types = { version = "0.44.1", default-features = false }
-+rattler_shell = { version = "0.26.4", default-features = false }
++rattler_conda_types = { version = "0.44.3", default-features = false }
++rattler_shell = { version = "0.26.6", default-features = false }
  rayon = "1.8"
  regex = "1.5"
  # WARNING: If you change this, you must also publish a new version of zed-reqwest to crates.io
-@@ -782,6 +784,7 @@
+@@ -781,6 +783,7 @@
  web-time = "1.1.0"
  wgpu = { git = "https://github.com/zed-industries/wgpu", rev = "465557eccfe77c840a9b4936f1408da9503372c4" }
  windows-core = "0.61"
@@ -111,7 +111,7 @@
          let args = description.split('\n').map(PathBuf::from).collect();
 --- a/crates/text/src/text.rs
 +++ b/crates/text/src/text.rs
-@@ -3429,11 +3429,7 @@
+@@ -3460,11 +3460,7 @@
 
  impl Default for LineEnding {
      fn default() -> Self {
@@ -276,7 +276,7 @@
              let _ = AttachConsole(ATTACH_PARENT_PROCESS);
          }
      }
-@@ -320,7 +321,26 @@
+@@ -320,7 +321,31 @@
      );
 
      #[cfg(windows)]
@@ -300,6 +300,11 @@
 +            }
 +        }
 +        check_for_conpty_dll();
++    }
++    if let Some(cargo_home) = option_env!("CARGO_HOME")
++        && env::var("CARGO_HOME").is_err()
++    {
++        unsafe { env::set_var("CARGO_HOME", cargo_home); }
 +    }
 
      let app =

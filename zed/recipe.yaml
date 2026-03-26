@@ -1,7 +1,7 @@
 context:
   license: GPL-3.0-or-later
-  version: 0.228.0
-  sha256: 12c0385514ca0615eb9b8f4ec81b7a2e5ecc124f3b528130c663da7e07a08822
+  version: 0.229.0
+  sha256: 607d3fd234eca45f4cdb7797803fbd6184e58667cc226e6fa6dd296fe01c5a0d
 
 package:
   name: zed
@@ -20,6 +20,7 @@ build:
   number: 0
   script:
     content:
+    - set AWS_LC_SYS_PREBUILT_NASM=0
     - set "LK_CUSTOM_WEBRTC=%SRC_DIR%\webrtc"
     - cargo fetch
     - cargo install --frozen --no-default-features --no-track --path crates\zed --root "%LIBRARY_PREFIX%"
@@ -34,6 +35,7 @@ requirements:
   build:
   - cmake >=3.12.0
   - ${{ compiler('c') }}
+  - nasm
   - rust >=1.93.0
   host:
   - icu 78.*
