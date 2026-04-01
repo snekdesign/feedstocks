@@ -8,7 +8,7 @@
 -rustflags = ["-C", "target-feature=+crt-static"]
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -377,6 +377,8 @@
+@@ -384,6 +384,8 @@
  [profile.release]
  strip = true
  lto = "fat"
@@ -19,14 +19,14 @@
  # possible, but using settings that are more beneficial for iterative
 --- a/crates/uv-distribution/Cargo.toml
 +++ b/crates/uv-distribution/Cargo.toml
-@@ -35,6 +35,7 @@
- uv-platform-tags = { workspace = true }
+@@ -36,6 +36,7 @@
  uv-pypi-types = { workspace = true }
+ uv-python = { workspace = true }
  uv-redacted = { workspace = true }
 +uv-static = { workspace = true }
  uv-types = { workspace = true }
+ uv-warnings = { workspace = true }
  uv-workspace = { workspace = true }
-
 --- a/crates/uv-distribution/src/source/mod.rs
 +++ b/crates/uv-distribution/src/source/mod.rs
 @@ -37,7 +37,10 @@
