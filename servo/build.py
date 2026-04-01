@@ -36,6 +36,7 @@ def main() -> None:
         check=True,
         env=dict(
             os.environ,
+            AWS_LC_SYS_PREBUILT_NASM='0',
             LIBCLANG_PATH=str(next(libclang_path.glob('libclang-*.dll'))),
             MOZJS_ARCHIVE=str(cwd / 'libmozjs.tar.gz'),
         ),

@@ -12,7 +12,7 @@
 
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -260,7 +260,6 @@
+@@ -279,7 +279,6 @@
  debug-assertions = false
  lto = true
  codegen-units = 1
@@ -20,7 +20,7 @@
 
  [profile.production-stripped]
  inherits = "production"
-@@ -274,6 +273,7 @@
+@@ -293,6 +292,7 @@
  codegen-units = 1
 
  [patch.crates-io]
@@ -30,36 +30,17 @@
  #
 --- a/components/script_bindings/build.rs
 +++ b/components/script_bindings/build.rs
-@@ -79,19 +79,7 @@
- }
-
- fn try_python_command(mut command: Command) -> Result<Command, String> {
--    let command_result = command.output();
--
--    if let Ok(output) = command_result {
--        return if output.status.success() {
-             Ok(command)
--        } else {
--            Err(format!(
--                "`{command:?}` failed with {}",
--                String::from_utf8_lossy(&output.stderr)
--            ))
--        };
--    }
--    Err(format!("`{command:?}` failed to run (is it installed?)"))
- }
-
- /// Tries to find a suitable python, which in Servo is always `uv run python`.
-@@ -101,26 +89,6 @@
+@@ -113,35 +113,11 @@
  ///
  /// Note: This function should be kept in sync with the version in `components/servo/build.rs`
  fn find_python() -> Command {
--    let mut command = Command::new("uv");
--    command.args(["run", "python"]);
--
--    let command_result = try_python_command(command).inspect_err(|e| println!("cargo:warning={e}"));
--    if let Ok(command) = command_result {
--        return command;
+-    // Test uv first - if it works, create a FRESH command to return
+-    let uv_result = try_python_command("uv", &["run", "--frozen", "python"])
+-        .inspect_err(|e| println!("cargo:warning={e}"));
+-    if uv_result.is_ok() {
+-        let mut cmd = Command::new("uv");
+-        cmd.args(["run", "--frozen", "python"]);
+-        return cmd;
 -    }
 -
 -    println!(
@@ -68,19 +49,16 @@
 -        to provision a python environment >= python 3.11."
 -    );
 -
--    let python3 = Command::new("python3");
--    let python3_result = try_python_command(python3);
--    if let Ok(command) = python3_result {
--        return command;
+-    let python3_result = try_python_command("python3", &[]);
+-    if python3_result.is_ok() {
+-        return Command::new("python3");
 -    }
 -
-     let python = Command::new("python");
-     let python_result = try_python_command(python);
-     if let Ok(command) = python_result {
-@@ -127,10 +95,7 @@
-         return command;
+     let python_result = try_python_command("python", &[]);
+     if python_result.is_ok() {
+         return Command::new("python");
      }
-
+-
 -    // We first try `python` before printing an error for `python3`, since python3 is often missing
 -    // provided via python on Windows (but not necessarily on linux).
 -    println!("cargo:warning={}", python3_result.unwrap_err());
@@ -91,36 +69,17 @@
  }
 --- a/components/servo/build.rs
 +++ b/components/servo/build.rs
-@@ -26,19 +26,7 @@
- }
-
- fn try_python_command(mut command: Command) -> Result<Command, String> {
--    let command_result = command.output();
--
--    if let Ok(output) = command_result {
--        return if output.status.success() {
-             Ok(command)
--        } else {
--            Err(format!(
--                "`{command:?}` failed with {}",
--                String::from_utf8_lossy(&output.stderr)
--            ))
--        };
--    }
--    Err(format!("`{command:?}` failed to run (is it installed?)"))
- }
-
- /// Tries to find a suitable python, which in Servo is always `uv run python`.
-@@ -48,26 +36,6 @@
+@@ -58,35 +58,11 @@
  ///
  /// Note: This function should be kept in sync with the version in `components/script_bindings/build.rs`
  fn find_python() -> Command {
--    let mut command = Command::new("uv");
--    command.args(["run", "python"]);
--
--    let command_result = try_python_command(command).inspect_err(|e| println!("cargo:warning={e}"));
--    if let Ok(command) = command_result {
--        return command;
+-    // Test uv first - if it works, create a FRESH command to return
+-    let uv_result = try_python_command("uv", &["run", "--frozen", "python"])
+-        .inspect_err(|e| println!("cargo:warning={e}"));
+-    if uv_result.is_ok() {
+-        let mut cmd = Command::new("uv");
+-        cmd.args(["run", "--frozen", "python"]);
+-        return cmd;
 -    }
 -
 -    println!(
@@ -129,19 +88,16 @@
 -        to provision a python environment >= python 3.11."
 -    );
 -
--    let python3 = Command::new("python3");
--    let python3_result = try_python_command(python3);
--    if let Ok(command) = python3_result {
--        return command;
+-    let python3_result = try_python_command("python3", &[]);
+-    if python3_result.is_ok() {
+-        return Command::new("python3");
 -    }
 -
-     let python = Command::new("python");
-     let python_result = try_python_command(python);
-     if let Ok(command) = python_result {
-@@ -74,10 +42,7 @@
-         return command;
+     let python_result = try_python_command("python", &[]);
+     if python_result.is_ok() {
+         return Command::new("python");
      }
-
+-
 -    // We first try `python` before printing an error for `python3`, since python3 is often missing
 -    // provided via python on Windows (but not necessarily on linux).
 -    println!("cargo:warning={}", python3_result.unwrap_err());
@@ -152,7 +108,7 @@
  }
 --- a/components/servo/servo.rs
 +++ b/components/servo/servo.rs
-@@ -103,8 +103,12 @@
+@@ -105,8 +105,12 @@
              let mut plugin_dir = std::env::current_exe().unwrap();
              plugin_dir.pop();
 
@@ -189,7 +145,7 @@
      }
 --- a/ports/servoshell/prefs.rs
 +++ b/ports/servoshell/prefs.rs
-@@ -561,7 +561,7 @@
+@@ -562,7 +562,7 @@
      window_size: Option<Size2D<u32, DeviceIndependentPixel>>,
 
      /// The url we should load.
