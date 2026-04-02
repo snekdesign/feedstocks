@@ -1,6 +1,6 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -658,6 +658,8 @@
+@@ -660,6 +660,8 @@
  pulldown-cmark = { version = "0.13.0", default-features = false }
  quote = "1.0.9"
  rand = "0.9"
@@ -9,15 +9,15 @@
  rayon = "1.8"
  regex = "1.5"
  # WARNING: If you change this, you must also publish a new version of zed-reqwest to crates.io
-@@ -781,6 +783,7 @@
- web-time = "1.1.0"
- wgpu = { git = "https://github.com/zed-industries/wgpu", rev = "465557eccfe77c840a9b4936f1408da9503372c4" }
+@@ -784,6 +786,7 @@
+ webrtc-sys = "0.3.23"
+ wgpu = { git = "https://github.com/zed-industries/wgpu.git", branch = "v29" }
  windows-core = "0.61"
 +windows-link = "0.2"
  yawc = "0.2.5"
  zeroize = "1.8"
  zstd = "0.11"
-@@ -915,13 +918,11 @@
+@@ -919,13 +922,11 @@
  zed_actions = { codegen-units = 1 }
 
  [profile.release]
@@ -111,7 +111,7 @@
          let args = description.split('\n').map(PathBuf::from).collect();
 --- a/crates/text/src/text.rs
 +++ b/crates/text/src/text.rs
-@@ -3460,11 +3460,7 @@
+@@ -3463,11 +3463,7 @@
 
  impl Default for LineEnding {
      fn default() -> Self {
@@ -125,7 +125,7 @@
 
 --- a/crates/zed/build.rs
 +++ b/crates/zed/build.rs
-@@ -88,120 +88,6 @@
+@@ -90,120 +90,6 @@
              println!("cargo:rustc-link-arg=/stack:{}", 8 * 1024 * 1024);
          }
 
@@ -248,7 +248,7 @@
              "stable" => "resources/windows/app-icon.ico",
 --- a/crates/zed/Cargo.toml
 +++ b/crates/zed/Cargo.toml
-@@ -167,6 +167,8 @@
+@@ -169,6 +169,8 @@
  project_symbols.workspace = true
  prompt_store.workspace = true
  proto.workspace = true
