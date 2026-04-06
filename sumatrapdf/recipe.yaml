@@ -1,6 +1,6 @@
 context:
-  version: 3.6.0
-  sha256: 831aec4f5a54e2a2dda7ee842413aa117e1f240bcd3310799aa2cf26264f1293
+  version: 3.6.1
+  sha256: 1dd2d727f7591d6eb34a2d99787fbcc9125062583128b1340b300fbea5b3cb24
 
 package:
   name: sumatrapdf
