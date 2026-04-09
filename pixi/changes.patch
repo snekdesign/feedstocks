@@ -13,33 +13,33 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -225,6 +225,7 @@
- rattler_conda_types = { version = "0.43.5", default-features = false, features = [
+@@ -223,6 +223,7 @@
+ rattler_conda_types = { version = "0.44.3", default-features = false, features = [
    "rayon",
  ] }
-+rattler_config = { version = "0.3.2", default-features = false }
- rattler_digest = { version = "1.2.2", default-features = false }
- rattler_lock = { version = "0.26.16", default-features = false }
- rattler_menuinst = { version = "0.2.49", default-features = false }
-@@ -243,15 +244,39 @@
++rattler_config = { version = "0.3.7", default-features = false }
+ rattler_digest = { version = "1.2.3", default-features = false }
+ rattler_index = { version = "0.27.20", default-features = false, features = [
+   "s3",
+@@ -245,15 +246,39 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
 
  # Rattler build crates
--rattler_build_core = { version = "0.1.0", default-features = false, features = [
-+rattler-build = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0", default-features = false, features = [
+-rattler_build_core = { version = "0.2.1", default-features = false, features = [
++rattler-build = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3", default-features = false, features = [
    "s3",
  ] }
--rattler_build_jinja = { version = "0.1.0" }
--rattler_build_recipe = { version = "0.1.0" }
--rattler_build_types = { version = "0.1.0" }
--rattler_build_variant_config = { version = "0.1.0" }
-+rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0", default-features = false, features = [
+-rattler_build_jinja = { version = "0.1.3" }
+-rattler_build_recipe = { version = "0.1.3" }
+-rattler_build_types = { version = "0.1.3" }
+-rattler_build_variant_config = { version = "0.1.3" }
++rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3", default-features = false, features = [
 +  "s3",
 +] }
-+rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0" }
-+rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0" }
-+rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0" }
-+rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.1.0" }
++rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3" }
++rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3" }
++rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3" }
++rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3" }
 
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
@@ -97,13 +97,13 @@
 @@ -25,7 +25,7 @@
      build::{WorkingDirectoryBehavior, run_build},
      console_utils::LoggingOutputHandler,
-     metadata::{BuildConfiguration, Debug, Output, PlatformWithVirtualPackages},
+     metadata::{BuildConfiguration, Output, PlatformWithVirtualPackages},
 -    tool_configuration::Configuration,
 +    tool_configuration::{Configuration, reqwest_client_from_auth_storage},
      types::{Directories, PackageIdentifier, PackagingSettings},
  };
  use rattler_build_recipe::variant_render::RenderConfig;
-@@ -734,10 +734,36 @@
+@@ -745,10 +745,36 @@
              .await
              .into_diagnostic()?;
 
@@ -142,7 +142,7 @@
              // This indicates that the environments are externally managed, e.g. they are already
 --- a/crates/pixi_build_rattler_build/Cargo.toml
 +++ b/crates/pixi_build_rattler_build/Cargo.toml
-@@ -22,10 +22,12 @@
+@@ -18,10 +18,12 @@
  indexmap = { workspace = true }
  miette = { workspace = true }
  pathdiff = { workspace = true }
@@ -155,7 +155,7 @@
  serde = { workspace = true, features = ["derive"] }
  serde_json = { workspace = true }
  tempfile = { workspace = true }
-@@ -35,6 +37,7 @@
+@@ -31,6 +33,7 @@
 
  chrono = "0.4.41"
  pixi_build_types = { workspace = true }
@@ -168,7 +168,7 @@
 @@ -33,7 +33,7 @@
      build::{WorkingDirectoryBehavior, run_build},
      console_utils::LoggingOutputHandler,
-     metadata::{BuildConfiguration, Debug, Output, PlatformWithVirtualPackages},
+     metadata::{BuildConfiguration, Output, PlatformWithVirtualPackages},
 -    tool_configuration::Configuration,
 +    tool_configuration::{Configuration, reqwest_client_from_auth_storage},
      types::{PackageIdentifier, PackagingSettings},
@@ -229,6 +229,82 @@
              // Pixi is incremental so keep the build
              .with_keep_build(true)
              // This indicates that the environments are externally managed, e.g. they are already
+--- a/crates/pixi_cli/src/search.rs
++++ b/crates/pixi_cli/src/search.rs
+@@ -12,7 +12,7 @@
+ use pixi_manifest::FeaturesExt;
+ use pixi_progress::await_in_progress;
+ use rattler_conda_types::{
+-    MatchSpec, PackageName, ParseStrictness, ParseStrictnessWithNameMatcher, Platform,
++    MatchSpec, PackageName, PackageNameMatcher, ParseStrictness, ParseStrictnessWithNameMatcher, Platform,
+     RepoDataRecord,
+ };
+ use tracing::{debug, error};
+@@ -46,7 +46,7 @@
+     pub platform: Option<Platform>,
+
+     /// Limit the number of versions shown per package, -1 for no limit
+-    #[clap(short, long, default_value = "5", allow_hyphen_values = true)]
++    #[clap(short, long, default_value = "-1", allow_hyphen_values = true)]
+     pub limit: i64,
+
+     /// Limit the number of packages shown, -1 for no limit
+@@ -53,7 +53,7 @@
+     #[clap(
+         short = 'n',
+         long = "limit-packages",
+-        default_value = "5",
++        default_value = "-1",
+         allow_hyphen_values = true
+     )]
+     pub limit_packages: i64,
+@@ -122,7 +122,14 @@
+         }
+         platforms
+     } else {
+-        Platform::all().collect()
++        vec![
++            Platform::Linux64,
++            Platform::LinuxAarch64,
++            Platform::NoArch,
++            Platform::Osx64,
++            Platform::OsxArm64,
++            Platform::Win64,
++        ]
+     };
+
+     let matchspec = MatchSpec::from_str(
+@@ -137,7 +144,7 @@
+     let packages = if let Some(workspace) = workspace {
+         await_in_progress("searching packages...", |_| async {
+             WorkspaceContext::new(CliInterface {}, workspace)
+-                .search(matchspec, channels, platforms)
++                .search(matchspec.clone(), channels, platforms)
+                 .await
+         })
+         .await?
+@@ -144,7 +151,7 @@
+     } else {
+         await_in_progress("searching packages...", |_| async {
+             DefaultContext::new(CliInterface {})
+-                .search(matchspec, channels, platforms)
++                .search(matchspec.clone(), channels, platforms)
+                 .await
+         })
+         .await?
+@@ -160,7 +167,11 @@
+         }
+     } else {
+         let limit_versions = if args.limit < 0 {
+-            None
++            if let PackageNameMatcher::Exact(_) = matchspec.name {
++                None
++            } else {
++                Some(1)
++            }
+         } else {
+             Some(args.limit as usize)
+         };
 --- a/crates/pixi_global/src/install.rs
 +++ b/crates/pixi_global/src/install.rs
 @@ -54,7 +54,7 @@
