@@ -1,0 +1,8 @@
+--- a/ffdec.bat
++++ b/ffdec.bat
+@@ -22,4 +22,4 @@
+ if not "%FFDEC_STACK_SIZE%"=="" set STACK_SIZE_PARAM="-Xss%FFDEC_STACK_SIZE%" 
+ if not "%FFDEC_MEMORY%"=="" set MEMORY_PARAM="-Xmx%FFDEC_MEMORY%" 
+
+-java %MEMORY_PARAM% %STACK_SIZE_PARAM% -Djava.net.preferIPv4Stack=true -Djna.nosys=true -Djava.util.Arrays.useLegacyMergeSort=true -jar "%~dp0\ffdec.jar" %*
++java %MEMORY_PARAM% %STACK_SIZE_PARAM% -Djava.net.preferIPv4Stack=true -Djna.nosys=true -Djava.util.Arrays.useLegacyMergeSort=true -jar "%~dp0..\share\java\ffdec\ffdec.jar" %*

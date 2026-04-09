@@ -1,0 +1,33 @@
+context:
+  version: 26.0.0
+  sha256: e13509d0ed11c6d77bb1588701d803eb2c706e2ba4eaab8bc4477255cfc718f4
+
+package:
+  name: ffdec
+  version: ${{ version }}
+
+source:
+  url: https://github.com/jindrapetrik/jpexs-decompiler/releases/download/version${{ version }}/ffdec_${{ version }}.zip
+  sha256: ${{ sha256 }}
+  patches:
+  - changes.patch
+
+build:
+  number: 0
+  script:
+  - md "%LIBRARY_BIN%"
+  - mklink /H "%LIBRARY_BIN%\ffdec.cmd" ffdec.bat
+  - (robocopy /S "%SRC_DIR%" "%LIBRARY_PREFIX%\share\java\ffdec" icon.ico *.jar *.swc *.xml) ^& if %ERRORLEVEL% LEQ 1 exit 0
+  skip:
+  - not win
+  - build_platform != target_platform
+
+requirements:
+  run:
+  - openjdk >=8.0.0
+
+about:
+  license_file:
+  - license.txt
+  - lib/*.license.txt
+  summary: JPEXS Free Flash Decompiler

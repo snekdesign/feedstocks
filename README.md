@@ -9,8 +9,8 @@
 ```
 ## License
 Recipes in this repo are published under [GPL-2.0-only][3] and [Anti-996][4]
-licenses, except for the [Zed recipe][5] which must use the GPL-3.0-or-later
-license same as the [Zed crate][6].
+licenses, except for the [ffdec][5] and [zed][6] recipes which must use the
+GPL-3.0-or-later license due to its restriction.
 
 This repo comes with no pre-built packages. If you have packages built with
 recipes here and want to distribute them, make sure their own licenses are not
@@ -20,5 +20,5 @@ violated.
 [2]: https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history#evergreen-bootstrappers
 [3]: LICENSE#L1-L339
 [4]: LICENSE#L343-L388
-[5]: zed
-[6]: https://github.com/zed-industries/zed/blob/v0.227.1/crates/zed/Cargo.toml#L7
+[5]: ffdec
+[6]: zed
