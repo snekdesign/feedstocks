@@ -1,6 +1,14 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -129,6 +129,9 @@
+@@ -66,6 +66,7 @@
+ enum-map = "2.7.3"
+ flate2 = "1.1.9"
+ futures = "0.3.32"
++gdt-cpus = "25.12.0"
+ image = { version = "0.25.10", default-features = false }
+ js-sys = "0.3.85"
+ web-sys = "0.3.85"
+@@ -129,6 +130,9 @@
                                   # we overwrite an empty item. And sometimes it can even be a footgun
                                   # by keeping big allocations alive.
 
@@ -10,7 +18,7 @@
  # Don't optimize build scripts and macros.
  [profile.release.build-override]
  opt-level = 0
-@@ -137,7 +140,11 @@
+@@ -137,7 +141,11 @@
  panic = "unwind"
 
  [profile.release]
@@ -59,7 +67,15 @@
  [lints]
  workspace = true
 
-@@ -74,7 +78,7 @@
+@@ -19,6 +23,7 @@
+ image = { workspace = true, features = ["png"] }
+ egui-winit = "0.33.3"
+ fontdb = "0.23"
++gdt-cpus = { workspace = true }
+ ruffle_core = { path = "../core", features = ["audio", "clap", "mp3", "aac", "nellymoser", "default_compatibility_rules", "egui"] }
+ ruffle_render = { path = "../render", features = ["clap"] }
+ ruffle_render_wgpu = { path = "../render/wgpu", features = ["clap"] }
+@@ -74,7 +79,7 @@
  CompanyName = "Ruffle LLC"
  LegalCopyright = "Copyright © 2018 Ruffle LLC and Ruffle contributors"
  # InternalName should be the same as the module name
@@ -79,6 +95,38 @@
              weight: if is_bold {
                  fontdb::Weight::BOLD
              } else {
+--- a/desktop/src/main.rs
++++ b/desktop/src/main.rs
+@@ -26,6 +26,7 @@
+ use app::App;
+ use clap::Parser;
+ use cli::Opt;
++use gdt_cpus::{CoreType, cpu_info, pin_thread_to_core};
+ use rfd::MessageDialogResult;
+ use ruffle_core::StaticCallstack;
+ use std::cell::RefCell;
+@@ -165,6 +166,21 @@
+     subscriber.init();
+
+     let result = App::new(preferences).and_then(|(mut app, event_loop)| {
++        match cpu_info() {
++            Ok(info) => {
++                for core in &info.sockets[0].cores {
++                    if core.core_type != CoreType::Efficiency {
++                        if let Err(err) = pin_thread_to_core(core.logical_processor_ids[0]) {
++                            tracing::warn!("Failed to set CPU affinity: {err}");
++                        }
++                        break;
++                    }
++                }
++            }
++            Err(err) => {
++                tracing::warn!("Failed to retrieve cpuinfo: {err}");
++            }
++        }
+         event_loop.run_app(&mut app).context("Event loop failure")
+     });
+
 --- a/video/external/src/decoder/openh264.rs
 +++ b/video/external/src/decoder/openh264.rs
 @@ -52,6 +52,7 @@
