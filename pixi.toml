@@ -10,13 +10,14 @@ readme = 'README.md'
 repository = 'https://github.com/snekdesign/feedstocks'
 
 [dependencies]
-rattler-build = '>=0.58.0'
+rattler-build = '>=0.62.0'
 
 [tasks.build]
 cmd = [
     'rattler-build',
     'build',
     '--config-file', '$PIXI_HOME/config.toml',
+    '--env-isolation', 'none',
     '--no-include-recipe',
     '--variant-config', 'variants.yaml',
     '--recipe-dir',
