@@ -1,6 +1,6 @@
 context:
-  version: 0.0.6
-  sha256: 68359230f7d7b743b497ce8132b9127e312bb510f875e89b21a4c6fb8cf22b65
+  version: 0.1.0
+  sha256: 311db5fd67ca035d480a507393c2fd3a28912cd2d3a6b9ea0efc5bac84d81173
 
 package:
   name: servo
@@ -17,8 +17,8 @@ source:
   patches:
   - 0001-conda-build.patch
 # https://book.servo.org/building/building-offline.html#prebuilt-spidermonkey-artifacts
-- url: https://github.com/servo/mozjs/releases/download/mozjs-sys-v0.140.5-11/libmozjs-x86_64-pc-windows-msvc.tar.gz
-  sha256: 2b52b81c3dbb997c3b72007b98abd594ae3a789dd4a3c816b54ba973420f9371
+- url: https://github.com/servo/mozjs/releases/download/mozjs-sys-v0.140.8-2/libmozjs-x86_64-pc-windows-msvc.tar.gz
+  sha256: 47504ae055b05c275b70b4ae6d66db87f26c8ed1c6ac7afd5a5f3e6bd55a16c6
   file_name: libmozjs.tar.gz
 
 build:
