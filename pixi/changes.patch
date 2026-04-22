@@ -21,7 +21,7 @@
  rattler_digest = { version = "1.2.3", default-features = false }
  rattler_index = { version = "0.27.20", default-features = false, features = [
    "s3",
-@@ -245,15 +246,39 @@
+@@ -246,15 +247,39 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
 
  # Rattler build crates
@@ -66,6 +66,70 @@
  # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
  reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "7650ed76215a962a96d94a79be71c27bffde7ab2" }
  reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "7650ed76215a962a96d94a79be71c27bffde7ab2" }
+--- a/crates/pixi_api/src/context.rs
++++ b/crates/pixi_api/src/context.rs
+@@ -32,7 +32,7 @@
+     /// Search for packages matching a [`MatchSpec`]
+     pub async fn search(
+         &self,
+-        matchspec: MatchSpec,
++        matchspec: Vec<MatchSpec>,
+         channels: IndexSet<Channel>,
+         platforms: Vec<Platform>,
+     ) -> miette::Result<Vec<RepoDataRecord>> {
+@@ -416,7 +416,7 @@
+     /// Search for packages matching a [`MatchSpec`]
+     pub async fn search(
+         &self,
+-        matchspec: MatchSpec,
++        matchspec: Vec<MatchSpec>,
+         channels: IndexSet<Channel>,
+         platforms: Vec<Platform>,
+     ) -> miette::Result<Vec<RepoDataRecord>> {
+--- a/crates/pixi_api/src/workspace/search/mod.rs
++++ b/crates/pixi_api/src/workspace/search/mod.rs
+@@ -7,7 +7,7 @@
+
+ pub async fn search(
+     workspace: Option<&Workspace>,
+-    matchspec: MatchSpec,
++    matchspec: Vec<MatchSpec>,
+     channels: IndexSet<Channel>,
+     platforms: Vec<Platform>,
+ ) -> miette::Result<Vec<RepoDataRecord>> {
+@@ -21,7 +21,7 @@
+     let gateway = config.gateway().with_client(client).finish();
+
+     let repo_data = gateway
+-        .query(channels.clone(), platforms, vec![matchspec.clone()])
++        .query(channels.clone(), platforms, matchspec.clone())
+         .recursive(false)
+         .await
+         .into_diagnostic()?;
+@@ -33,11 +33,18 @@
+     }
+
+     if packages.is_empty() {
+-        return Err(miette::miette!(
+-            help = "Try glob patterns like 'python*' or '*numpy*'",
+-            "No packages found matching '{}'",
+-            matchspec
+-        ));
++        if matchspec.len() == 1 {
++            return Err(miette::miette!(
++                help = "Try glob patterns like 'python*' or '*numpy*'",
++                "No packages found matching '{}'",
++                matchspec[0]
++            ));
++        } else {
++            return Err(miette::miette!(
++                help = "Try glob patterns like 'python*' or '*numpy*'",
++                "No packages found",
++            ));
++        }
+     }
+
+     packages.sort();
 --- a/crates/pixi_build_backend/Cargo.toml
 +++ b/crates/pixi_build_backend/Cargo.toml
 @@ -23,6 +23,7 @@
@@ -240,6 +304,15 @@
      RepoDataRecord,
  };
  use tracing::{debug, error};
+@@ -31,7 +31,7 @@
+ pub struct Args {
+     /// MatchSpec of a package to search
+     #[arg(required = true)]
+-    pub package: String,
++    pub package: Vec<String>,
+
+     #[clap(flatten)]
+     pub channels: ChannelsConfig,
 @@ -46,7 +46,7 @@
      pub platform: Option<Platform>,
 
@@ -258,7 +331,7 @@
          allow_hyphen_values = true
      )]
      pub limit_packages: i64,
-@@ -122,7 +122,14 @@
+@@ -122,22 +122,31 @@
          }
          platforms
      } else {
@@ -273,8 +346,25 @@
 +        ]
      };
 
-     let matchspec = MatchSpec::from_str(
-@@ -137,7 +144,7 @@
+-    let matchspec = MatchSpec::from_str(
+-        &args.package,
+-        ParseStrictnessWithNameMatcher {
+-            parse_strictness: ParseStrictness::Lenient,
+-            exact_names_only: false,
+-        },
+-    )
+-    .into_diagnostic()?;
++    let matchspec = args.package.into_iter().map(
++            |p| MatchSpec::from_str(
++                &p,
++                ParseStrictnessWithNameMatcher {
++                    parse_strictness: ParseStrictness::Lenient,
++                    exact_names_only: false,
++                },
++            )
++        ).collect::<Result<Vec<_>, _>>()
++        .into_diagnostic()?;
+
      let packages = if let Some(workspace) = workspace {
          await_in_progress("searching packages...", |_| async {
              WorkspaceContext::new(CliInterface {}, workspace)
@@ -283,7 +373,7 @@
                  .await
          })
          .await?
-@@ -144,7 +151,7 @@
+@@ -144,7 +153,7 @@
      } else {
          await_in_progress("searching packages...", |_| async {
              DefaultContext::new(CliInterface {})
@@ -292,12 +382,17 @@
                  .await
          })
          .await?
-@@ -160,7 +167,11 @@
+@@ -160,7 +169,16 @@
          }
      } else {
          let limit_versions = if args.limit < 0 {
 -            None
-+            if let PackageNameMatcher::Exact(_) = matchspec.name {
++            if matchspec.into_iter().all(
++                |p| match p.name {
++                    PackageNameMatcher::Exact(_) => true,
++                    _ => false,
++                }
++            ) {
 +                None
 +            } else {
 +                Some(1)
