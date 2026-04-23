@@ -1,0 +1,43 @@
+context:
+  version: 0.1.0dev20260331
+  commit: 577474d89ee61aef4a48145cdec82a638d874751
+  sha256: 47e382d351b59104efbbae7e209357b75f908a00c9cb2fb00fe485a4b64eb888
+
+package:
+  name: wezterm
+  version: ${{ version }}
+
+source:
+  url: https://codeload.github.com/wezterm/wezterm/tar.gz/${{ commit }}
+  sha256: ${{ sha256 }}
+  patches:
+  - changes.patch
+
+build:
+  number: 0
+  script:
+  - set "OPENSSL_DIR=%LIBRARY_PREFIX%"
+  - set OPENSSL_NO_VENDOR=1
+  - cargo install --locked --no-track --path wezterm-gui --root "%LIBRARY_PREFIX%"
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - perl * *_strawberry
+  - rust >=1.89.0
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
+  host:
+  - freetype
+  - harfbuzz
+  - openssl
+  run:
+  - openconsole
+
+about:
+  license_file: LICENSE.md
+  summary: A GPU-accelerated cross-platform terminal emulator and multiplexer
