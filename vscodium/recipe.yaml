@@ -1,6 +1,6 @@
 context:
-  version: 1.112.01907
-  sha256: 6dcfc1e7f2a74ad236f1622eed673b9777bec7451282fee0c5a2731bcf296445
+  version: 1.116.02821
+  sha256: 76949a39754f3bef265e40dafe45f336db8491f7604b8c17aeb711e7362c2ee3
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.7.1
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -24,9 +24,9 @@ context:
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
   ruff_sha256: 05b310206dd124d8af70316667c046f07899ec7da6a511a6b5ae91a252efc3be
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/versions?size=1
-  toml_version: 0.9.9
+  toml_version: 0.9.25
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/latest/file/sha256
-  toml_sha256: 738fe99d1912bb6c282e2d8f7a24b5a71379e4aaf798f5a0c48cc14964111b90
+  toml_sha256: 9d5ebdd2f1f1b8508d0eef3c82edc33e4704c480d0c7161b2874bf9a0386ecbb
 
 package:
   name: vscodium
