@@ -1,6 +1,6 @@
 context:
-  version: 1.9.0
-  sha256: 75b27d4d6df44bd34e2f70663cfd998f5ec41e680e1e593238bbe517a84c7ed2
+  version: 1.9.3
+  sha256: d532172d7ab24d2a25944e2434212d63ee85f3650e97b5f7579e7f201a78ad64
 
 package:
   name: libgit2
