@@ -1,23 +1,23 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -660,6 +660,8 @@
+@@ -684,6 +684,8 @@
  pulldown-cmark = { version = "0.13.0", default-features = false }
  quote = "1.0.9"
  rand = "0.9"
-+rattler_conda_types = { version = "0.44.3", default-features = false }
-+rattler_shell = { version = "0.26.6", default-features = false }
++rattler_conda_types = { version = "0.46.0", default-features = false }
++rattler_shell = { version = "0.26.11", default-features = false }
  rayon = "1.8"
  regex = "1.5"
  # WARNING: If you change this, you must also publish a new version of zed-reqwest to crates.io
-@@ -784,6 +786,7 @@
+@@ -807,6 +809,7 @@
  webrtc-sys = "0.3.23"
  wgpu = { git = "https://github.com/zed-industries/wgpu.git", branch = "v29" }
  windows-core = "0.61"
 +windows-link = "0.2"
+ yaml-rust2 = "0.8"
  yawc = "0.2.5"
  zeroize = "1.8"
- zstd = "0.11"
-@@ -919,13 +922,11 @@
+@@ -950,13 +953,11 @@
  zed_actions = { codegen-units = 1 }
 
  [profile.release]
@@ -109,23 +109,9 @@
              String::from_utf16_lossy(&buffer[..len as usize])
          };
          let args = description.split('\n').map(PathBuf::from).collect();
---- a/crates/text/src/text.rs
-+++ b/crates/text/src/text.rs
-@@ -3463,11 +3463,7 @@
-
- impl Default for LineEnding {
-     fn default() -> Self {
--        #[cfg(unix)]
-         return Self::Unix;
--
--        #[cfg(not(unix))]
--        return Self::Windows;
-     }
- }
-
 --- a/crates/zed/build.rs
 +++ b/crates/zed/build.rs
-@@ -90,120 +90,6 @@
+@@ -88,120 +88,6 @@
              println!("cargo:rustc-link-arg=/stack:{}", 8 * 1024 * 1024);
          }
 
@@ -141,7 +127,7 @@
 -            let conpty_dll_target = target_dir.join("conpty.dll");
 -            let open_console_target = target_dir.join("OpenConsole.exe");
 -
--            let conpty_url = "https://github.com/microsoft/terminal/releases/download/v1.23.13503.0/Microsoft.Windows.Console.ConPTY.1.23.251216003.nupkg";
+-            let conpty_url = "https://github.com/microsoft/terminal/releases/download/v1.24.10621.0/Microsoft.Windows.Console.ConPTY.1.24.260303001.nupkg";
 -            let nupkg_path = out_dir.join("conpty.nupkg.zip");
 -            let extract_dir = out_dir.join("conpty");
 -
@@ -248,7 +234,7 @@
              "stable" => "resources/windows/app-icon.ico",
 --- a/crates/zed/Cargo.toml
 +++ b/crates/zed/Cargo.toml
-@@ -169,6 +169,8 @@
+@@ -170,6 +170,8 @@
  project_symbols.workspace = true
  prompt_store.workspace = true
  proto.workspace = true
@@ -259,7 +245,7 @@
  remote.workspace = true
 --- a/crates/zed/src/main.rs
 +++ b/crates/zed/src/main.rs
-@@ -37,6 +37,7 @@
+@@ -39,6 +39,7 @@
  use parking_lot::Mutex;
  use project::{project_settings::ProjectSettings, trusted_worktrees};
  use proto;
@@ -267,7 +253,7 @@
  use recent_projects::{RemoteSettings, open_remote_project};
  use release_channel::{AppCommitSha, AppVersion, ReleaseChannel};
  use session::{AppSession, Session};
-@@ -236,7 +237,7 @@
+@@ -238,7 +239,7 @@
      unsafe {
          use windows::Win32::System::Console::{ATTACH_PARENT_PROCESS, AttachConsole};
 
@@ -276,7 +262,7 @@
              let _ = AttachConsole(ATTACH_PARENT_PROCESS);
          }
      }
-@@ -320,7 +321,31 @@
+@@ -322,7 +323,31 @@
      );
 
      #[cfg(windows)]
