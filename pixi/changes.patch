@@ -14,46 +14,43 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -223,6 +223,7 @@
- rattler_conda_types = { version = "0.44.3", default-features = false, features = [
+ rattler_conda_types = { version = "0.46.0", default-features = false, features = [
    "rayon",
  ] }
-+rattler_config = { version = "0.3.7", default-features = false }
++rattler_config = { version = "0.3.11", default-features = false }
  rattler_digest = { version = "1.2.3", default-features = false }
- rattler_index = { version = "0.27.20", default-features = false, features = [
+ rattler_index = { version = "0.28.0", default-features = false, features = [
    "s3",
-@@ -246,15 +247,39 @@
+@@ -246,6 +247,9 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
 
  # Rattler build crates
--rattler_build_core = { version = "0.2.1", default-features = false, features = [
-+rattler-build = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3", default-features = false, features = [
-   "s3",
- ] }
--rattler_build_jinja = { version = "0.1.3" }
--rattler_build_recipe = { version = "0.1.3" }
--rattler_build_types = { version = "0.1.3" }
--rattler_build_variant_config = { version = "0.1.3" }
-+rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3", default-features = false, features = [
++rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867", default-features = false, features = [
 +  "s3",
 +] }
-+rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3" }
-+rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3" }
-+rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3" }
-+rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.3" }
+ rattler_build_core = { version = "0.2.1", default-features = false, features = [
+   "s3",
+ ] }
+@@ -255,6 +259,31 @@
+ rattler_build_variant_config = { version = "0.1.3" }
 
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
 +file_url = { path = "../rattler/crates/file_url" }
++path_resolver = { path = "../rattler/crates/path_resolver" }
 +rattler = { path = "../rattler/crates/rattler" }
 +rattler_cache = { path = "../rattler/crates/rattler_cache" }
 +rattler_conda_types = { path = "../rattler/crates/rattler_conda_types" }
 +rattler_config = { path = "../rattler/crates/rattler_config" }
 +rattler_digest = { path = "../rattler/crates/rattler_digest" }
++rattler_git = { path = "../rattler/crates/rattler_git" }
++rattler_index = { path = "../rattler/crates/rattler_index" }
 +rattler_lock = { path = "../rattler/crates/rattler_lock" }
 +rattler_macros = { path = "../rattler/crates/rattler_macros" }
 +rattler_menuinst = { path = "../rattler/crates/rattler_menuinst" }
 +rattler_networking = { path = "../rattler/crates/rattler_networking" }
 +rattler_package_streaming = { path = "../rattler/crates/rattler_package_streaming" }
++rattler_prefix_guard = { path = "../rattler/crates/rattler_prefix_guard" }
 +rattler_pty = { path = "../rattler/crates/rattler_pty" }
 +rattler_redaction = { path = "../rattler/crates/rattler_redaction" }
 +rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway" }
@@ -66,6 +63,31 @@
  # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
  reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "7650ed76215a962a96d94a79be71c27bffde7ab2" }
  reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "7650ed76215a962a96d94a79be71c27bffde7ab2" }
+@@ -263,15 +292,15 @@
+ # Temporary patch: rattler-build main has been updated to use the new rattler
+ # versions but no release has been published yet. Remove once rattler-build
+ # cuts a new release.
+-rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
+-rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
++rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
+
+ [patch."https://github.com/prefix-dev/rattler-build"]
+ #rattler-build = { path = "/var/home/tobias/src/rattler-build" }
 --- a/crates/pixi_api/src/context.rs
 +++ b/crates/pixi_api/src/context.rs
 @@ -32,7 +32,7 @@
