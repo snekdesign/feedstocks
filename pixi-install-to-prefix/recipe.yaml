@@ -1,6 +1,6 @@
 context:
-  version: 0.1.2
-  sha256: 473a90e49c917b1fb8635741228ffba51b265ef4452334563d2120206b9f1a89
+  version: 0.1.3
+  sha256: f7db1a398866ee6dc71d106d0106b4ffce6cb6d6f70df0fe8797a3a15b72e317
 
 package:
   name: pixi-install-to-prefix
@@ -10,10 +10,8 @@ source:
 - url: https://codeload.github.com/pavelzw/pixi-install-to-prefix/tar.gz/v${{ version }}
   sha256: ${{ sha256 }}
   patches:
-  - 0001-customize.patch
-- url: https://codeload.github.com/prefix-dev/pixi/tar.gz/dfbefb4f7d1b1a7dd8dbff013e31c85dcb148e87
-  sha256: 9b90d857c967ad8f580c60b59595624cd9b754f1e774057b9715d72526523f3c
-  target_directory: pixi
+  - changes.patch
+- path: build.rs
 - if: win
   then:
   - url: https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.3.1/VC-LTL-Binary.7z
@@ -21,8 +19,8 @@ source:
     target_directory: vc_ltl
 - if: win
   then:
-  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.1.9/YY-Thunks-Objs.zip
-    sha256: c53b87f83a3a1322de22195ee43fca590e757369b713304a4ce4fcaad532f8b7
+  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.2.1/YY-Thunks-Objs.zip
+    sha256: 36b6cf1f8f9ac0d05863140d20d8ca70a796775e520fed2842667b517a867f52
     target_directory: yy_thunks
 
 build:
@@ -32,7 +30,7 @@ build:
     then:
     - set "VC_LTL=%SRC_DIR%\vc_ltl"
     - set "YY_THUNKS=%SRC_DIR%\yy_thunks"
-    - cargo install --config target.x86_64-pc-windows-msvc.linker=\"link\" --locked --no-track --path . --root "%LIBRARY_PREFIX%"
+    - cargo install --locked --no-track --path . --root "%LIBRARY_PREFIX%"
     else:
     - cargo install --locked --no-track --path . --root "$PREFIX"
   skip:
@@ -42,13 +40,11 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust >=1.89.0
+  - rust >=1.90.0
   - if: linux
     then: diffutils
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
-  - if: win
-    then: 7zip
 
 tests:
 - script:
