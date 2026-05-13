@@ -17,7 +17,7 @@
  yaml-rust2 = "0.8"
  yawc = "0.2.5"
  zeroize = "1.8"
-@@ -950,13 +953,11 @@
+@@ -951,13 +954,11 @@
  zed_actions = { codegen-units = 1 }
 
  [profile.release]
@@ -229,9 +229,9 @@
 -            }
 -        }
 -
-         let release_channel = option_env!("RELEASE_CHANNEL").unwrap_or("dev");
-         let icon = match release_channel {
-             "stable" => "resources/windows/app-icon.ico",
+         println!("cargo:rerun-if-env-changed=RELEASE_CHANNEL");
+         println!("cargo:rerun-if-env-changed=GITHUB_RUN_NUMBER");
+
 --- a/crates/zed/Cargo.toml
 +++ b/crates/zed/Cargo.toml
 @@ -170,6 +170,8 @@
@@ -245,7 +245,7 @@
  remote.workspace = true
 --- a/crates/zed/src/main.rs
 +++ b/crates/zed/src/main.rs
-@@ -39,6 +39,7 @@
+@@ -40,6 +40,7 @@
  use parking_lot::Mutex;
  use project::{project_settings::ProjectSettings, trusted_worktrees};
  use proto;
@@ -253,7 +253,7 @@
  use recent_projects::{RemoteSettings, open_remote_project};
  use release_channel::{AppCommitSha, AppVersion, ReleaseChannel};
  use session::{AppSession, Session};
-@@ -238,7 +239,7 @@
+@@ -240,7 +241,7 @@
      unsafe {
          use windows::Win32::System::Console::{ATTACH_PARENT_PROCESS, AttachConsole};
 
@@ -262,7 +262,7 @@
              let _ = AttachConsole(ATTACH_PARENT_PROCESS);
          }
      }
-@@ -322,7 +323,31 @@
+@@ -326,7 +327,31 @@
      );
 
      #[cfg(windows)]
