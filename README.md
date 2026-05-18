@@ -1,7 +1,7 @@
 # feedstocks
 ## Dependencies
 - [Pixi][1] >=0.63.0
-- MSVC 17.14.* [LTSC][2] (Windows only)
+- [MSVC Build Tools v14.51][2]
 - Xcode or Xcode Command Line Tools (macOS only)
 ## Usage
 ```
@@ -17,7 +17,7 @@ recipes here and want to distribute them, make sure their own licenses are not
 violated.
 
 [1]: https://pixi.sh/
-[2]: https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history#evergreen-bootstrappers
+[2]: https://devblogs.microsoft.com/cppblog/microsoft-c-msvc-build-tools-v14-51-preview-released-how-to-opt-in/
 [3]: LICENSE#L1-L339
 [4]: LICENSE#L343-L388
 [5]: ffdec
