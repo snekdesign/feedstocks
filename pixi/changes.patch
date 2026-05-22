@@ -13,26 +13,26 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -223,6 +223,7 @@
- rattler_conda_types = { version = "0.46.0", default-features = false, features = [
+@@ -228,6 +228,7 @@
+ rattler_conda_types = { version = "0.46", default-features = false, features = [
    "rayon",
  ] }
-+rattler_config = { version = "0.3.11", default-features = false }
- rattler_digest = { version = "1.2.3", default-features = false }
- rattler_index = { version = "0.28.0", default-features = false, features = [
++rattler_config = { version = "0.4.1", default-features = false }
+ rattler_digest = { version = "1.3", default-features = false }
+ rattler_index = { version = "0.30", default-features = false, features = [
    "s3",
-@@ -246,6 +247,9 @@
+@@ -251,6 +252,9 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
 
  # Rattler build crates
-+rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867", default-features = false, features = [
++rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4", default-features = false, features = [
 +  "s3",
 +] }
- rattler_build_core = { version = "0.2.1", default-features = false, features = [
+ rattler_build_core = { version = "0.2.4", default-features = false, features = [
    "s3",
  ] }
-@@ -255,6 +259,31 @@
- rattler_build_variant_config = { version = "0.1.3" }
+@@ -260,6 +264,32 @@
+ rattler_build_variant_config = { version = "0.1.6" }
 
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
@@ -60,10 +60,11 @@
 +rattler_upload = { path = "../rattler/crates/rattler_upload" }
 +rattler_virtual_packages = { path = "../rattler/crates/rattler_virtual_packages" }
 +simple_spawn_blocking = { path = "../rattler/crates/simple_spawn_blocking" }
- # This is a temporary patch to get `cargo vendor` to work with the `uv` and pep508_rs` crates.
- reqwest-middleware = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "7650ed76215a962a96d94a79be71c27bffde7ab2" }
- reqwest-retry = { git = "https://github.com/astral-sh/reqwest-middleware", rev = "7650ed76215a962a96d94a79be71c27bffde7ab2" }
-@@ -263,15 +292,15 @@
++
+ version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
+
+ # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
+@@ -272,15 +302,15 @@
  # Temporary patch: rattler-build main has been updated to use the new rattler
  # versions but no release has been published yet. Remove once rattler-build
  # cuts a new release.
@@ -76,15 +77,15 @@
 -rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
 -rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
 -rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
-+rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
-+rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
-+rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
-+rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
-+rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
-+rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
-+rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
-+rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
-+rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", rev = "ea85410517c549abf5878079cc653284fbeb8867" }
++rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
 
  [patch."https://github.com/prefix-dev/rattler-build"]
  #rattler-build = { path = "/var/home/tobias/src/rattler-build" }
@@ -180,16 +181,16 @@
  jsonrpc-http-server = { workspace = true }
 --- a/crates/pixi_build_backend/src/intermediate_backend.rs
 +++ b/crates/pixi_build_backend/src/intermediate_backend.rs
-@@ -25,7 +25,7 @@
-     build::{WorkingDirectoryBehavior, run_build},
+@@ -26,7 +26,7 @@
      console_utils::LoggingOutputHandler,
      metadata::{BuildConfiguration, Output, PlatformWithVirtualPackages},
+     system_tools::SystemTools,
 -    tool_configuration::Configuration,
 +    tool_configuration::{Configuration, reqwest_client_from_auth_storage},
      types::{Directories, PackageIdentifier, PackagingSettings},
  };
  use rattler_build_recipe::variant_render::RenderConfig;
-@@ -745,10 +745,36 @@
+@@ -758,10 +758,36 @@
              .await
              .into_diagnostic()?;
 
@@ -267,18 +268,18 @@
 -            .with_experimental(self.config.experimental.unwrap_or(false))
 +            .with_experimental(true)
              .with_recipe_path(&self.recipe_source.path);
-
-         // Render recipe with variant config
-@@ -341,7 +341,7 @@
+         if let Some(prefix) = &self.build_string_prefix {
+             render_config = render_config.with_build_string_prefix(prefix);
+@@ -347,7 +347,7 @@
              .with_target_platform(host_platform)
              .with_build_platform(build_platform)
              .with_host_platform(host_platform)
 -            .with_experimental(self.config.experimental.unwrap_or(false))
 +            .with_experimental(true)
              .with_recipe_path(&self.recipe_source.path);
-
-         // Render recipe with variant config
-@@ -393,10 +393,36 @@
+         if let Some(prefix) = &self.build_string_prefix {
+             render_config = render_config.with_build_string_prefix(prefix);
+@@ -405,10 +405,36 @@
              self.recipe_source.path.clone(),
          );
 
@@ -447,3 +448,77 @@
 +        Ok(ExposedName(value.to_string()))
      }
  }
+
+--- a/crates/pixi_uv_conversions/Cargo.toml
++++ b/crates/pixi_uv_conversions/Cargo.toml
+@@ -13,6 +13,7 @@
+ [dependencies]
+ chrono = { workspace = true }
+ dunce = { workspace = true }
++http = { workspace = true }
+ jiff = { workspace = true }
+ miette = { workspace = true }
+ pep440_rs = { workspace = true }
+--- a/crates/pixi_uv_conversions/src/conversions.rs
++++ b/crates/pixi_uv_conversions/src/conversions.rs
+@@ -5,6 +5,7 @@
+
+ use crate::GitUrlWithPrefix;
+ use crate::git_url::decode_windows_drive_letter;
++use http::HeaderValue;
+ use miette::IntoDiagnostic;
+ use pep440_rs::VersionSpecifiers;
+ use pixi_git::{git::GitReference as PixiGitReference, sha::GitSha as PixiGitSha};
+@@ -20,7 +21,7 @@
+ use std::{collections::HashSet, fmt::Write};
+ use uv_configuration::BuildOptions;
+ use uv_configuration::TrustedHost;
+-use uv_distribution_types::{GitSourceDist, Index, IndexLocations, IndexUrl};
++use uv_distribution_types::{GitSourceDist, Index, IndexCacheControl, IndexLocations, IndexUrl};
+ use uv_normalize::{InvalidNameError, PackageName};
+ use uv_pep508::{VerbatimUrl, VerbatimUrlError};
+ use uv_python::PythonEnvironment;
+@@ -76,6 +77,17 @@
+         ));
+     }
+
++    let cache_control = Some(
++        IndexCacheControl {
++            api: Some(
++                HeaderValue::from_static("max-age=600"),
++            ),
++            files: Some(
++                HeaderValue::from_static("max-age=365000000, immutable, public"),
++            ),
++        },
++    );
++
+     // Convert the index to a `IndexUrl`
+     let index = options
+         .index_url
+@@ -83,7 +95,11 @@
+         .map(DisplaySafeUrl::from_url)
+         .map(VerbatimUrl::from_url)
+         .map(IndexUrl::from)
+-        .map(Index::from_index_url)
++        .map(|url| {
++            let mut index = Index::from_index_url(url);
++            index.cache_control = cache_control.clone();
++            index
++        })
+         .into_iter();
+
+     // Convert to list of extra indexes
+@@ -96,7 +112,11 @@
+                 .map(DisplaySafeUrl::from_url)
+                 .map(VerbatimUrl::from_url)
+                 .map(IndexUrl::from)
+-                .map(Index::from_extra_index_url)
++                .map(|url| {
++                    let mut index = Index::from_extra_index_url(url);
++                    index.cache_control = cache_control.clone();
++                    index
++                })
+         });
+
+     let flat_indexes = if let Some(flat_indexes) = options.find_links.clone() {
