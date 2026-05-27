@@ -1,15 +1,13 @@
 context:
-  year: 2026
-  month: '04'
-  day: 14
-  sha256: 917ded133eb7b140f9fc251d2c8f9fc3522dcec9df337400800e1ab5855e309c
+  version: 0.2.0
+  sha256: 00f2cbd7180ace4df287a58e015aa218f250a056ab4e2ae3a1e363373cbfe5d2
 
 package:
   name: ruffle
-  version: 0.2.0dev${{ year }}${{ month }}${{ day }}
+  version: ${{ version }}
 
 source:
-- url: https://codeload.github.com/ruffle-rs/ruffle/tar.gz/nightly-${{ year }}-${{ month }}-${{ day }}
+- url: https://github.com/ruffle-rs/ruffle/releases/download/v${{ version }}/ruffle-${{ version }}-reproducible-source.zip
   sha256: ${{ sha256 }}
   patches:
   - changes.patch
