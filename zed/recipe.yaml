@@ -1,7 +1,7 @@
 context:
   license: GPL-3.0-or-later
-  version: 1.2.3
-  sha256: c397c39495239a7a5a774bd91164a6e17d6a07f224c2f5038fcd776d25ed04d1
+  version: 1.4.2
+  sha256: 139165edf8aabfa242dea5bba4d4fa4d26a99ab63beac274dd3452f35b60a8af
 
 package:
   name: zed
