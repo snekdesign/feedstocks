@@ -1,6 +1,6 @@
 context:
-  version: 0.69.0
-  sha256: 87a53c3b38bca6211b311edd987a706e7caffe017cc5e2ba1504386e0868b103
+  version: 0.70.0
+  sha256: b6247d725c8bd859b964a90389cf9e3a4bb01aedb69b002fdae1a305eca86434
 
 recipe:
   name: pixi
@@ -50,7 +50,6 @@ outputs:
       - cargo install --frozen --no-track --path crates/pixi_build_mojo --profile dist --root "%LIBRARY_PREFIX%"
       - cargo install --frozen --no-track --path crates/pixi_build_python --profile dist --root "%LIBRARY_PREFIX%"
       - cargo install --frozen --no-track --path crates/pixi_build_r --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_rattler_build --profile dist --root "%LIBRARY_PREFIX%"
       - cargo install --frozen --no-track --path crates/pixi_build_ros --profile dist --root "%LIBRARY_PREFIX%"
       - cargo install --frozen --no-track --path crates/pixi_build_rust --profile dist --root "%LIBRARY_PREFIX%"
       else:
@@ -59,7 +58,6 @@ outputs:
       - cargo install --frozen --no-track --path crates/pixi_build_mojo --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path crates/pixi_build_python --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path crates/pixi_build_r --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_rattler_build --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path crates/pixi_build_ros --profile dist --root "$PREFIX"
       - cargo install --frozen --no-track --path crates/pixi_build_rust --profile dist --root "$PREFIX"
 - package:
@@ -112,16 +110,6 @@ outputs:
   tests:
   - script:
     - pixi-build-r help
-- package:
-    name: pixi-build-rattler-build
-  inherit: pixi-build
-  build:
-    files:
-    - bin/pixi-build-rattler-build
-    - Library/bin/pixi-build-rattler-build.exe
-  tests:
-  - script:
-    - pixi-build-rattler-build help
 - package:
     name: pixi-build-ros
   inherit: pixi-build

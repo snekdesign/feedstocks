@@ -13,7 +13,7 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -228,6 +228,7 @@
+@@ -232,6 +232,7 @@
  rattler_conda_types = { version = "0.46", default-features = false, features = [
    "rayon",
  ] }
@@ -21,17 +21,17 @@
  rattler_digest = { version = "1.3", default-features = false }
  rattler_index = { version = "0.30", default-features = false, features = [
    "s3",
-@@ -251,6 +252,9 @@
+@@ -255,6 +256,9 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
 
  # Rattler build crates
-+rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4", default-features = false, features = [
++rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7", default-features = false, features = [
 +  "s3",
 +] }
  rattler_build_core = { version = "0.2.4", default-features = false, features = [
    "s3",
  ] }
-@@ -260,6 +264,32 @@
+@@ -264,6 +268,32 @@
  rattler_build_variant_config = { version = "0.1.6" }
 
  [patch.crates-io]
@@ -64,7 +64,7 @@
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -272,15 +302,15 @@
+@@ -276,15 +306,15 @@
  # Temporary patch: rattler-build main has been updated to use the new rattler
  # versions but no release has been published yet. Remove once rattler-build
  # cuts a new release.
@@ -77,21 +77,21 @@
 -rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
 -rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
 -rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
-+rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
-+rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
-+rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
-+rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
-+rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
-+rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
-+rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
-+rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
-+rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", rev = "51c5fff930512422781c99d8217a11524690a3a4" }
++rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
 
  [patch."https://github.com/prefix-dev/rattler-build"]
  #rattler-build = { path = "/var/home/tobias/src/rattler-build" }
 --- a/crates/pixi_api/src/context.rs
 +++ b/crates/pixi_api/src/context.rs
-@@ -32,7 +32,7 @@
+@@ -34,7 +34,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -100,7 +100,7 @@
          channels: IndexSet<Channel>,
          platforms: Vec<Platform>,
      ) -> miette::Result<Vec<RepoDataRecord>> {
-@@ -416,7 +416,7 @@
+@@ -420,7 +420,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -190,7 +190,7 @@
      types::{Directories, PackageIdentifier, PackagingSettings},
  };
  use rattler_build_recipe::variant_render::RenderConfig;
-@@ -758,10 +758,36 @@
+@@ -784,10 +784,36 @@
              .await
              .into_diagnostic()?;
 
@@ -270,7 +270,7 @@
              .with_recipe_path(&self.recipe_source.path);
          if let Some(prefix) = &self.build_string_prefix {
              render_config = render_config.with_build_string_prefix(prefix);
-@@ -347,7 +347,7 @@
+@@ -349,7 +349,7 @@
              .with_target_platform(host_platform)
              .with_build_platform(build_platform)
              .with_host_platform(host_platform)
@@ -279,7 +279,7 @@
              .with_recipe_path(&self.recipe_source.path);
          if let Some(prefix) = &self.build_string_prefix {
              render_config = render_config.with_build_string_prefix(prefix);
-@@ -405,10 +405,36 @@
+@@ -407,10 +407,36 @@
              self.recipe_source.path.clone(),
          );
 
@@ -336,7 +336,7 @@
 
      #[clap(flatten)]
      pub channels: ChannelsConfig,
-@@ -46,7 +46,7 @@
+@@ -49,7 +49,7 @@
      pub platform: Option<Platform>,
 
      /// Limit the number of versions shown per package, -1 for no limit
@@ -345,7 +345,7 @@
      pub limit: i64,
 
      /// Limit the number of packages shown, -1 for no limit
-@@ -53,7 +53,7 @@
+@@ -56,7 +56,7 @@
      #[clap(
          short = 'n',
          long = "limit-packages",
@@ -354,7 +354,7 @@
          allow_hyphen_values = true
      )]
      pub limit_packages: i64,
-@@ -122,22 +122,31 @@
+@@ -126,22 +126,31 @@
          }
          platforms
      } else {
@@ -396,7 +396,7 @@
                  .await
          })
          .await?
-@@ -144,7 +153,7 @@
+@@ -148,7 +157,7 @@
      } else {
          await_in_progress("searching packages...", |_| async {
              DefaultContext::new(CliInterface {})
@@ -405,7 +405,7 @@
                  .await
          })
          .await?
-@@ -160,7 +169,16 @@
+@@ -164,7 +173,16 @@
          }
      } else {
          let limit_versions = if args.limit < 0 {
@@ -425,7 +425,7 @@
          };
 --- a/crates/pixi_global/src/install.rs
 +++ b/crates/pixi_global/src/install.rs
-@@ -54,7 +54,7 @@
+@@ -55,7 +55,7 @@
              } else {
                  false
              }
