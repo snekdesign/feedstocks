@@ -12,7 +12,7 @@
 
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -335,7 +335,6 @@
+@@ -347,7 +347,6 @@
  debug-assertions = false
  lto = true
  codegen-units = 1
@@ -20,7 +20,7 @@
 
  [profile.production-stripped]
  inherits = "production"
-@@ -349,6 +348,7 @@
+@@ -361,6 +360,7 @@
  codegen-units = 1
 
  [patch.crates-io]
@@ -107,7 +107,7 @@
 \ No newline at end of file
 --- a/components/servo/servo.rs
 +++ b/components/servo/servo.rs
-@@ -100,8 +100,12 @@
+@@ -101,8 +101,12 @@
              let mut plugin_dir = std::env::current_exe().unwrap();
              plugin_dir.pop();
 
@@ -135,7 +135,7 @@
 
 --- a/ports/servoshell/desktop/headed_window.rs
 +++ b/ports/servoshell/desktop/headed_window.rs
-@@ -117,6 +117,7 @@
+@@ -119,6 +119,7 @@
              .with_decorations(!no_native_titlebar)
              .with_transparent(no_native_titlebar)
              .with_inner_size(LogicalSize::new(inner_size.width, inner_size.height))
@@ -155,7 +155,7 @@
      }
 --- a/ports/servoshell/prefs.rs
 +++ b/ports/servoshell/prefs.rs
-@@ -534,7 +534,7 @@
+@@ -545,7 +545,7 @@
      window_size: Option<Size2D<u32, DeviceIndependentPixel>>,
 
      /// The url we should load.
