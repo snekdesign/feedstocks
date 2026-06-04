@@ -25,7 +25,7 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
 
  # Rattler build crates
-+rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7", default-features = false, features = [
++rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085", default-features = false, features = [
 +  "s3",
 +] }
  rattler_build_core = { version = "0.2.4", default-features = false, features = [
@@ -77,15 +77,15 @@
 -rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
 -rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
 -rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
-+rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
-+rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
-+rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
-+rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
-+rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
-+rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
-+rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
-+rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
-+rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", rev = "22f5d08c576e7453a7393835a63b29f202b111c7" }
++rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
++rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
++rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
++rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
++rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
++rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
++rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
++rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
++rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
 
  [patch."https://github.com/prefix-dev/rattler-build"]
  #rattler-build = { path = "/var/home/tobias/src/rattler-build" }
@@ -190,7 +190,7 @@
      types::{Directories, PackageIdentifier, PackagingSettings},
  };
  use rattler_build_recipe::variant_render::RenderConfig;
-@@ -784,10 +784,36 @@
+@@ -824,10 +824,36 @@
              .await
              .into_diagnostic()?;
 
@@ -252,7 +252,7 @@
  [dev-dependencies]
 --- a/crates/pixi_build_rattler_build/src/protocol.rs
 +++ b/crates/pixi_build_rattler_build/src/protocol.rs
-@@ -33,7 +33,7 @@
+@@ -34,7 +34,7 @@
      build::{WorkingDirectoryBehavior, run_build},
      console_utils::LoggingOutputHandler,
      metadata::{BuildConfiguration, Output, PlatformWithVirtualPackages},
@@ -261,25 +261,7 @@
      types::{PackageIdentifier, PackagingSettings},
  };
  use rattler_build_recipe::{stage1::Source as RecipeSource, variant_render::RenderConfig};
-@@ -90,7 +90,7 @@
-             .with_target_platform(params.host_platform)
-             .with_build_platform(build_platform)
-             .with_host_platform(params.host_platform)
--            .with_experimental(self.config.experimental.unwrap_or(false))
-+            .with_experimental(true)
-             .with_recipe_path(&self.recipe_source.path);
-         if let Some(prefix) = &self.build_string_prefix {
-             render_config = render_config.with_build_string_prefix(prefix);
-@@ -349,7 +349,7 @@
-             .with_target_platform(host_platform)
-             .with_build_platform(build_platform)
-             .with_host_platform(host_platform)
--            .with_experimental(self.config.experimental.unwrap_or(false))
-+            .with_experimental(true)
-             .with_recipe_path(&self.recipe_source.path);
-         if let Some(prefix) = &self.build_string_prefix {
-             render_config = render_config.with_build_string_prefix(prefix);
-@@ -407,10 +407,36 @@
+@@ -447,10 +447,36 @@
              self.recipe_source.path.clone(),
          );
 
@@ -469,16 +451,17 @@
  use miette::IntoDiagnostic;
  use pep440_rs::VersionSpecifiers;
  use pixi_git::{git::GitReference as PixiGitReference, sha::GitSha as PixiGitSha};
-@@ -20,7 +21,7 @@
- use std::{collections::HashSet, fmt::Write};
+@@ -23,7 +24,8 @@
  use uv_configuration::BuildOptions;
  use uv_configuration::TrustedHost;
--use uv_distribution_types::{GitSourceDist, Index, IndexLocations, IndexUrl};
-+use uv_distribution_types::{GitSourceDist, Index, IndexCacheControl, IndexLocations, IndexUrl};
+ use uv_distribution_types::{
+-    ConfigSettingEntry, ConfigSettings, GitSourceDist, Index, IndexLocations, IndexUrl,
++    ConfigSettingEntry, ConfigSettings, GitSourceDist, Index, IndexCacheControl, IndexLocations,
++    IndexUrl,
+ };
  use uv_normalize::{InvalidNameError, PackageName};
  use uv_pep508::{VerbatimUrl, VerbatimUrlError};
- use uv_python::PythonEnvironment;
-@@ -76,6 +77,17 @@
+@@ -98,6 +100,17 @@
          ));
      }
 
@@ -496,7 +479,7 @@
      // Convert the index to a `IndexUrl`
      let index = options
          .index_url
-@@ -83,7 +95,11 @@
+@@ -105,7 +118,11 @@
          .map(DisplaySafeUrl::from_url)
          .map(VerbatimUrl::from_url)
          .map(IndexUrl::from)
@@ -509,7 +492,7 @@
          .into_iter();
 
      // Convert to list of extra indexes
-@@ -96,7 +112,11 @@
+@@ -118,7 +135,11 @@
                  .map(DisplaySafeUrl::from_url)
                  .map(VerbatimUrl::from_url)
                  .map(IndexUrl::from)
