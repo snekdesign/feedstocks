@@ -1,6 +1,6 @@
 context:
-  version: 0.2.0
-  sha256: 00f2cbd7180ace4df287a58e015aa218f250a056ab4e2ae3a1e363373cbfe5d2
+  version: 0.3.0
+  sha256: 349f4da84795947f51453f93a6d8a25ca84ce3c81cf1814d3dd5bceddecdd2d3
 
 package:
   name: ruffle
@@ -22,7 +22,7 @@ build:
   script:
   - set "LIBCLANG_PATH=%BUILD_PREFIX%\Library\bin\libclang-13.dll"
   - cargo fetch
-  - cargo install -F jpegxr --frozen --no-track --path desktop --root "%LIBRARY_PREFIX%"
+  - cargo install -F jpegxr --frozen --no-track --path desktop --profile dist --root "%LIBRARY_PREFIX%"
   skip:
   - not win
   - build_platform != target_platform

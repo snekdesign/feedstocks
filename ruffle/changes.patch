@@ -1,16 +1,16 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -66,6 +66,7 @@
+@@ -67,6 +67,7 @@
  enum-map = "2.7.3"
  flate2 = "1.1.9"
  futures = "0.3.32"
 +gdt-cpus = "25.12.0"
  image = { version = "0.25.10", default-features = false }
- js-sys = "0.3.85"
- web-sys = "0.3.85"
-@@ -129,6 +130,9 @@
-                                  # we overwrite an empty item. And sometimes it can even be a footgun
-                                  # by keeping big allocations alive.
+ js-sys = "0.3.97"
+ web-sys = "0.3.97"
+@@ -143,6 +144,9 @@
+                                  # `[b'a', b'b', b'c']` array. The array form is clearer when the elements
+                                  # represent a set of alternatives (any-of) rather than a byte sequence.
 
 +[patch.crates-io]
 +clang-sys = { path = "clang-sys" }
@@ -18,21 +18,19 @@
  # Don't optimize build scripts and macros.
  [profile.release.build-override]
  opt-level = 0
-@@ -137,7 +141,11 @@
+@@ -151,7 +155,9 @@
  panic = "unwind"
 
  [profile.release]
-+codegen-units = 1
-+lto = true
 +opt-level = 3
  panic = "abort"
 +strip = true
 
- [profile.dev.package.h263-rs]
- opt-level = 3
+ [profile.dist]
+ inherits = "release"
 --- a/core/src/avm1/globals.rs
 +++ b/core/src/avm1/globals.rs
-@@ -360,9 +360,7 @@
+@@ -374,9 +374,7 @@
          .get(0)
          .unwrap_or(&Value::Undefined)
          .coerce_to_i32(activation)?;
@@ -75,7 +73,7 @@
  ruffle_core = { path = "../core", features = ["audio", "clap", "mp3", "aac", "nellymoser", "default_compatibility_rules", "egui"] }
  ruffle_render = { path = "../render", features = ["clap"] }
  ruffle_render_wgpu = { path = "../render/wgpu", features = ["clap"] }
-@@ -74,7 +79,7 @@
+@@ -76,7 +81,7 @@
  CompanyName = "Ruffle LLC"
  LegalCopyright = "Copyright © 2018 Ruffle LLC and Ruffle contributors"
  # InternalName should be the same as the module name
@@ -86,7 +84,7 @@
  [features]
 --- a/desktop/src/backends/ui.rs
 +++ b/desktop/src/backends/ui.rs
-@@ -299,7 +299,7 @@
+@@ -284,7 +284,7 @@
          let is_italic = query.is_italic;
 
          let query = fontdb::Query {
@@ -105,7 +103,7 @@
  use rfd::MessageDialogResult;
  use ruffle_core::StaticCallstack;
  use std::cell::RefCell;
-@@ -165,6 +166,21 @@
+@@ -186,6 +187,21 @@
      subscriber.init();
 
      let result = App::new(preferences).and_then(|(mut app, event_loop)| {
