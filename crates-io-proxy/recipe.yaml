@@ -38,8 +38,6 @@ tests:
   - crates-io-proxy -V
 
 about:
-  license: Apache-2.0 OR MIT
-  license_file:
-  - LICENSE-APACHE
-  - LICENSE-MIT
+  license: MIT
+  license_file: LICENSE-MIT
   summary: Caching HTTP proxy server for the crates.io registry
