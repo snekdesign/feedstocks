@@ -13,26 +13,26 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -232,6 +232,7 @@
- rattler_conda_types = { version = "0.46", default-features = false, features = [
+@@ -234,6 +234,7 @@
+ rattler_conda_types = { version = "0.47", default-features = false, features = [
    "rayon",
  ] }
-+rattler_config = { version = "0.4.1", default-features = false }
++rattler_config = { version = "0.5.2", default-features = false }
  rattler_digest = { version = "1.3", default-features = false }
  rattler_index = { version = "0.30", default-features = false, features = [
    "s3",
-@@ -255,6 +256,9 @@
+@@ -257,6 +258,9 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
 
  # Rattler build crates
-+rattler-build = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085", default-features = false, features = [
++rattler-build = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7", default-features = false, features = [
 +  "s3",
 +] }
- rattler_build_core = { version = "0.2.4", default-features = false, features = [
+ rattler_build_core = { version = "0.2.7", default-features = false, features = [
    "s3",
  ] }
-@@ -264,6 +268,32 @@
- rattler_build_variant_config = { version = "0.1.6" }
+@@ -266,6 +270,32 @@
+ rattler_build_variant_config = { version = "0.1.9" }
 
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
@@ -64,34 +64,26 @@
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -276,15 +306,15 @@
- # Temporary patch: rattler-build main has been updated to use the new rattler
- # versions but no release has been published yet. Remove once rattler-build
- # cuts a new release.
--rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
--rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
--rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
--rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
--rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
--rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
--rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
--rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
--rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", branch = "main" }
-+rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
-+rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
-+rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
-+rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
-+rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
-+rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
-+rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
-+rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
-+rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", rev = "59ae2f4cc1962fa2a3f1d5e5976b5da78e9d0085" }
+@@ -275,6 +305,16 @@
+ # `astral-reqwest-middleware` (rattler, rattler-build, uv).
+ reqwest-middleware = { path = "patches/reqwest_middleware_shim" }
 
- [patch."https://github.com/prefix-dev/rattler-build"]
- #rattler-build = { path = "/var/home/tobias/src/rattler-build" }
++rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++
+ # Strip debug info from dependencies: faster links, much smaller `target/`,
+ # while keeping full debuggability for our own crates.
+ # See https://matklad.github.io/2021/09/04/fast-rust-builds.html
 --- a/crates/pixi_api/src/context.rs
 +++ b/crates/pixi_api/src/context.rs
-@@ -34,7 +34,7 @@
+@@ -36,7 +36,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -100,7 +92,7 @@
          channels: IndexSet<Channel>,
          platforms: Vec<Platform>,
      ) -> miette::Result<Vec<RepoDataRecord>> {
-@@ -420,7 +420,7 @@
+@@ -460,7 +460,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -155,7 +147,7 @@
      packages.sort();
 --- a/crates/pixi_build_backend/Cargo.toml
 +++ b/crates/pixi_build_backend/Cargo.toml
-@@ -23,6 +23,7 @@
+@@ -24,6 +24,7 @@
  minijinja = { workspace = true }
  ordermap = { workspace = true }
  pathdiff = { workspace = true }
@@ -163,7 +155,7 @@
  rattler_build_core = { workspace = true }
  rattler_build_jinja = { workspace = true }
  rattler_build_recipe = { workspace = true }
-@@ -29,6 +30,7 @@
+@@ -30,6 +31,7 @@
  rattler_build_types = { workspace = true }
  rattler_build_variant_config = { workspace = true }
  rattler_conda_types = { workspace = true }
@@ -171,7 +163,7 @@
  rattler_digest = { workspace = true }
  rattler_virtual_packages = { workspace = true }
  serde = { workspace = true, features = ["derive"] }
-@@ -42,6 +44,7 @@
+@@ -43,6 +45,7 @@
  url = { workspace = true }
 
  pixi_build_types = { workspace = true }
@@ -244,7 +236,7 @@
  tempfile = { workspace = true }
 @@ -31,6 +33,7 @@
 
- chrono = "0.4.41"
+ jiff = { workspace = true }
  pixi_build_types = { workspace = true }
 +pixi_config = { workspace = true }
  tracing.workspace = true
@@ -300,8 +292,8 @@
              // This indicates that the environments are externally managed, e.g. they are already
 --- a/crates/pixi_cli/src/search.rs
 +++ b/crates/pixi_cli/src/search.rs
-@@ -12,7 +12,7 @@
- use pixi_manifest::FeaturesExt;
+@@ -14,7 +14,7 @@
+ use pixi_manifest::{FeaturesExt, HasWorkspaceManifest, PixiPlatformName};
  use pixi_progress::await_in_progress;
  use rattler_conda_types::{
 -    MatchSpec, PackageName, ParseStrictness, ParseStrictnessWithNameMatcher, Platform,
@@ -309,7 +301,7 @@
      RepoDataRecord,
  };
  use tracing::{debug, error};
-@@ -31,7 +31,7 @@
+@@ -33,7 +33,7 @@
  pub struct Args {
      /// MatchSpec of a package to search
      #[arg(required = true)]
@@ -318,8 +310,8 @@
 
      #[clap(flatten)]
      pub channels: ChannelsConfig,
-@@ -49,7 +49,7 @@
-     pub platform: Option<Platform>,
+@@ -52,7 +52,7 @@
+     pub platform: Option<PixiPlatformName>,
 
      /// Limit the number of versions shown per package, -1 for no limit
 -    #[clap(short, long, default_value = "5", allow_hyphen_values = true)]
@@ -327,7 +319,7 @@
      pub limit: i64,
 
      /// Limit the number of packages shown, -1 for no limit
-@@ -56,7 +56,7 @@
+@@ -59,7 +59,7 @@
      #[clap(
          short = 'n',
          long = "limit-packages",
@@ -336,7 +328,7 @@
          allow_hyphen_values = true
      )]
      pub limit_packages: i64,
-@@ -126,22 +126,31 @@
+@@ -143,22 +143,31 @@
          }
          platforms
      } else {
@@ -378,7 +370,7 @@
                  .await
          })
          .await?
-@@ -148,7 +157,7 @@
+@@ -165,7 +174,7 @@
      } else {
          await_in_progress("searching packages...", |_| async {
              DefaultContext::new(CliInterface {})
@@ -387,7 +379,7 @@
                  .await
          })
          .await?
-@@ -164,7 +173,16 @@
+@@ -181,7 +190,16 @@
          }
      } else {
          let limit_versions = if args.limit < 0 {
@@ -438,9 +430,9 @@
  chrono = { workspace = true }
  dunce = { workspace = true }
 +http = { workspace = true }
+ hex = { workspace = true }
  jiff = { workspace = true }
  miette = { workspace = true }
- pep440_rs = { workspace = true }
 --- a/crates/pixi_uv_conversions/src/conversions.rs
 +++ b/crates/pixi_uv_conversions/src/conversions.rs
 @@ -5,6 +5,7 @@
@@ -461,7 +453,7 @@
  };
  use uv_normalize::{InvalidNameError, PackageName};
  use uv_pep508::{VerbatimUrl, VerbatimUrlError};
-@@ -98,6 +100,17 @@
+@@ -130,6 +132,17 @@
          ));
      }
 
@@ -479,7 +471,7 @@
      // Convert the index to a `IndexUrl`
      let index = options
          .index_url
-@@ -105,7 +118,11 @@
+@@ -137,7 +150,11 @@
          .map(DisplaySafeUrl::from_url)
          .map(VerbatimUrl::from_url)
          .map(IndexUrl::from)
@@ -492,7 +484,7 @@
          .into_iter();
 
      // Convert to list of extra indexes
-@@ -118,7 +135,11 @@
+@@ -150,7 +167,11 @@
                  .map(DisplaySafeUrl::from_url)
                  .map(VerbatimUrl::from_url)
                  .map(IndexUrl::from)

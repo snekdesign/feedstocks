@@ -1,6 +1,6 @@
 # feedstocks
 ## Dependencies
-- [Pixi][1] >=0.63.0
+- [Pixi][1] >=0.71.0
 - [MSVC Build Tools v14.51][2]
 - Xcode or Xcode Command Line Tools (macOS only)
 ## Usage
