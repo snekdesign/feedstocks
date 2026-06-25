@@ -12,15 +12,16 @@
 
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -347,7 +347,6 @@
+@@ -402,7 +402,7 @@
  debug-assertions = false
  lto = true
  codegen-units = 1
 -opt-level = "s"
++opt-level = 3
 
  [profile.production-stripped]
  inherits = "production"
-@@ -361,6 +360,7 @@
+@@ -416,6 +416,7 @@
  codegen-units = 1
 
  [patch.crates-io]
@@ -155,7 +156,7 @@
      }
 --- a/ports/servoshell/prefs.rs
 +++ b/ports/servoshell/prefs.rs
-@@ -545,7 +545,7 @@
+@@ -571,7 +571,7 @@
      window_size: Option<Size2D<u32, DeviceIndependentPixel>>,
 
      /// The url we should load.
