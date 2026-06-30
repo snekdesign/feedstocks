@@ -25,7 +25,7 @@
  simple_spawn_blocking = { version = "1.1.0", default-features = false }
 
  # Rattler build crates
-+rattler-build = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7", default-features = false, features = [
++rattler-build = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8", default-features = false, features = [
 +  "s3",
 +] }
  rattler_build_core = { version = "0.2.7", default-features = false, features = [
@@ -68,19 +68,29 @@
  # `astral-reqwest-middleware` (rattler, rattler-build, uv).
  reqwest-middleware = { path = "patches/reqwest_middleware_shim" }
 
-+rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
-+rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
-+rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
-+rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
-+rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
-+rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
-+rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
-+rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
-+rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.7" }
++rattler_build_core = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
++rattler_build_jinja = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
++rattler_build_networking = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
++rattler_build_recipe = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
++rattler_build_script = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
++rattler_build_source_cache = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
++rattler_build_types = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
++rattler_build_variant_config = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
++rattler_build_yaml_parser = { git = "https://github.com/prefix-dev/rattler-build", tag = "rattler_build_core-v0.2.8" }
 +
  # Strip debug info from dependencies: faster links, much smaller `target/`,
  # while keeping full debuggability for our own crates.
  # See https://matklad.github.io/2021/09/04/fast-rust-builds.html
+@@ -307,3 +347,9 @@
+ strip = "none"               # or "debuginfo" to separate
+ # macOS only:
+ codegen-units = 1 # better line info (slower build, clearer profiles)
++
++[profile.release]
++codegen-units = 1
++lto = true
++opt-level = 3
++strip = true
 --- a/crates/pixi_api/src/context.rs
 +++ b/crates/pixi_api/src/context.rs
 @@ -36,7 +36,7 @@

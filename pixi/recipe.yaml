@@ -1,6 +1,6 @@
 context:
-  version: 0.71.0
-  sha256: 5ef1e13cfb7707528ca4759ecc4e4dfd63267ebdec0e189cba6447faf2ce1924
+  version: 0.71.2
+  sha256: d01e4e213c9eaf9ef8d27d5606022d4dad25a4820794bfb4aee8a360a51feaf5
 
 recipe:
   name: pixi
@@ -12,8 +12,8 @@ source:
   target_directory: pixi
   patches:
   - changes.patch
-- url: https://codeload.github.com/conda/rattler/tar.gz/rattler_upload-v0.8.1
-  sha256: 1800c56c74e74adc20b9c629b4c6204e07f18e2b90acc1a159421733a53cb079
+- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.46.0
+  sha256: b62b0418d3e80d230caa691d1bcb15fe53e76180e5219dfbd7ad4ce018b1cbc4
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
@@ -45,21 +45,21 @@ outputs:
     - if: win
       then:
       - set AWS_LC_SYS_PREBUILT_NASM=0
-      - cargo install --features performance --frozen --no-track --path crates/pixi --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_cmake --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_mojo --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_python --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_r --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_ros --profile dist --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_rust --profile dist --root "%LIBRARY_PREFIX%"
+      - cargo install --features performance --frozen --no-track --path crates/pixi --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path crates/pixi_build_cmake --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path crates/pixi_build_mojo --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path crates/pixi_build_python --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path crates/pixi_build_r --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path crates/pixi_build_ros --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path crates/pixi_build_rust --root "%LIBRARY_PREFIX%"
       else:
-      - cargo install --features performance --frozen --no-track --path crates/pixi --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_cmake --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_mojo --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_python --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_r --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_ros --profile dist --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_rust --profile dist --root "$PREFIX"
+      - cargo install --features performance --frozen --no-track --path crates/pixi --root "$PREFIX"
+      - cargo install --frozen --no-track --path crates/pixi_build_cmake --root "$PREFIX"
+      - cargo install --frozen --no-track --path crates/pixi_build_mojo --root "$PREFIX"
+      - cargo install --frozen --no-track --path crates/pixi_build_python --root "$PREFIX"
+      - cargo install --frozen --no-track --path crates/pixi_build_r --root "$PREFIX"
+      - cargo install --frozen --no-track --path crates/pixi_build_ros --root "$PREFIX"
+      - cargo install --frozen --no-track --path crates/pixi_build_rust --root "$PREFIX"
 - package:
     name: pixi
   inherit: pixi-build
