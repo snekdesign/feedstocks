@@ -1,6 +1,6 @@
 context:
-  version: 0.71.2
-  sha256: d01e4e213c9eaf9ef8d27d5606022d4dad25a4820794bfb4aee8a360a51feaf5
+  version: 0.72.0
+  sha256: ebd5b62581cc4a9e16dd7bb41f3e5e83a99e53676788a388463f8ce5a3e58e81
 
 recipe:
   name: pixi
