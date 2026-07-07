@@ -1,32 +1,30 @@
 context:
-  version: 1.121.03429
-  sha256: cde622b803be7e0e24742790a2f3583eeeadae91c9332ea78af579853625bd8d
+  version: 1.126.04524
+  sha256: 5b5bc348861ce861aed968b086233b45050694013c0607ea66b401f31b987c57
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
-  cmake_version: 0.7.2
+  cmake_version: 0.8.0
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
-  cmake_sha256: 035c09baf89b4498e28e1e80746c0e31b06daec65a41890f8853c2a8270804ac
+  cmake_sha256: a0ba584846ac440ca27d600acd301df0bd65ae591b3bb583066ce1eb304947d3
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/versions?size=1
   clangd_version: 0.6.0
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
   clangd_sha256: 32030694fa6c0ef438f4e4219f84677cd32f603c7faa4c71a283efc1f5b51751
-  # https://api.github.com/repos/mathworks/MATLAB-extension-for-vscode/releases/latest
-  # matlab_version: 1.3.8
-  # matlab_sha256: 58e4c73b48a4eb3c5926b833c0164360977b8eddd38afeeaa3a7bf0eb1ad4d3f
-  # https://open-vsx.org/api/ms-python/python/versions?size=1
-  python_version: 2026.4.0
-  # https://open-vsx.org/api/ms-python/python/latest/file/sha256
-  python_sha256: 232aeafb01f069824fdd92d3e628c1c442bbcfa1d3cc945ff97076340bb2b4a6
-  # https://api.github.com/repos/whoami730/cython-enhanced/releases/latest
+  # https://open-vsx.org/api/whoami730/cython-enhanced/versions?size=1
   cython_version: 1.0.5
+  # https://open-vsx.org/api/whoami730/cython-enhanced/latest/file/sha256
   cython_sha256: 423715d7efbac30a5db53eb0eb64afe08b9ec7d462613b3622b96ccec3bfa54b
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/versions?size=1
-  ruff_version: 2026.44.0
+  ruff_version: 2026.56.0
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
-  ruff_sha256: 237d2e9e7767ba6871ece96b4c0e442e9c32a682e665f4764eef7ed43cb4e8b7
+  ruff_sha256: 894ab53c7fff2e1e3fa1d9de1dc2ed7caffb81b116c01f1f3876fa345fd7a8ce
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/versions?size=1
-  toml_version: 0.11.7
+  toml_version: 1.2.0
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/latest/file/sha256
-  toml_sha256: df69f02f14f4c139585c722682c1de0332476f593b46a3f935293a69a4b20f5d
+  toml_sha256: dd86c8d7c42ab990174ce5bf02e199469a1ad9be05176cc30ecdc0c5334424f5
+  # https://open-vsx.org/api/zensical/zensical-studio/versions?size=1
+  zensical_version: 0.1.3
+  # https://open-vsx.org/api/zensical/zensical-studio/latest/file/sha256
+  zensical_sha256: 817276c74b087eab36a62292deac22eabde225106426a00c9702cf55afc4d7d5
 
 package:
   name: vscodium
@@ -44,13 +42,10 @@ source:
 - url: https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/${{ clangd_version }}/file/llvm-vs-code-extensions.vscode-clangd-${{ clangd_version }}.vsix
   sha256: ${{ clangd_sha256 }}
   target_directory: vscodium/bootstrap/extensions
-# - url: https://github.com/mathworks/MATLAB-extension-for-vscode/releases/download/v${{ matlab_version }}/language-matlab-${{ matlab_version }}.vsix
-#   sha256: ${{ matlab_sha256 }}
-#   target_directory: vscodium/bootstrap/extensions
-- url: https://open-vsx.org/api/ms-python/python/${{ python_version }}/file/ms-python.python-${{ python_version }}.vsix
-  sha256: ${{ python_sha256 }}
+- url: https://open-vsx.org/api/ms-python/python/2025.4.0/file/ms-python.python-2025.4.0.vsix
+  sha256: 31b22cdb399b0aaeb7705e8e38665e0c33ac3dacd13852a1a8b7fb151c728b72
   target_directory: vscodium/bootstrap/extensions
-- url: https://github.com/whoami730/cython-enhanced/releases/download/${{ cython_version }}/cython-enhanced.vsix
+- url: https://open-vsx.org/api/whoami730/cython-enhanced/${{ cython_version }}/file/whoami730.cython-enhanced-${{ cython_version }}.vsix
   sha256: ${{ cython_sha256 }}
   target_directory: vscodium/bootstrap/extensions
 - url: https://open-vsx.org/api/charliermarsh/ruff/win32-x64/${{ ruff_version }}/file/charliermarsh.ruff-${{ ruff_version }}@win32-x64.vsix
@@ -58,6 +53,9 @@ source:
   target_directory: vscodium/bootstrap/extensions
 - url: https://open-vsx.org/api/tombi-toml/tombi/win32-x64/${{ toml_version }}/file/tombi-toml.tombi-${{ toml_version }}@win32-x64.vsix
   sha256: ${{ toml_sha256 }}
+  target_directory: vscodium/bootstrap/extensions
+- url: https://open-vsx.org/api/zensical/zensical-studio/${{ zensical_version }}/file/zensical.zensical-studio-${{ zensical_version }}.vsix
+  sha256: ${{ zensical_sha256 }}
   target_directory: vscodium/bootstrap/extensions
 
 build:
