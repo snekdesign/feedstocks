@@ -1,8 +1,8 @@
 context:
-  version: 0.72.0
-  sha256: ebd5b62581cc4a9e16dd7bb41f3e5e83a99e53676788a388463f8ce5a3e58e81
+  version: 0.72.1
+  sha256: a7e9f58c948d872d581b6466b9f9b439bc6363fffb3a7eefe3c84d117b713405
 
-recipe:
+package:
   name: pixi
   version: ${{ version }}
 
@@ -20,116 +20,32 @@ source:
 
 build:
   number: 0
+  script:
+  - if: win
+    then:
+    - set AWS_LC_SYS_PREBUILT_NASM=0
+    - cargo install --features performance --locked --no-track --path pixi/crates/pixi --root "%LIBRARY_PREFIX%"
+    else:
+    - cargo install --features performance --locked --no-track --path pixi/crates/pixi --root "$PREFIX"
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
 
-outputs:
-- staging:
-    name: pixi-build
-  requirements:
-    build:
-    - ${{ compiler('c') }}
-    - rust >=1.90.0
-    - if: linux
-      then: diffutils
-    - if: linux
-      then: make
-    - nasm
-    - if: microarch_level|int > 0
-      then: x86_64-microarch-level ==${{ microarch_level }}
+requirements:
   build:
-    script:
-    - cd pixi
-    - cargo fetch
-    - if: win
-      then:
-      - set AWS_LC_SYS_PREBUILT_NASM=0
-      - cargo install --features performance --frozen --no-track --path crates/pixi --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_cmake --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_mojo --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_python --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_r --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_ros --root "%LIBRARY_PREFIX%"
-      - cargo install --frozen --no-track --path crates/pixi_build_rust --root "%LIBRARY_PREFIX%"
-      else:
-      - cargo install --features performance --frozen --no-track --path crates/pixi --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_cmake --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_mojo --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_python --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_r --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_ros --root "$PREFIX"
-      - cargo install --frozen --no-track --path crates/pixi_build_rust --root "$PREFIX"
-- package:
-    name: pixi
-  inherit: pixi-build
-  build:
-    files:
-    - bin/pixi
-    - Library/bin/pixi.exe
-  tests:
-  - script:
-    - pixi -V
-- package:
-    name: pixi-build-cmake
-  inherit: pixi-build
-  build:
-    files:
-    - bin/pixi-build-cmake
-    - Library/bin/pixi-build-cmake.exe
-  tests:
-  - script:
-    - pixi-build-cmake help
-- package:
-    name: pixi-build-mojo
-  inherit: pixi-build
-  build:
-    files:
-    - bin/pixi-build-mojo
-    - Library/bin/pixi-build-mojo.exe
-  tests:
-  - script:
-    - pixi-build-mojo help
-- package:
-    name: pixi-build-python
-  inherit: pixi-build
-  build:
-    files:
-    - bin/pixi-build-python
-    - Library/bin/pixi-build-python.exe
-  tests:
-  - script:
-    - pixi-build-python help
-- package:
-    name: pixi-build-r
-  inherit: pixi-build
-  build:
-    files:
-    - bin/pixi-build-r
-    - Library/bin/pixi-build-r.exe
-  tests:
-  - script:
-    - pixi-build-r help
-- package:
-    name: pixi-build-ros
-  inherit: pixi-build
-  build:
-    files:
-    - bin/pixi-build-ros
-    - Library/bin/pixi-build-ros.exe
-  tests:
-  - script:
-    - pixi-build-ros help
-- package:
-    name: pixi-build-rust
-  inherit: pixi-build
-  build:
-    files:
-    - bin/pixi-build-rust
-    - Library/bin/pixi-build-rust.exe
-  tests:
-  - script:
-    - pixi-build-rust help
+  - ${{ compiler('c') }}
+  - rust >=1.94.0
+  - if: linux
+    then: diffutils
+  - if: linux
+    then: make
+  - nasm
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
+
+tests:
+- script:
+  - pixi -V
 
 about:
   license: BSD-3-Clause
