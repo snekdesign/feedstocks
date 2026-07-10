@@ -67,7 +67,7 @@
          channels: IndexSet<Channel>,
          platforms: Vec<Platform>,
      ) -> miette::Result<Vec<RepoDataRecord>> {
-@@ -460,7 +460,7 @@
+@@ -478,7 +478,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
