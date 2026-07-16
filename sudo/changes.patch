@@ -1,0 +1,37 @@
+--- a/.cargo/config.toml
++++ b/.cargo/config.toml
+@@ -15,8 +15,3 @@
+ # -Clink-args=/DYNAMICBASE /CETCOMPAT: Enable "shadow stack" (https://learn.microsoft.com/en-us/cpp/build/reference/cetcompat)
+ [target.'cfg(all(target_os = "windows", any(target_arch = "x86", target_arch = "x86_64")))']
+ rustflags = ["-Clink-args=/DYNAMICBASE /CETCOMPAT"]
+-
+-[registries]
+-Sudo_PublicPackages = { index = "sparse+https://pkgs.dev.azure.com/shine-oss/sudo/_packaging/Sudo_PublicPackages/Cargo/index/" }
+-[source.crates-io]
+-replace-with = "Sudo_PublicPackages"
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -37,9 +37,8 @@
+
+ # For more profile settings, and details on the ones below, see https://doc.rust-lang.org/cargo/reference/profiles.html#profile-settings
+ [profile.release]
+-# Enable full debug info for optimized builds.
+-debug = "full"
+-# Split debuginfo into its own file to reduce binary size.
+-split-debuginfo = "packed"
++codegen-units = 1
+ lto = true
++opt-level = 3
+ panic = "abort"
++strip = true
+--- a/sudo/src/rpc_bindings.rs
++++ b/sudo/src/rpc_bindings.rs
+@@ -13,7 +13,7 @@
+ }
+
+ impl<'a> Utf8Str<'a> {
+-    pub fn new(s: &str) -> Utf8Str {
++    pub fn new(s: &str) -> Utf8Str<'_> {
+         Utf8Str {
+             length: min(s.len(), u32::MAX as usize) as u32,
+             data: s.as_ptr(),

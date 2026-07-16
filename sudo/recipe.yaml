@@ -1,0 +1,39 @@
+context:
+  version: 1.0.1
+  commit: 9f50d79704a9d4d468bc59f725993714762981ca
+  sha256: ff40e0e18446f61d378d4eeea91010ade4d09a3264e81738d3fa6dce65d25841
+
+package:
+  name: sudo
+  version: ${{ version }}
+
+source:
+  url: https://codeload.github.com/microsoft/sudo/tar.gz/${{ commit }}
+  sha256: ${{ sha256 }}
+  patches:
+  - changes.patch
+
+build:
+  number: 0
+  script: cargo install --locked --no-track --path sudo --root "%LIBRARY_PREFIX%"
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - rust
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
+
+tests:
+- script:
+  - sudo -V
+
+about:
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: It's sudo, for Windows
