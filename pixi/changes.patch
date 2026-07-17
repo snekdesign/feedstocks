@@ -13,7 +13,7 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -267,6 +267,32 @@
+@@ -268,6 +268,32 @@
  rattler_build_variant_config = { version = "0.1.9" }
 
  [patch.crates-io]
@@ -46,7 +46,7 @@
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -308,3 +334,9 @@
+@@ -309,3 +335,9 @@
  strip = "none"               # or "debuginfo" to separate
  # macOS only:
  codegen-units = 1 # better line info (slower build, clearer profiles)
@@ -58,7 +58,7 @@
 +strip = true
 --- a/crates/pixi_api/src/context.rs
 +++ b/crates/pixi_api/src/context.rs
-@@ -36,7 +36,7 @@
+@@ -37,7 +37,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -67,7 +67,7 @@
          channels: IndexSet<Channel>,
          platforms: Vec<Platform>,
      ) -> miette::Result<Vec<RepoDataRecord>> {
-@@ -478,7 +478,7 @@
+@@ -479,7 +479,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
