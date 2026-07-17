@@ -1,23 +1,23 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -693,6 +693,8 @@
+@@ -715,6 +715,8 @@
  quick-xml = "0.38"
  quote = "1.0.9"
  rand = "0.9"
-+rattler_conda_types = { version = "0.47.1", default-features = false }
-+rattler_shell = { version = "0.27.6", default-features = false }
++rattler_conda_types = { version = "0.48.1", default-features = false }
++rattler_shell = { version = "0.27.10", default-features = false }
  rayon = "1.8"
  regex = "1.5"
  # WARNING: If you change this, you must also publish a new version of zed-reqwest to crates.io
-@@ -819,6 +821,7 @@
+@@ -848,6 +850,7 @@
  webrtc-sys = "0.3.23"
- wgpu = { git = "https://github.com/zed-industries/wgpu.git", rev = "357a0c56e0070480ad9daea5d2eaa83150b79e88" }
+ wgpu = "29.0.4"
  windows-core = "0.61"
 +windows-link = "0.2"
  yaml-rust2 = "0.8"
  yawc = "0.2.5"
  zeroize = "1.8"
-@@ -972,13 +975,11 @@
+@@ -1005,13 +1008,11 @@
  zed_actions = { codegen-units = 1 }
 
  [profile.release]
@@ -68,7 +68,7 @@
          .ok()?
 --- a/crates/gpui_windows/Cargo.toml
 +++ b/crates/gpui_windows/Cargo.toml
-@@ -37,6 +37,7 @@
+@@ -38,6 +38,7 @@
  uuid.workspace = true
  windows.workspace = true
  windows-core.workspace = true
@@ -245,15 +245,15 @@
  remote.workspace = true
 --- a/crates/zed/src/main.rs
 +++ b/crates/zed/src/main.rs
-@@ -50,6 +50,7 @@
+@@ -46,6 +46,7 @@
+ use node_runtime::{NodeBinaryOptions, NodeRuntime};
  use parking_lot::Mutex;
  use project::{project_settings::ProjectSettings, trusted_worktrees};
- use proto;
 +use rattler_shell::activation::{ActivationVariables, Activator};
  use recent_projects::{RemoteSettings, open_remote_project};
  use release_channel::{AppCommitSha, AppVersion, ReleaseChannel};
  use session::{AppSession, Session};
-@@ -248,7 +249,7 @@
+@@ -252,7 +253,7 @@
      unsafe {
          use windows::Win32::System::Console::{ATTACH_PARENT_PROCESS, AttachConsole};
 
@@ -262,7 +262,7 @@
              let _ = AttachConsole(ATTACH_PARENT_PROCESS);
          }
      }
-@@ -334,7 +335,32 @@
+@@ -338,7 +339,32 @@
      );
 
      #[cfg(windows)]

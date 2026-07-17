@@ -1,7 +1,7 @@
 context:
   license: GPL-3.0-or-later
-  version: 1.6.3
-  sha256: 092802148973c75716d3ccdc7ad0d3297c4a519ad6f2c9ec3937a394fe6777b2
+  version: 1.11.3
+  sha256: c62f43fb5ea5ca38bb8a82960b2577bc03d48d1a3fba6937a51132521c3a7e6b
 
 package:
   name: zed
@@ -36,7 +36,7 @@ requirements:
   - cmake >=3.12.0
   - ${{ compiler('c') }}
   - nasm
-  - rust >=1.93.0
+  - rust >=1.95.0
   host:
   - icu 78.*
   run:
