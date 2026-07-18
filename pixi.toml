@@ -14,13 +14,13 @@ readme = 'README.md'
 repository = 'https://github.com/snekdesign/feedstocks'
 
 [target.linux-64.dependencies]
-rattler-build = '>=0.63.0'
+rattler-build = '==0.68.0'
 
 [target.osx-64.dependencies]
-rattler-build = { version = '>=0.63.0', channel = 'https://prefix.dev/github-releases' }
+rattler-build = { version = '==0.68.0', channel = 'https://prefix.dev/github-releases' }
 
 [target.win-64.dependencies]
-rattler-build = '>=0.63.0'
+rattler-build = '==0.68.0'
 
 [target.unix.activation]
 scripts = ['activate.sh']
@@ -29,6 +29,7 @@ scripts = ['activate.sh']
 cmd = [
     'rattler-build',
     'build',
+    # TODO: Remove this once we can update rattler-build
     '--config-file', '$PIXI_HOME/config.toml',
     '--env-isolation', 'none',
     '--no-include-recipe',
