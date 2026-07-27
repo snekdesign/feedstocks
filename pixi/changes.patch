@@ -58,16 +58,16 @@
 +strip = true
 --- a/crates/pixi_api/src/context.rs
 +++ b/crates/pixi_api/src/context.rs
-@@ -37,7 +37,7 @@
-     /// Search for packages matching a [`MatchSpec`]
+@@ -38,7 +38,7 @@
      pub async fn search(
          &self,
+         config: pixi_config::Config,
 -        matchspec: MatchSpec,
 +        matchspec: Vec<MatchSpec>,
          channels: IndexSet<Channel>,
          platforms: Vec<Platform>,
      ) -> miette::Result<Vec<RepoDataRecord>> {
-@@ -479,7 +479,7 @@
+@@ -482,7 +482,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -78,10 +78,10 @@
      ) -> miette::Result<Vec<RepoDataRecord>> {
 --- a/crates/pixi_api/src/workspace/search/mod.rs
 +++ b/crates/pixi_api/src/workspace/search/mod.rs
-@@ -7,7 +7,7 @@
-
+@@ -8,7 +8,7 @@
  pub async fn search(
      workspace: Option<&Workspace>,
+     config: Config,
 -    matchspec: MatchSpec,
 +    matchspec: Vec<MatchSpec>,
      channels: IndexSet<Channel>,
@@ -122,7 +122,7 @@
      packages.sort();
 --- a/crates/pixi_cli/src/global/update.rs
 +++ b/crates/pixi_cli/src/global/update.rs
-@@ -52,11 +52,7 @@
+@@ -53,11 +53,7 @@
          .ok_or_else(|| miette::miette!("Environment {} not found", env_name.fancy_display()))?
          .exposed;
 
@@ -155,7 +155,7 @@
 
      #[clap(flatten)]
      pub channels: ChannelsConfig,
-@@ -52,7 +52,7 @@
+@@ -55,7 +55,7 @@
      pub platform: Option<PixiPlatformName>,
 
      /// Limit the number of versions shown per package, -1 for no limit
@@ -164,7 +164,7 @@
      pub limit: i64,
 
      /// Limit the number of packages shown, -1 for no limit
-@@ -59,7 +59,7 @@
+@@ -62,7 +62,7 @@
      #[clap(
          short = 'n',
          long = "limit-packages",
@@ -173,7 +173,7 @@
          allow_hyphen_values = true
      )]
      pub limit_packages: i64,
-@@ -143,22 +143,31 @@
+@@ -146,22 +146,31 @@
          }
          platforms
      } else {
@@ -215,16 +215,16 @@
                  .await
          })
          .await?
-@@ -165,7 +174,7 @@
-     } else {
+@@ -170,7 +179,7 @@
+             .merge_config(args.config.clone().into());
          await_in_progress("searching packages...", |_| async {
              DefaultContext::new(CliInterface {})
--                .search(matchspec, channels, platforms)
-+                .search(matchspec.clone(), channels, platforms)
+-                .search(config, matchspec, channels, platforms)
++                .search(config, matchspec.clone(), channels, platforms)
                  .await
          })
          .await?
-@@ -181,7 +190,16 @@
+@@ -186,7 +195,16 @@
          }
      } else {
          let limit_versions = if args.limit < 0 {
@@ -255,7 +255,7 @@
      };
 --- a/crates/pixi_global/src/project/parsed_manifest.rs
 +++ b/crates/pixi_global/src/project/parsed_manifest.rs
-@@ -391,11 +391,7 @@
+@@ -504,11 +504,7 @@
      type Err = ExposedNameError;
 
      fn from_str(value: &str) -> Result<Self, Self::Err> {
