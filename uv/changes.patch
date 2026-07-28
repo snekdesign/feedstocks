@@ -8,15 +8,15 @@
 -rustflags = ["-C", "target-feature=+crt-static"]
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -388,6 +388,8 @@
+@@ -383,6 +383,8 @@
  [profile.release]
  strip = true
  lto = "fat"
 +opt-level = 3
 +codegen-units = 1
+ # This will still show a panic message, we only skip the unwind.
+ panic = "abort"
 
- # This profile is meant to mimic the `release` profile as closely as
- # possible, but using settings that are more beneficial for iterative
 --- a/crates/uv-distribution/Cargo.toml
 +++ b/crates/uv-distribution/Cargo.toml
 @@ -39,6 +39,7 @@
@@ -25,8 +25,8 @@
  uv-redacted = { workspace = true }
 +uv-static = { workspace = true }
  uv-types = { workspace = true }
- uv-warnings = { workspace = true }
  uv-workspace = { workspace = true }
+
 --- a/crates/uv-distribution/src/source/mod.rs
 +++ b/crates/uv-distribution/src/source/mod.rs
 @@ -37,7 +37,10 @@
@@ -41,7 +41,7 @@
  use uv_git_types::{GitHubRepository, GitOid, GitUrl};
  use uv_metadata::read_archive_metadata;
  use uv_normalize::PackageName;
-@@ -2559,6 +2562,10 @@
+@@ -2603,6 +2606,10 @@
          resource: &GitDirectorySourceUrl<'_>,
          client: &ManagedClient<'_>,
      ) -> Result<Option<ResolutionMetadata>, Error> {
@@ -52,7 +52,7 @@
          let GitDirectorySourceUrl {
              git, subdirectory, ..
          } = resource;
-@@ -2577,19 +2584,41 @@
+@@ -2621,19 +2628,41 @@
 
          // Fetch the `pyproject.toml` from the resolved commit.
          let url =
@@ -99,7 +99,7 @@
                  Ok::<Option<String>, Error>(Some(content))
 --- a/crates/uv-git/src/lib.rs
 +++ b/crates/uv-git/src/lib.rs
-@@ -8,6 +8,6 @@
+@@ -9,6 +9,6 @@
 
  mod credentials;
  mod git;
