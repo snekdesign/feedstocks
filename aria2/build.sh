@@ -24,7 +24,7 @@ ln ucrt64/share/gettext/archive.dir.tar.xz $_
 autoreconf -i
 mkdir -p build
 cd build
-PKG_CONFIG_PATH="$(cygpath "$LIBRARY_LIB/pkgconfig"):$PKG_CONFIG_PATH" \
+PKG_CONFIG_PATH="$(cygpath "$LIBRARY_LIB/pkgconfig")" \
     ../configure \
     --without-wintls \
     --with-libiconv-prefix="$(cygpath "$LIBRARY_PREFIX")" \
