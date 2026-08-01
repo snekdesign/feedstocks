@@ -12,7 +12,7 @@
 
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -402,7 +402,7 @@
+@@ -406,7 +406,7 @@
  debug-assertions = false
  lto = true
  codegen-units = 1
@@ -21,7 +21,7 @@
 
  [profile.production-stripped]
  inherits = "production"
-@@ -416,6 +416,7 @@
+@@ -420,6 +420,7 @@
  codegen-units = 1
 
  [patch.crates-io]
@@ -108,7 +108,7 @@
 \ No newline at end of file
 --- a/components/servo/servo.rs
 +++ b/components/servo/servo.rs
-@@ -101,8 +101,12 @@
+@@ -105,8 +105,12 @@
              let mut plugin_dir = std::env::current_exe().unwrap();
              plugin_dir.pop();
 
@@ -146,7 +146,7 @@
                  MIN_WINDOW_INNER_SIZE.height,
 --- a/ports/servoshell/parser.rs
 +++ b/ports/servoshell/parser.rs
-@@ -76,6 +76,7 @@
+@@ -87,6 +87,7 @@
  }
 
  fn try_as_file(request: &str) -> Option<ServoUrl> {
@@ -156,8 +156,8 @@
      }
 --- a/ports/servoshell/prefs.rs
 +++ b/ports/servoshell/prefs.rs
-@@ -571,7 +571,7 @@
-     window_size: Option<Size2D<u32, DeviceIndependentPixel>>,
+@@ -576,7 +576,7 @@
+     zealous_gc: bool,
 
      /// The url we should load.
 -    #[bpaf(positional("URL"), fallback(String::from("https://www.servo.org")))]
