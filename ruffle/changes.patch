@@ -1,14 +1,14 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -67,6 +67,7 @@
+@@ -68,6 +68,7 @@
  enum-map = "2.7.3"
  flate2 = "1.1.9"
  futures = "0.3.32"
-+gdt-cpus = "25.12.0"
++gdt-cpus = "0.2606.1"
  image = { version = "0.25.10", default-features = false }
  js-sys = "0.3.97"
  web-sys = "0.3.97"
-@@ -143,6 +144,9 @@
+@@ -144,6 +145,9 @@
                                   # `[b'a', b'b', b'c']` array. The array form is clearer when the elements
                                   # represent a set of alternatives (any-of) rather than a byte sequence.
 
@@ -18,7 +18,7 @@
  # Don't optimize build scripts and macros.
  [profile.release.build-override]
  opt-level = 0
-@@ -151,7 +155,9 @@
+@@ -152,7 +156,9 @@
  panic = "unwind"
 
  [profile.release]
@@ -99,22 +99,31 @@
  use app::App;
  use clap::Parser;
  use cli::Opt;
-+use gdt_cpus::{CoreType, cpu_info, pin_thread_to_core};
++use gdt_cpus::{CoreKind, CpuInfo, ThreadPriority, pin_thread_to_core, set_thread_priority};
  use rfd::MessageDialogResult;
  use ruffle_core::StaticCallstack;
  use std::cell::RefCell;
-@@ -186,6 +187,21 @@
+@@ -186,6 +187,30 @@
      subscriber.init();
 
      let result = App::new(preferences).and_then(|(mut app, event_loop)| {
-+        match cpu_info() {
++        match CpuInfo::detect() {
 +            Ok(info) => {
-+                for core in &info.sockets[0].cores {
-+                    if core.core_type != CoreType::Efficiency {
-+                        if let Err(err) = pin_thread_to_core(core.logical_processor_ids[0]) {
-+                            tracing::warn!("Failed to set CPU affinity: {err}");
++                let mut p_cores: Vec<_> = info.lps.iter()
++                    .filter(|lp| lp.kind == CoreKind::Performance && lp.smt_index == 0)
++                    .collect();
++
++                p_cores.sort_by_key(|lp| std::cmp::Reverse(lp.perf_hint));
++
++                if let Some(best) = p_cores.first() {
++                    let _ = pin_thread_to_core(best.os_id as usize);
++                    match set_thread_priority(ThreadPriority::Highest) {
++                        Ok(applied) => {
++                            tracing::info!("render priority: {applied}");
 +                        }
-+                        break;
++                        Err(err) => {
++                            tracing::warn!("Failed to set thread priority: {err}");
++                        }
 +                    }
 +                }
 +            }
