@@ -1,6 +1,6 @@
 context:
-  version: 0.12.0
-  sha256: 17c768f651d4e09e83a25b781a74924694838f222a1f3676c4450073161c859a
+  version: 0.12.1
+  sha256: 4e87a6c0e5feddb55e080ba2e8b7ecc1379361471d724071b0c0e0ba5df72981
 
 package:
   name: uv
@@ -15,12 +15,15 @@ source:
 build:
   number: 0
   script:
-  - if: win
-    then:
-    - set AWS_LC_SYS_PREBUILT_NASM=0
-    - cargo install --features windows-gui-bin --locked --no-track --path crates\uv --root "%LIBRARY_PREFIX%"
-    else:
-    - cargo install --locked --no-track --path crates/uv --root "$PREFIX"
+    content:
+    - if: win
+      then:
+      - set AWS_LC_SYS_PREBUILT_NASM=0
+      - cargo install --features windows-gui-bin --locked --no-track --path crates\uv --root "%LIBRARY_PREFIX%"
+      else:
+      - cargo install --locked --no-track --path crates/uv --root "$PREFIX"
+    env:
+      CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
