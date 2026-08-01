@@ -1,6 +1,6 @@
 context:
-  version: 0.1.3
-  sha256: f7db1a398866ee6dc71d106d0106b4ffce6cb6d6f70df0fe8797a3a15b72e317
+  version: 0.1.6
+  sha256: b27ad07b46ce4fb9358211d8c0b61aad261cdd40ee3538beadb39544d6bc3cbd
 
 package:
   name: pixi-install-to-prefix
@@ -19,20 +19,23 @@ source:
     target_directory: vc_ltl
 - if: win
   then:
-  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.2.1/YY-Thunks-Objs.zip
-    sha256: 36b6cf1f8f9ac0d05863140d20d8ca70a796775e520fed2842667b517a867f52
+  - url: https://github.com/Chuyu-Team/YY-Thunks/releases/download/v1.2.2/YY-Thunks-Objs.zip
+    sha256: 518ed7ef4825e8a41997fbccfa2c8090cf31a6038fd51520a2e49886f947f9fc
     target_directory: yy_thunks
 
 build:
   number: 0
   script:
-  - if: win
-    then:
-    - set "VC_LTL=%SRC_DIR%\vc_ltl"
-    - set "YY_THUNKS=%SRC_DIR%\yy_thunks"
-    - cargo install --locked --no-track --path . --root "%LIBRARY_PREFIX%"
-    else:
-    - cargo install --locked --no-track --path . --root "$PREFIX"
+    content:
+    - if: win
+      then:
+      - set "VC_LTL=%SRC_DIR%\vc_ltl"
+      - set "YY_THUNKS=%SRC_DIR%\yy_thunks"
+      - cargo install --locked --no-track --path . --root "%LIBRARY_PREFIX%"
+      else:
+      - cargo install --locked --no-track --path . --root "$PREFIX"
+    env:
+      CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
@@ -40,7 +43,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust >=1.90.0
+  - rust >=1.93.1
   - if: linux
     then: diffutils
   - if: microarch_level|int > 0
