@@ -1,0 +1,20 @@
+LIBRARY cmd.dll
+EXPORTS
+    CMD_ModuleHandle
+    ChildProcessRunningLock
+    ConSetThreadUILanguage
+    ConStreamGetOSHandle
+    ConStreamInit
+    DuplicateEnvironment
+    InputCodePage
+    IsConsoleHandle
+    OutputCodePage
+    OutputStreamMode
+    ParseCommandLine
+    bExit
+    cmd_free=free
+    csStdErr
+    csStdIn
+    csStdOut
+    lpOriginalEnvironment
+    nErrorLevel

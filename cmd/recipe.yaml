@@ -1,13 +1,13 @@
 context:
-  version: 0.4.15
-  sha256: 317a1d17798c45d5e81facd0f910aa6f1457826c4cc359fed8011d116f194043
+  version: 0.4.16rc2
+  sha256: a467a615383da7dbe82003be2969e6e64a90914c99c5e30ee3ca4268b79c28d7
 
 package:
   name: cmd
   version: ${{ version }}
 
 source:
-  url: https://codeload.github.com/reactos/reactos/tar.gz/${{ version }}-release
+  url: https://codeload.github.com/reactos/reactos/tar.gz/0.4.16-RC2
   sha256: ${{ sha256 }}
 
 build:
