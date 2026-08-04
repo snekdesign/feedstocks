@@ -7,9 +7,9 @@ LDFLAGS="$LDFLAGS -fuse-ld=lld" \
     PKG_CONFIG_PATH="$LIBRARY_LIB\\pkgconfig" \
     ../configure \
     --ar="$AR" \
-    --cc="$CC" \
+    --cc=clang \
     --cpu=host \
-    --cxx="$CXX" \
+    --cxx=clang++ \
     --disable-avx512 \
     --disable-debug \
     --disable-fma4 \
@@ -17,13 +17,12 @@ LDFLAGS="$LDFLAGS -fuse-ld=lld" \
     --disable-xop \
     --enable-gpl \
     --enable-libplacebo \
-    --enable-libshaderc \
     --enable-lto \
     --enable-shared \
     --host-extralibs= \
-    --ld="$CC" \
-    --nm="$NM" \
-    --ranlib="$RANLIB" \
+    --ld=clang \
+    --nm=llvm-nm \
+    --ranlib=llvm-ranlib \
     --strip=llvm-strip \
     --toolchain=msvc
 make -j$CPU_COUNT

@@ -1,6 +1,6 @@
 --- a/configure
 +++ b/configure
-@@ -3531,7 +3531,7 @@
+@@ -3588,7 +3588,7 @@
 
  ddagrab_filter_deps="d3d11va IDXGIOutput1 DXGI_OUTDUPL_FRAME_INFO"
  gfxcapture_filter_deps="cxx17 threads d3d11va IGraphicsCaptureItemInterop __x_ABI_CWindows_CGraphics_CCapture_CIGraphicsCaptureSession3"
@@ -11,7 +11,7 @@
  deinterlace_d3d12_filter_deps="d3d12va ID3D12VideoProcessor"
 --- a/ffbuild/common.mak
 +++ b/ffbuild/common.mak
-@@ -27,7 +27,7 @@
+@@ -19,7 +19,7 @@
  ifndef V
  Q      = @
  ECHO   = printf "$(1)\t%s\n" $(2)
@@ -22,7 +22,7 @@
  MSG    = $@
 --- a/fftools/ffplay.c
 +++ b/fftools/ffplay.c
-@@ -3145,7 +3145,7 @@
+@@ -3146,7 +3146,7 @@
              (!is->video_st || (is->viddec.finished == is->videoq.serial && frame_queue_nb_remaining(&is->pictq) == 0))) {
              if (loop != 1 && (!loop || --loop)) {
                  stream_seek(is, start_time != AV_NOPTS_VALUE ? start_time : 0, 0, 0);
@@ -31,7 +31,7 @@
                  ret = AVERROR_EOF;
                  goto fail;
              }
-@@ -3472,12 +3472,6 @@
+@@ -3481,12 +3481,6 @@
              case SDLK_9:
                  update_volume(cur_stream, -1, SDL_VOLUME_STEP);
                  break;
@@ -44,7 +44,7 @@
              case SDLK_v:
                  stream_cycle_channel(cur_stream, AVMEDIA_TYPE_VIDEO);
                  break;
-@@ -3489,15 +3483,6 @@
+@@ -3498,15 +3492,6 @@
              case SDLK_t:
                  stream_cycle_channel(cur_stream, AVMEDIA_TYPE_SUBTITLE);
                  break;
@@ -60,7 +60,7 @@
              case SDLK_PAGEUP:
                  if (cur_stream->ic->nb_chapters <= 1) {
                      incr = 600.0;
-@@ -3513,15 +3498,19 @@
+@@ -3522,15 +3507,19 @@
                  seek_chapter(cur_stream, -1);
                  break;
              case SDLK_LEFT:
@@ -80,7 +80,7 @@
                  incr = -60.0;
              do_seek:
                      if (seek_by_bytes) {
-@@ -3820,14 +3809,11 @@
+@@ -3829,14 +3818,11 @@
             "m                   toggle mute\n"
             "9, 0                decrease and increase volume respectively\n"
             "/, *                decrease and increase volume respectively\n"
@@ -97,7 +97,7 @@
             "page down/page up   seek to previous/next chapter or backward/forward 10 minutes if no chapters\n"
             "right mouse click   seek to percentage in file corresponding to fraction of width\n"
             "left double-click   toggle full screen\n"
-@@ -3882,6 +3868,9 @@
+@@ -3891,6 +3877,9 @@
      }
      if (display_disable)
          flags &= ~SDL_INIT_VIDEO;
