@@ -38,6 +38,7 @@ requirements:
   build:
   - ${{ compiler('c') }}
   - rust >=1.94.0
+  - ${{ stdlib('c') }}
   - if: linux
     then: diffutils
   - if: linux
@@ -45,6 +46,9 @@ requirements:
   - nasm
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
+  ignore_run_exports:
+    by_name:
+    - __osx
 
 tests:
 - script:
