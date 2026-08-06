@@ -1,7 +1,7 @@
 context:
   license: GPL-3.0-or-later
-  version: 1.11.3
-  sha256: c62f43fb5ea5ca38bb8a82960b2577bc03d48d1a3fba6937a51132521c3a7e6b
+  version: 1.14.2
+  sha256: 2a76e45be06708e719d71aa37cab887c2fcf34e5d5cad8c41ef2be5b70ba2e02
 
 package:
   name: zed
@@ -20,11 +20,12 @@ build:
   number: 0
   script:
     content:
-    - set AWS_LC_SYS_PREBUILT_NASM=0
     - set "LK_CUSTOM_WEBRTC=%SRC_DIR%\webrtc"
     - cargo fetch
     - cargo install --frozen --no-default-features --no-track --path crates\zed --root "%LIBRARY_PREFIX%"
     env:
+      AWS_LC_SYS_PREBUILT_NASM: '0'
+      CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
       ZED_UPDATE_EXPLANATION: Please use your package manager to update zed from conda-forge
   skip:
   - not win
@@ -44,6 +45,7 @@ requirements:
 
 tests:
 - script:
+  - set "USERPROFILE=%HOMEDRIVE%%HOMEPATH%"
   - zed --system-specs
 
 about:
