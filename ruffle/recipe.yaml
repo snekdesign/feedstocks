@@ -1,6 +1,6 @@
 context:
-  version: 0.4.1
-  sha256: 48d7e3c81fbfbb12ebb1912752af0a02a302e8e345fbf2134d7670bcb42e8b9f
+  version: 0.5.0
+  sha256: 41e20bab9a08134a9f586fe6d159d5bdd257e92e4b23bfa898223302a625587c
 
 package:
   name: ruffle
