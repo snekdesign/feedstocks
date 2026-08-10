@@ -8,7 +8,7 @@
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
 -
- [target.'cfg(all(windows, debug_assertions))']
+ [target."cfg(all(windows, debug_assertions))"]
  rustflags = [
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
@@ -47,9 +47,9 @@
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
 @@ -311,3 +337,9 @@
- strip = "none"               # or "debuginfo" to separate
+ panic = "unwind"  # needed for backtraces
  # macOS only:
- codegen-units = 1 # better line info (slower build, clearer profiles)
+ codegen-units = 1  # better line info (slower build, clearer profiles)
 +
 +[profile.release]
 +codegen-units = 1
@@ -270,7 +270,7 @@
 
 --- a/crates/pixi_uv_conversions/Cargo.toml
 +++ b/crates/pixi_uv_conversions/Cargo.toml
-@@ -13,6 +13,7 @@
+@@ -12,6 +12,7 @@
  [dependencies]
  chrono = { workspace = true }
  dunce = { workspace = true }
