@@ -1,0 +1,41 @@
+context:
+  version: 1.4.0
+  sha256: b979d375913be969c6230412e3883fb36c2ecad0a021176563cdfeef8fcb23fe
+
+package:
+  name: tombi
+  version: ${{ version }}
+
+source:
+  url: https://codeload.github.com/tombi-toml/tombi/tar.gz/v${{ version }}
+  sha256: ${{ sha256 }}
+  patches:
+  - changes.patch
+
+build:
+  number: 0
+  script:
+    content:
+    - cargo install --locked --no-track --path rust/tombi-cli --root "%LIBRARY_PREFIX%"
+    env:
+      CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - rust >=1.94.0
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
+
+tests:
+- script:
+  - tombi -V
+
+about:
+  license: MIT
+  license_file: LICENSE
+  summary: TOML Formatter / Linter / Language Server
