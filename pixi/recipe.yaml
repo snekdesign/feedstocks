@@ -1,8 +1,8 @@
 context:
-  version: 0.76.2
-  sha256: 09c0a8b9b7fdadab7b38bb6190d1e72b061a565c03e16177e2053197de4df607
+  version: 0.77.0
+  sha256: afac93f0962e801aa5f9523d315170128c3b0e05654c68c62d7756fd874cddf4
 
-package:
+recipe:
   name: pixi
   version: ${{ version }}
 
@@ -20,39 +20,68 @@ source:
 
 build:
   number: 0
-  script:
-    content:
-    - if: win
-      then:
-      - set AWS_LC_SYS_PREBUILT_NASM=0
-      - cargo install --features performance --locked --no-track --path pixi/crates/pixi --root "%LIBRARY_PREFIX%"
-      else:
-      - cargo install --features performance --locked --no-track --path pixi/crates/pixi --root "$PREFIX"
-    env:
-      CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
 
-requirements:
+outputs:
+- staging:
+    name: pixi-build
+  requirements:
+    build:
+    - ${{ compiler('c') }}
+    - rust >=1.94.0
+    - ${{ stdlib('c') }}
+    - if: linux
+      then: diffutils
+    - if: linux
+      then: make
+    - nasm
+    - if: microarch_level|int > 0
+      then: x86_64-microarch-level ==${{ microarch_level }}
   build:
-  - ${{ compiler('c') }}
-  - rust >=1.94.0
-  - ${{ stdlib('c') }}
-  - if: linux
-    then: diffutils
-  - if: linux
-    then: make
-  - nasm
-  - if: microarch_level|int > 0
-    then: x86_64-microarch-level ==${{ microarch_level }}
-  ignore_run_exports:
-    by_name:
-    - __osx
-
-tests:
-- script:
-  - pixi -V
+    script:
+      content:
+      - cd pixi
+      - cargo fetch
+      - if: win
+        then:
+        - set AWS_LC_SYS_PREBUILT_NASM=0
+        - cargo install --features performance --frozen --no-track --path crates/pixi --root "%LIBRARY_PREFIX%"
+        - cargo install --frozen --no-track --path crates/pixi_build_rattler_build --root "%LIBRARY_PREFIX%"
+        else:
+        - cargo install --features performance --frozen --no-track --path crates/pixi --root "$PREFIX"
+        - cargo install --frozen --no-track --path crates/pixi_build_rattler_build --root "$PREFIX"
+      env:
+        CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
+- package:
+    name: pixi
+  inherit: pixi-build
+  requirements:
+    ignore_run_exports:
+      by_name:
+      - __osx
+  build:
+    files:
+    - bin/pixi
+    - Library/bin/pixi.exe
+  tests:
+  - script:
+    - pixi -V
+- package:
+    name: pixi-build-rattler-build
+  inherit: pixi-build
+  requirements:
+    ignore_run_exports:
+      by_name:
+      - __osx
+  build:
+    files:
+    - bin/pixi-build-rattler-build
+    - Library/bin/pixi-build-rattler-build.exe
+  tests:
+  - script:
+    - pixi-build-rattler-build help
 
 about:
   license: BSD-3-Clause

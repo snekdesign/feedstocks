@@ -13,7 +13,13 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -270,6 +270,32 @@
+@@ -265,11 +265,38 @@
+   "s3",
+ ] }
+ rattler_build_jinja = { version = "0.1.9" }
++rattler_build_networking = { version = "0.1.10" }
+ rattler_build_recipe = { version = "0.1.9" }
+ rattler_build_types = { version = "0.1.8" }
  rattler_build_variant_config = { version = "0.1.9" }
 
  [patch.crates-io]
@@ -46,7 +52,7 @@
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -311,3 +337,9 @@
+@@ -311,3 +338,9 @@
  panic = "unwind"  # needed for backtraces
  # macOS only:
  codegen-units = 1  # better line info (slower build, clearer profiles)
@@ -58,7 +64,7 @@
 +strip = true
 --- a/crates/pixi_api/src/context.rs
 +++ b/crates/pixi_api/src/context.rs
-@@ -38,7 +38,7 @@
+@@ -36,7 +36,7 @@
      pub async fn search(
          &self,
          config: pixi_config::Config,
@@ -66,8 +72,8 @@
 +        matchspec: Vec<MatchSpec>,
          channels: IndexSet<Channel>,
          platforms: Vec<Platform>,
-     ) -> miette::Result<Vec<RepoDataRecord>> {
-@@ -492,7 +492,7 @@
+         fuzzy_limit: Option<usize>,
+@@ -562,7 +562,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -75,10 +81,10 @@
 +        matchspec: Vec<MatchSpec>,
          channels: IndexSet<Channel>,
          platforms: Vec<Platform>,
-     ) -> miette::Result<Vec<RepoDataRecord>> {
+         fuzzy_limit: Option<usize>,
 --- a/crates/pixi_api/src/workspace/search/mod.rs
 +++ b/crates/pixi_api/src/workspace/search/mod.rs
-@@ -8,7 +8,7 @@
+@@ -27,7 +27,7 @@
  pub async fn search(
      workspace: Option<&Workspace>,
      config: Config,
@@ -86,40 +92,141 @@
 +    matchspec: Vec<MatchSpec>,
      channels: IndexSet<Channel>,
      platforms: Vec<Platform>,
- ) -> miette::Result<Vec<RepoDataRecord>> {
-@@ -21,7 +21,7 @@
-     let gateway = config.gateway().with_client(client).finish();
+     fuzzy_limit: Option<usize>,
+@@ -59,10 +59,11 @@
+         }
+     };
 
-     let repo_data = gateway
--        .query(channels.clone(), platforms, vec![matchspec.clone()])
-+        .query(channels.clone(), platforms, matchspec.clone())
-         .recursive(false)
-         .await
-         .into_diagnostic()?;
-@@ -33,11 +33,18 @@
+-    let mut packages = run_query(vec![matchspec.clone()]).await?;
++    let mut packages = run_query(matchspec.clone()).await?;
+
+     if packages.is_empty()
+-        && let Some(name) = bare_exact_name(&matchspec)
++        && matchspec.len() == 1
++        && let Some(name) = bare_exact_name(&matchspec[0])
+     {
+         // The subdirs are already cached in the gateway, so listing the
+         // package names is cheap: no record downloads.
+@@ -78,7 +79,7 @@
+             .filter(|n| n.as_normalized().contains(needle))
+             .collect();
+         if matches.is_empty() {
+-            return Err(no_packages_found(&matchspec));
++            return Err(no_packages_found(matchspec));
+         }
+         let fuzzy_matches = matches.len();
+         matches.sort_by_key(|n| {
+@@ -112,7 +113,7 @@
      }
 
      if packages.is_empty() {
--        return Err(miette::miette!(
--            help = "Try glob patterns like 'python*' or '*numpy*'",
--            "No packages found matching '{}'",
--            matchspec
--        ));
-+        if matchspec.len() == 1 {
-+            return Err(miette::miette!(
-+                help = "Try glob patterns like 'python*' or '*numpy*'",
-+                "No packages found matching '{}'",
-+                matchspec[0]
-+            ));
-+        } else {
-+            return Err(miette::miette!(
-+                help = "Try glob patterns like 'python*' or '*numpy*'",
-+                "No packages found",
-+            ));
-+        }
+-        return Err(no_packages_found(&matchspec));
++        return Err(no_packages_found(matchspec));
      }
 
      packages.sort();
+@@ -123,12 +124,19 @@
+     })
+ }
+
+-fn no_packages_found(matchspec: &MatchSpec) -> miette::Report {
+-    miette::miette!(
+-        help = "Try glob patterns like 'python*' or '*numpy*'",
+-        "No packages found matching '{}'",
+-        matchspec
+-    )
++fn no_packages_found(matchspec: Vec<MatchSpec>) -> miette::Report {
++    if matchspec.len() == 1 {
++        miette::miette!(
++            help = "Try glob patterns like 'python*' or '*numpy*'",
++            "No packages found matching '{}'",
++            matchspec[0]
++        )
++    } else {
++        miette::miette!(
++            help = "Try glob patterns like 'python*' or '*numpy*'",
++            "No packages found",
++        )
++    }
+ }
+
+ /// Returns the package name if the match spec is nothing more than a bare,
+--- a/crates/pixi_build_backend/Cargo.toml
++++ b/crates/pixi_build_backend/Cargo.toml
+@@ -19,6 +19,7 @@
+ pathdiff = { workspace = true }
+ rattler_build_core = { workspace = true }
+ rattler_build_jinja = { workspace = true }
++rattler_build_networking = { workspace = true }
+ rattler_build_recipe = { workspace = true }
+ rattler_build_types = { workspace = true }
+ rattler_build_variant_config = { workspace = true }
+@@ -36,6 +37,7 @@
+ url = { workspace = true }
+
+ pixi_build_types = { workspace = true }
++pixi_utils = { workspace = true }
+
+ jsonrpc-core = { workspace = true }
+ jsonrpc-http-server = { workspace = true }
+--- a/crates/pixi_build_backend/src/intermediate_backend.rs
++++ b/crates/pixi_build_backend/src/intermediate_backend.rs
+@@ -839,10 +839,17 @@
+             .await
+             .into_diagnostic()?;
+
++        let (_, authenticated_client) = pixi_utils::reqwest::build_reqwest_clients(None, None)?;
++        let base_client = rattler_build_networking::BaseClient::new_from_clients(
++            authenticated_client.clone(),
++            authenticated_client,
++            None,
++        );
+         let tool_config = Configuration::builder()
+             .with_opt_cache_dir(self.cache_dir.clone())
+             .with_logging_output_handler(self.logging_output_handler.clone())
+             .with_testing(false)
++            .with_reqwest_client(base_client)
+             // Pixi is incremental so keep the build
+             .with_keep_build(true)
+             // This indicates that the environments are externally managed, e.g. they are already
+--- a/crates/pixi_build_rattler_build/Cargo.toml
++++ b/crates/pixi_build_rattler_build/Cargo.toml
+@@ -14,6 +14,7 @@
+ miette = { workspace = true }
+ pathdiff = { workspace = true }
+ rattler_build_core = { workspace = true }
++rattler_build_networking = { workspace = true }
+ rattler_build_recipe = { workspace = true }
+ rattler_build_variant_config = { workspace = true }
+ rattler_conda_types = { workspace = true }
+@@ -23,6 +24,7 @@
+ tokio = { workspace = true, features = ["macros"] }
+
+ pixi_build_backend = { workspace = true }
++pixi_utils = { workspace = true }
+
+ jiff = { workspace = true }
+ pixi_build_types = { workspace = true }
+--- a/crates/pixi_build_rattler_build/src/protocol.rs
++++ b/crates/pixi_build_rattler_build/src/protocol.rs
+@@ -461,10 +461,17 @@
+             self.recipe_source.path.clone(),
+         );
+
++        let (_, authenticated_client) = pixi_utils::reqwest::build_reqwest_clients(None, None)?;
++        let base_client = rattler_build_networking::BaseClient::new_from_clients(
++            authenticated_client.clone(),
++            authenticated_client,
++            None,
++        );
+         let tool_config = Configuration::builder()
+             .with_opt_cache_dir(self.cache_dir.clone())
+             .with_logging_output_handler(self.logging_output_handler.clone())
+             .with_testing(false)
++            .with_reqwest_client(base_client)
+             // Pixi is incremental so keep the build
+             .with_keep_build(true)
+             // This indicates that the environments are externally managed, e.g. they are already
 --- a/crates/pixi_cli/src/global/update.rs
 +++ b/crates/pixi_cli/src/global/update.rs
 @@ -53,11 +53,7 @@
@@ -173,7 +280,7 @@
          allow_hyphen_values = true
      )]
      pub limit_packages: i64,
-@@ -146,22 +146,31 @@
+@@ -146,17 +146,26 @@
          }
          platforms
      } else {
@@ -207,24 +314,27 @@
 +        ).collect::<Result<Vec<_>, _>>()
 +        .into_diagnostic()?;
 
-     let packages = if let Some(workspace) = workspace {
+     // Only fetch records for the packages that will be shown; the total
+     // fuzzy match count comes back separately for the "... and N more" hint.
+@@ -169,7 +178,7 @@
+     let result = if let Some(workspace) = workspace {
          await_in_progress("searching packages...", |_| async {
              WorkspaceContext::new(CliInterface {}, workspace)
--                .search(matchspec, channels, platforms)
-+                .search(matchspec.clone(), channels, platforms)
+-                .search(matchspec, channels, platforms, fuzzy_limit)
++                .search(matchspec.clone(), channels, platforms, fuzzy_limit)
                  .await
          })
          .await?
-@@ -170,7 +179,7 @@
+@@ -178,7 +187,7 @@
              .merge_config(args.config.clone().into());
          await_in_progress("searching packages...", |_| async {
              DefaultContext::new(CliInterface {})
--                .search(config, matchspec, channels, platforms)
-+                .search(config, matchspec.clone(), channels, platforms)
+-                .search(config, matchspec, channels, platforms, fuzzy_limit)
++                .search(config, matchspec.clone(), channels, platforms, fuzzy_limit)
                  .await
          })
          .await?
-@@ -186,7 +195,16 @@
+@@ -195,7 +204,16 @@
          }
      } else {
          let limit_versions = if args.limit < 0 {
@@ -276,8 +386,8 @@
  dunce = { workspace = true }
 +http = { workspace = true }
  hex = { workspace = true }
- jiff = { workspace = true }
  miette = { workspace = true }
+ pathdiff = { workspace = true }
 --- a/crates/pixi_uv_conversions/src/conversions.rs
 +++ b/crates/pixi_uv_conversions/src/conversions.rs
 @@ -5,6 +5,7 @@
