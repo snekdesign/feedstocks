@@ -1,6 +1,6 @@
 context:
-  version: 1.9.3
-  sha256: d532172d7ab24d2a25944e2434212d63ee85f3650e97b5f7579e7f201a78ad64
+  version: 1.9.7
+  sha256: 1a4fbe7589e814777ae76b64734ad80f4ecad22cd33a22682a2aaea4ae5375e7
 
 package:
   name: libgit2
@@ -9,8 +9,6 @@ package:
 source:
   url: https://codeload.github.com/libgit2/libgit2/tar.gz/v${{ version }}
   sha256: ${{ sha256 }}
-  patches:
-  - changes.patch
 
 build:
   number: 0
@@ -19,14 +17,12 @@ build:
     cmake
     -B build
     -D BUILD_CLI=OFF
-    -D BUILD_EXAMPLES=ON
     -D BUILD_TESTS=OFF
     -D REGEX_BACKEND=pcre2
     -D STATIC_CRT=OFF
     -D USE_SSH=exec
-    %CMAKE_ARGS%
-  - cmake --build build --config Release
-  - cmake --install build
+    --install-prefix "%LIBRARY_PREFIX%"
+  - cmake --build build --config Release --target install
   skip:
   - not win
   - build_platform != target_platform
@@ -41,10 +37,6 @@ requirements:
   - zlib
   run:
   - openssh
-
-tests:
-- script:
-  - lg2 || if %ERRORLEVEL% EQU 1 exit 0
 
 about:
   license_file: COPYING
