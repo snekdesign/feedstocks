@@ -1,6 +1,6 @@
 --- a/crates/rattler_shell/src/shell/mod.rs
 +++ b/crates/rattler_shell/src/shell/mod.rs
-@@ -146,10 +146,16 @@
+@@ -146,10 +146,17 @@
      /// Records are NUL-separated (`env -0`) rather than newline-separated
      /// so that values which themselves contain newlines survive the
      /// round-trip through [`Shell::parse_env`].
@@ -10,6 +10,7 @@
      }
 
 +    #[cfg(target_os = "macos")]
++    #[allow(missing_docs)]
 +    fn print_env(&self, f: &mut impl Write) -> std::fmt::Result {
 +        writeln!(f, "/usr/bin/env")
 +    }
@@ -17,7 +18,7 @@
      /// Write the script to the writer and do some post-processing for
      /// line-endings. Only really relevant for cmd.exe scripts.
      fn write_script(&self, f: &mut impl std::io::Write, script: &str) -> std::io::Result<()> {
-@@ -161,6 +167,7 @@
+@@ -161,6 +168,7 @@
      /// The default implementation expects NUL-separated `KEY=VALUE`
      /// records (see [`Shell::print_env`]), so a value containing a
      /// newline is kept intact instead of being cut at the newline.
@@ -25,11 +26,12 @@
      fn parse_env<'i>(&self, env: &'i str) -> HashMap<&'i str, &'i str> {
          env.split('\0')
              .filter_map(|record| record.split_once('='))
-@@ -171,6 +178,11 @@
+@@ -171,6 +179,12 @@
              .collect()
      }
 
 +    #[cfg(target_os = "macos")]
++    #[allow(missing_docs)]
 +    fn parse_env<'i>(&self, env: &'i str) -> HashMap<&'i str, &'i str> {
 +        env.lines().filter_map(|line| line.split_once('=')).collect()
 +    }
@@ -37,7 +39,7 @@
      /// Get the line ending for this shell. Only `CmdExe` uses `\r\n`.
      fn line_ending(&self) -> &str {
          "\n"
-@@ -600,7 +612,11 @@
+@@ -600,7 +614,11 @@
          .filter_map(|line| {
              line.split_once('=')
                  // Trim " as CmdExe could add this to its variables.
