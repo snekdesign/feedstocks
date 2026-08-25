@@ -1,28 +1,52 @@
-From 4b60a28dbb79dba6eeba9bcc4f5cb7f2b2737be6 Mon Sep 17 00:00:00 2001
-From: snekdesign <104812819+snekdesign@users.noreply.github.com>
-Date: Sat, 23 Nov 2024 18:57:35 +0800
-Subject: [PATCH] strip dquotes
-
----
- crates/rattler_shell/src/shell/mod.rs | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/crates/rattler_shell/src/shell/mod.rs b/crates/rattler_shell/src/shell/mod.rs
-index 99c316a..a959580 100644
 --- a/crates/rattler_shell/src/shell/mod.rs
 +++ b/crates/rattler_shell/src/shell/mod.rs
-@@ -153,7 +153,11 @@ pub trait Shell {
-             .filter_map(|line| {
-                 line.split_once('=')
-                     // Trim " as CmdExe could add this to its variables.
--                    .map(|(key, value)| (key, value.trim_matches('"')))
-+                    .map(|(key, value)| if value.starts_with('"') && value.ends_with('"') && value != "\"" {
-+                        unsafe { (key, value.get_unchecked(1..value.len()-1)) }
-+                    } else {
-+                        (key, value)
-+                    })
-             })
+@@ -146,10 +146,16 @@
+     /// Records are NUL-separated (`env -0`) rather than newline-separated
+     /// so that values which themselves contain newlines survive the
+     /// round-trip through [`Shell::parse_env`].
++    #[cfg(not(target_os = "macos"))]
+     fn print_env(&self, f: &mut impl Write) -> std::fmt::Result {
+         writeln!(f, "/usr/bin/env -0")
+     }
+
++    #[cfg(target_os = "macos")]
++    fn print_env(&self, f: &mut impl Write) -> std::fmt::Result {
++        writeln!(f, "/usr/bin/env")
++    }
++
+     /// Write the script to the writer and do some post-processing for
+     /// line-endings. Only really relevant for cmd.exe scripts.
+     fn write_script(&self, f: &mut impl std::io::Write, script: &str) -> std::io::Result<()> {
+@@ -161,6 +167,7 @@
+     /// The default implementation expects NUL-separated `KEY=VALUE`
+     /// records (see [`Shell::print_env`]), so a value containing a
+     /// newline is kept intact instead of being cut at the newline.
++    #[cfg(not(target_os = "macos"))]
+     fn parse_env<'i>(&self, env: &'i str) -> HashMap<&'i str, &'i str> {
+         env.split('\0')
+             .filter_map(|record| record.split_once('='))
+@@ -171,6 +178,11 @@
              .collect()
      }
--- 
 
++    #[cfg(target_os = "macos")]
++    fn parse_env<'i>(&self, env: &'i str) -> HashMap<&'i str, &'i str> {
++        env.lines().filter_map(|line| line.split_once('='))
++    }
++
+     /// Get the line ending for this shell. Only `CmdExe` uses `\r\n`.
+     fn line_ending(&self) -> &str {
+         "\n"
+@@ -600,7 +612,11 @@
+         .filter_map(|line| {
+             line.split_once('=')
+                 // Trim " as CmdExe could add this to its variables.
+-                .map(|(key, value)| (key, value.trim_matches('"')))
++                .map(|(key, value)| if value.starts_with('"') && value.ends_with('"') && value != "\"" {
++                    unsafe { (key, value.get_unchecked(1..value.len()-1)) }
++                } else {
++                    (key, value)
++                })
+         })
+         .collect()
+ }

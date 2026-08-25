@@ -13,14 +13,14 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -265,11 +265,38 @@
+@@ -267,11 +267,38 @@
    "s3",
  ] }
- rattler_build_jinja = { version = "0.1.9" }
-+rattler_build_networking = { version = "0.1.10" }
- rattler_build_recipe = { version = "0.1.9" }
- rattler_build_types = { version = "0.1.8" }
- rattler_build_variant_config = { version = "0.1.9" }
+ rattler_build_jinja = { version = "0.1.13" }
++rattler_build_networking = { version = "0.1.11" }
+ rattler_build_recipe = { version = "0.1.13" }
+ rattler_build_types = { version = "0.1.12" }
+ rattler_build_variant_config = { version = "0.1.13" }
 
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
@@ -52,7 +52,7 @@
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -311,3 +338,9 @@
+@@ -313,3 +340,9 @@
  panic = "unwind"  # needed for backtraces
  # macOS only:
  codegen-units = 1  # better line info (slower build, clearer profiles)
@@ -73,7 +73,7 @@
          channels: IndexSet<Channel>,
          platforms: Vec<Platform>,
          fuzzy_limit: Option<usize>,
-@@ -562,7 +562,7 @@
+@@ -589,7 +589,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -84,7 +84,7 @@
          fuzzy_limit: Option<usize>,
 --- a/crates/pixi_api/src/workspace/search/mod.rs
 +++ b/crates/pixi_api/src/workspace/search/mod.rs
-@@ -27,7 +27,7 @@
+@@ -30,7 +30,7 @@
  pub async fn search(
      workspace: Option<&Workspace>,
      config: Config,
@@ -93,12 +93,12 @@
      channels: IndexSet<Channel>,
      platforms: Vec<Platform>,
      fuzzy_limit: Option<usize>,
-@@ -59,10 +59,11 @@
+@@ -63,10 +63,11 @@
          }
      };
 
--    let mut packages = run_query(vec![matchspec.clone()]).await?;
-+    let mut packages = run_query(matchspec.clone()).await?;
+-    let (mut packages, notices) = run_query(vec![matchspec.clone()]).await?;
++    let (mut packages, notices) = run_query(matchspec.clone()).await?;
 
      if packages.is_empty()
 -        && let Some(name) = bare_exact_name(&matchspec)
@@ -107,7 +107,7 @@
      {
          // The subdirs are already cached in the gateway, so listing the
          // package names is cheap: no record downloads.
-@@ -78,7 +79,7 @@
+@@ -82,7 +83,7 @@
              .filter(|n| n.as_normalized().contains(needle))
              .collect();
          if matches.is_empty() {
@@ -116,7 +116,7 @@
          }
          let fuzzy_matches = matches.len();
          matches.sort_by_key(|n| {
-@@ -112,7 +113,7 @@
+@@ -117,7 +118,7 @@
      }
 
      if packages.is_empty() {
@@ -125,7 +125,7 @@
      }
 
      packages.sort();
-@@ -123,12 +124,19 @@
+@@ -129,12 +130,19 @@
      })
  }
 
@@ -334,7 +334,7 @@
                  .await
          })
          .await?
-@@ -195,7 +204,16 @@
+@@ -201,7 +210,16 @@
          }
      } else {
          let limit_versions = if args.limit < 0 {
