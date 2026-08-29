@@ -1,13 +1,13 @@
 context:
-  version: 0.4.16rc2
-  sha256: a467a615383da7dbe82003be2969e6e64a90914c99c5e30ee3ca4268b79c28d7
+  version: 0.4.16
+  sha256: 978d2f7770cda793df05929f01e5ea2ff4939140982fa1a5bdb4e12c941e91d9
 
 recipe:
   name: libcmd
   version: ${{ version }}
 
 source:
-- url: https://codeload.github.com/reactos/reactos/tar.gz/0.4.16-RC2
+- url: https://codeload.github.com/reactos/reactos/tar.gz/0.4.16-release
   sha256: ${{ sha256 }}
   patches:
   - 0001-cmd.dll.patch
