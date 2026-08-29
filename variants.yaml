@@ -12,7 +12,7 @@ c_compiler:
 c_compiler_version:
 - if: osx
   then: '21.1'
-  else: '16.1'
+  else: '16.2'
 - if: win
   then: '2026.1'
 
@@ -42,7 +42,7 @@ cxx_compiler:
 cxx_compiler_version:
 - if: osx
   then: '21.1'
-  else: '16.1'
+  else: '16.2'
 - if: win
   then: '2026.1'
 
