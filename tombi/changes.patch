@@ -3,7 +3,7 @@
 @@ -6,8 +6,5 @@
  xtask = "run --package xtask --bin xtask --"
  parse-jsonschema = "run --package tombi-schema-store --example parse_jsonschema --"
-
+ 
 -[target.'cfg(all(windows, target_env = "msvc"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
 -
@@ -11,7 +11,7 @@
  rustflags = ["--cfg", 'getrandom_backend="wasm_js"']
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -153,3 +153,9 @@
+@@ -151,3 +151,9 @@
  ignored = [
    "wasi",
  ]
@@ -23,28 +23,29 @@
 +strip = true
 --- a/crates/tombi-schema-store/src/http_client/reqwest_client.rs
 +++ b/crates/tombi-schema-store/src/http_client/reqwest_client.rs
-@@ -26,9 +26,18 @@
+@@ -36,9 +36,20 @@
  impl HttpClient for ReqwestHttpClient {
      fn get_bytes<'a>(&'a self, url: &'a str) -> HttpFuture<'a, Result<Bytes, FetchError>> {
          async move {
--            let response = self
--                .0
--                .get(url)
++            let client = self.client()?;
 +            let builder = if let Some(suffix) = url.strip_prefix("https://raw.githubusercontent.com/") {
 +                let mut v: Vec<&str> = suffix.split('/').collect();
 +                let reference = v[2];
 +                v[2] = "contents";
 +                let path = v.join("/");
-+                self.0.get(format!("https://api.github.com/repos/{path}?ref={reference}"))
-+                    .header("Accept", "application/vnd.github.raw+json")
-+                    .header("X-GitHub-Api-Version", "2026-03-10")
++                client.get(format!("https://api.github.com/repos/{path}?ref={reference}"))
++                      .header("Accept", "application/vnd.github.raw+json")
++                      .header("X-GitHub-Api-Version", "2026-03-10")
 +            } else {
-+                self.0.get(url)
++                client.get(url)
 +            };
-+            let response = builder
-                 .send()
-                 .await
-                 .map_err(|err| FetchError::FetchFailed {
+             let response =
+-                self.client()?
+-                    .get(url)
++                builder
+                     .send()
+                     .await
+                     .map_err(|err| FetchError::FetchFailed {
 --- a/rust/tombi-cli/build.rs
 +++ b/rust/tombi-cli/build.rs
 @@ -1,29 +1,7 @@
@@ -73,7 +74,7 @@
 -        })
 -        .unwrap_or_else(|| env!("CARGO_PKG_VERSION").to_string());
 +    let git_version = env!("PKG_VERSION");
-
+ 
      println!("cargo:rustc-env=__TOMBI_VERSION={git_version}");
      println!("cargo:rustc-env=__TOMBI_TARGET_TRIPLE={target}");
 -    println!("cargo:rerun-if-changed=.git/HEAD");
