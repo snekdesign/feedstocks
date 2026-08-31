@@ -3,27 +3,27 @@
 @@ -13,9 +13,6 @@
  [target.x86_64-linux-android]
  linker = "x86_64-linux-android30-clang"
-
+ 
 -[target.x86_64-pc-windows-msvc]
 -linker = "lld-link.exe"
 -
  [target.x86_64-uwp-windows-msvc]
  linker = "lld-link.exe"
-
+ 
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -406,7 +406,7 @@
+@@ -412,7 +412,7 @@
  debug-assertions = false
  lto = true
  codegen-units = 1
 -opt-level = "s"
 +opt-level = 3
-
+ 
  [profile.production-stripped]
  inherits = "production"
-@@ -420,6 +420,7 @@
+@@ -426,6 +426,7 @@
  codegen-units = 1
-
+ 
  [patch.crates-io]
 +clang-sys = { path = "clang-sys" }
  # If you need to temporarily test Servo with a local fork of some upstream
@@ -64,7 +64,7 @@
 -    // provided via python on Windows (but not necessarily on linux).
 -    println!("cargo:warning={}", python3_result.unwrap_err());
      println!("cargo:warning={}", python_result.unwrap_err());
-
+ 
 -    panic!("No suitable python found! Tried: `uv run python`, `python3`, `python`.");
 +    panic!("No suitable python found! Tried: `python`.");
  }
@@ -108,10 +108,10 @@
 \ No newline at end of file
 --- a/components/servo/servo.rs
 +++ b/components/servo/servo.rs
-@@ -105,8 +105,12 @@
+@@ -107,8 +107,12 @@
              let mut plugin_dir = std::env::current_exe().unwrap();
              plugin_dir.pop();
-
+ 
 -            if cfg!(target_os = "macos") {
 -                plugin_dir.push("lib");
 +            if cfg!(windows) {
@@ -121,19 +121,19 @@
 +            if cfg!(windows) {
 +                plugin_dir.push("gstreamer-1.0");
              }
-
+ 
              let plugin_list = crate::gstreamer_plugins::gstreamer_plugins();
 --- a/ports/servoshell/Cargo.toml
 +++ b/ports/servoshell/Cargo.toml
 @@ -16,7 +16,7 @@
  bench = false
-
+ 
  [[bin]]
 -name = "servoshell"
 +name = "servo"
  path = "main.rs"
  bench = false
-
+ 
 --- a/ports/servoshell/desktop/headed_window.rs
 +++ b/ports/servoshell/desktop/headed_window.rs
 @@ -119,6 +119,7 @@
@@ -148,7 +148,7 @@
 +++ b/ports/servoshell/parser.rs
 @@ -87,6 +87,7 @@
  }
-
+ 
  fn try_as_file(request: &str) -> Option<ServoUrl> {
 +    #[cfg(not(windows))]
      if request.starts_with('/') {
@@ -156,15 +156,15 @@
      }
 --- a/ports/servoshell/prefs.rs
 +++ b/ports/servoshell/prefs.rs
-@@ -576,7 +576,7 @@
+@@ -579,7 +579,7 @@
      zealous_gc: bool,
-
+ 
      /// The url we should load.
 -    #[bpaf(positional("URL"), fallback(String::from("https://www.servo.org")))]
 +    #[bpaf(positional("URL"), fallback(String::from("about:blank")))]
      url: String,
  }
-
+ 
 --- a/ports/servoshell/resources/mod.rs
 +++ b/ports/servoshell/resources/mod.rs
 @@ -26,21 +26,14 @@
@@ -191,7 +191,7 @@
          }
 -        path.pop();
      }
-
+ 
      cfg_if! {
 --- a/python/servo/gstreamer.py
 +++ b/python/servo/gstreamer.py
@@ -200,10 +200,10 @@
  import sys
  from collections.abc import Set
 +from typing import TYPE_CHECKING
-
+ 
 -from servo.platform.build_target import BuildTarget  # noqa: E402
 +if TYPE_CHECKING:
 +    from servo.platform.build_target import BuildTarget  # noqa: E402
-
+ 
  GSTREAMER_BASE_LIBS = [
      # gstreamer
