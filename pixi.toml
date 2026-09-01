@@ -14,13 +14,13 @@ readme = 'README.md'
 repository = 'https://github.com/snekdesign/feedstocks'
 
 [target.linux-64.dependencies]
-rattler-build = '>=0.72.0'
+rattler-build = '==0.73.0'
 
 [target.osx-64.dependencies]
-rattler-build = { version = '>=0.72.0', channel = 'https://prefix.dev/github-releases' }
+rattler-build = { version = '==0.73.0', channel = 'https://prefix.dev/github-releases' }
 
 [target.win-64.dependencies]
-rattler-build = '>=0.72.0'
+rattler-build = '==0.73.0'
 
 [tasks.build]
 cmd = [
