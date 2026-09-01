@@ -21,14 +21,6 @@
  
  [profile.production-stripped]
  inherits = "production"
-@@ -426,6 +426,7 @@
- codegen-units = 1
- 
- [patch.crates-io]
-+clang-sys = { path = "clang-sys" }
- # If you need to temporarily test Servo with a local fork of some upstream
- # crate, add that here. Use the form:
- #
 --- a/components/script_bindings/build.rs
 +++ b/components/script_bindings/build.rs
 @@ -112,35 +112,11 @@

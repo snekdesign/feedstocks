@@ -19,7 +19,7 @@ def main() -> None:
         case _:
             assert False
     cwd = pathlib.Path(src_dir)
-    libclang_path = pathlib.Path(build_prefix, 'Library', 'bin')
+    libclang_path = pathlib.Path(build_prefix, 'Library', 'bin', 'libclang.dll')
     profile = 'production-stripped'
     target_dir = os.path.join(_dev_drive_or(temp), cwd.parent.name)
     subprocess.run(
@@ -37,7 +37,7 @@ def main() -> None:
         env=dict(
             os.environ,
             AWS_LC_SYS_PREBUILT_NASM='0',
-            LIBCLANG_PATH=str(next(libclang_path.glob('libclang-*.dll'))),
+            LIBCLANG_PATH=str(libclang_path),
             MOZJS_ARCHIVE=str(cwd / 'libmozjs.tar.gz'),
         ),
     )

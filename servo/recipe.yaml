@@ -11,11 +11,6 @@ source:
   sha256: ${{ sha256 }}
   patches:
   - changes.patch
-- url: https://codeload.github.com/KyleMayes/clang-sys/tar.gz/v1.9.1
-  sha256: 8dc83df59331a349e83da38bebcd9019df051eaa1e670119aafcc502505e7e4c
-  target_directory: clang-sys
-  patches:
-  - 0001-conda-build.patch
 # https://book.servo.org/building/building-offline.html#prebuilt-spidermonkey-artifacts
 - url: https://github.com/servo/mozjs/releases/download/mozjs-sys-v140.13.0-4/libmozjs-x86_64-pc-windows-msvc.tar.gz
   sha256: af50633529af989f1e84ab3fffc3a27e5a5b2163f181261a372bb8e4f7a6dd06
@@ -35,7 +30,7 @@ build:
 requirements:
   build:
   - ${{ compiler('cxx') }}
-  - libclang13
+  - libclang >=23.1.0
   - nasm
   - pkg-config
   - python >=3.14.0
