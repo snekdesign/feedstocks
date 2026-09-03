@@ -3,7 +3,7 @@
 @@ -4,10 +4,6 @@
  [target.x86_64-pc-windows-msvc]
  linker = "rust-lld"
- 
+
 -# Statically link the C runtime so the executable does not depend on the MSVC runtime DLLs.
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
@@ -13,15 +13,15 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -267,11 +267,38 @@
+@@ -268,11 +268,38 @@
    "s3",
  ] }
- rattler_build_jinja = { version = "0.1.13" }
+ rattler_build_jinja = { version = "0.1.14" }
 +rattler_build_networking = { version = "0.1.11" }
- rattler_build_recipe = { version = "0.1.13" }
- rattler_build_types = { version = "0.1.12" }
- rattler_build_variant_config = { version = "0.1.13" }
- 
+ rattler_build_recipe = { version = "0.1.14" }
+ rattler_build_types = { version = "0.1.13" }
+ rattler_build_variant_config = { version = "0.1.14" }
+
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
 +file_url = { path = "../rattler/crates/file_url" }
@@ -50,9 +50,9 @@
 +simple_spawn_blocking = { path = "../rattler/crates/simple_spawn_blocking" }
 +
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
- 
+
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -313,3 +340,9 @@
+@@ -314,3 +341,9 @@
  panic = "unwind"  # needed for backtraces
  # macOS only:
  codegen-units = 1  # better line info (slower build, clearer profiles)
@@ -96,10 +96,10 @@
 @@ -63,10 +63,11 @@
          }
      };
- 
+
 -    let (mut packages, notices) = run_query(vec![matchspec.clone()]).await?;
 +    let (mut packages, notices) = run_query(matchspec.clone()).await?;
- 
+
      if packages.is_empty()
 -        && let Some(name) = bare_exact_name(&matchspec)
 +        && matchspec.len() == 1
@@ -118,17 +118,17 @@
          matches.sort_by_key(|n| {
 @@ -117,7 +118,7 @@
      }
- 
+
      if packages.is_empty() {
 -        return Err(no_packages_found(&matchspec));
 +        return Err(no_packages_found(matchspec));
      }
- 
+
      packages.sort();
 @@ -129,12 +130,19 @@
      })
  }
- 
+
 -fn no_packages_found(matchspec: &MatchSpec) -> miette::Report {
 -    miette::miette!(
 -        help = "Try glob patterns like 'python*' or '*numpy*'",
@@ -149,7 +149,7 @@
 +        )
 +    }
  }
- 
+
  /// Returns the package name if the match spec is nothing more than a bare,
 --- a/crates/pixi_build_backend/Cargo.toml
 +++ b/crates/pixi_build_backend/Cargo.toml
@@ -163,10 +163,10 @@
  rattler_build_variant_config = { workspace = true }
 @@ -36,6 +37,7 @@
  url = { workspace = true }
- 
+
  pixi_build_types = { workspace = true }
 +pixi_utils = { workspace = true }
- 
+
  jsonrpc-core = { workspace = true }
  jsonrpc-http-server = { workspace = true }
 --- a/crates/pixi_build_backend/src/intermediate_backend.rs
@@ -174,7 +174,7 @@
 @@ -839,10 +839,17 @@
              .await
              .into_diagnostic()?;
- 
+
 +        let (_, authenticated_client) = pixi_utils::reqwest::build_reqwest_clients(None, None)?;
 +        let base_client = rattler_build_networking::BaseClient::new_from_clients(
 +            authenticated_client.clone(),
@@ -201,10 +201,10 @@
  rattler_conda_types = { workspace = true }
 @@ -23,6 +24,7 @@
  tokio = { workspace = true, features = ["macros"] }
- 
+
  pixi_build_backend = { workspace = true }
 +pixi_utils = { workspace = true }
- 
+
  jiff = { workspace = true }
  pixi_build_types = { workspace = true }
 --- a/crates/pixi_build_rattler_build/src/protocol.rs
@@ -212,7 +212,7 @@
 @@ -461,10 +461,17 @@
              self.recipe_source.path.clone(),
          );
- 
+
 +        let (_, authenticated_client) = pixi_utils::reqwest::build_reqwest_clients(None, None)?;
 +        let base_client = rattler_build_networking::BaseClient::new_from_clients(
 +            authenticated_client.clone(),
@@ -232,14 +232,14 @@
 @@ -57,11 +57,7 @@
          .ok_or_else(|| miette::miette!("Environment {} not found", env_name.fancy_display()))?
          .exposed;
- 
+
 -    let expose_type = if check_all_exposed(&env_binaries, exposed) {
 -        ExposedType::All
 -    } else {
 -        ExposedType::Nothing
 -    };
 +    let expose_type = ExposedType::Mappings(exposed.iter().cloned().collect());
- 
+
      Ok(EnvInstallResult {
          env_name: env_name.clone(),
 --- a/crates/pixi_cli/src/search.rs
@@ -259,17 +259,17 @@
      #[arg(required = true)]
 -    pub package: String,
 +    pub package: Vec<String>,
- 
+
      #[clap(flatten)]
      pub channels: ChannelsConfig,
 @@ -55,7 +55,7 @@
      pub platform: Option<PixiPlatformName>,
- 
+
      /// Limit the number of versions shown per package, -1 for no limit
 -    #[clap(short, long, default_value = "5", allow_hyphen_values = true)]
 +    #[clap(short, long, default_value = "-1", allow_hyphen_values = true)]
      pub limit: i64,
- 
+
      /// Limit the number of packages shown, -1 for no limit
 @@ -62,7 +62,7 @@
      #[clap(
@@ -294,7 +294,7 @@
 +            Platform::Win64,
 +        ]
      };
- 
+
 -    let matchspec = MatchSpec::from_str(
 -        &args.package,
 -        ParseStrictnessWithNameMatcher {
@@ -313,7 +313,7 @@
 +            )
 +        ).collect::<Result<Vec<_>, _>>()
 +        .into_diagnostic()?;
- 
+
      // Only fetch records for the packages that will be shown; the total
      // fuzzy match count comes back separately for the "... and N more" hint.
 @@ -169,7 +178,7 @@
@@ -367,7 +367,7 @@
 +++ b/crates/pixi_global/src/project/parsed_manifest.rs
 @@ -504,11 +504,7 @@
      type Err = ExposedNameError;
- 
+
      fn from_str(value: &str) -> Result<Self, Self::Err> {
 -        if value == pixi_utils::executable_name() {
 -            Err(ExposedNameError::PixiBinParseError)
@@ -377,7 +377,7 @@
 +        Ok(ExposedName(value.to_string()))
      }
  }
- 
+
 --- a/crates/pixi_uv_conversions/Cargo.toml
 +++ b/crates/pixi_uv_conversions/Cargo.toml
 @@ -12,6 +12,7 @@
@@ -391,7 +391,7 @@
 --- a/crates/pixi_uv_conversions/src/conversions.rs
 +++ b/crates/pixi_uv_conversions/src/conversions.rs
 @@ -5,6 +5,7 @@
- 
+
  use crate::GitUrlWithPrefix;
  use crate::git_url::decode_windows_drive_letter;
 +use http::HeaderValue;
@@ -411,7 +411,7 @@
 @@ -130,6 +132,17 @@
          ));
      }
- 
+
 +    let cache_control = Some(
 +        IndexCacheControl {
 +            api: Some(
@@ -437,7 +437,7 @@
 +            index
 +        })
          .into_iter();
- 
+
      // Convert to list of extra indexes
 @@ -150,7 +167,11 @@
                  .map(DisplaySafeUrl::from_url)
@@ -450,5 +450,5 @@
 +                    index
 +                })
          });
- 
+
      let flat_indexes = if let Some(flat_indexes) = options.find_links.clone() {
