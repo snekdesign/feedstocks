@@ -1,6 +1,6 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -68,6 +68,7 @@
+@@ -72,6 +72,7 @@
  enum-map = "2.7.3"
  flate2 = "1.1.9"
  futures = "0.3.32"
@@ -8,17 +8,7 @@
  image = { version = "0.25.10", default-features = false }
  js-sys = "0.3.97"
  web-sys = "0.3.97"
-@@ -144,6 +145,9 @@
-                                  # `[b'a', b'b', b'c']` array. The array form is clearer when the elements
-                                  # represent a set of alternatives (any-of) rather than a byte sequence.
-
-+[patch.crates-io]
-+clang-sys = { path = "clang-sys" }
-+
- # Don't optimize build scripts and macros.
- [profile.release.build-override]
- opt-level = 0
-@@ -152,7 +156,9 @@
+@@ -156,7 +157,9 @@
  panic = "unwind"
 
  [profile.release]
@@ -67,7 +57,7 @@
 
 @@ -19,6 +23,7 @@
  image = { workspace = true, features = ["png"] }
- egui-winit = "0.33.3"
+ egui-winit = { workspace = true }
  fontdb = "0.23"
 +gdt-cpus = { workspace = true }
  ruffle_core = { path = "../core", features = ["audio", "clap", "mp3", "aac", "nellymoser", "default_compatibility_rules", "egui"] }
@@ -84,7 +74,7 @@
  [features]
 --- a/desktop/src/backends/ui.rs
 +++ b/desktop/src/backends/ui.rs
-@@ -284,7 +284,7 @@
+@@ -324,7 +324,7 @@
          let is_italic = query.is_italic;
 
          let query = fontdb::Query {

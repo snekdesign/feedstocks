@@ -1,27 +1,22 @@
 context:
-  version: 0.5.0
-  sha256: 41e20bab9a08134a9f586fe6d159d5bdd257e92e4b23bfa898223302a625587c
+  version: 0.6.0
+  sha256: 0eeb2575b3eca698939364b0cbb38505cc7fa773ac07fb33985089e92c97c5cc
 
 package:
   name: ruffle
   version: ${{ version }}
 
 source:
-- url: https://github.com/ruffle-rs/ruffle/releases/download/v${{ version }}/ruffle-${{ version }}-reproducible-source.zip
+  url: https://github.com/ruffle-rs/ruffle/releases/download/v${{ version }}/ruffle-${{ version }}-reproducible-source.zip
   sha256: ${{ sha256 }}
   patches:
   - changes.patch
-- url: https://codeload.github.com/KyleMayes/clang-sys/tar.gz/v1.8.1
-  sha256: f3571b3033fc6ff32f86326de724ece3ced7867f2016ccf7cdb36284d3f9c9b8
-  target_directory: clang-sys
-  patches:
-  - 0001-conda-build.patch
 
 build:
   number: 0
   script:
     content:
-    - set "LIBCLANG_PATH=%BUILD_PREFIX%\Library\bin\libclang-13.dll"
+    - set "LIBCLANG_PATH=%BUILD_PREFIX%\Library\bin\libclang.dll"
     - cargo fetch
     - cargo install -F jpegxr --frozen --no-track --path desktop --profile dist --root "%LIBRARY_PREFIX%"
     env:
@@ -34,7 +29,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - libclang13 21.*
+  - libclang >=23.1.0
   - openjdk
   - rust >=1.89.0
   - if: microarch_level|int > 0
