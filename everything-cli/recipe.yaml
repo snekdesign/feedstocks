@@ -1,6 +1,6 @@
 context:
-  version: 1.1.0.37
-  sha256: 54af4594f5571be1478b339c939f708e6c458ac1de18332bab9de7c03ba34c0e
+  version: 1.1.0.38
+  sha256: 013f19e44c0f26cdb0a6f81d9dc4c0cdc6aa099f1379900ac966a4f74bd26dd5
 
 package:
   name: everything-cli
@@ -10,7 +10,7 @@ source:
   url: https://codeload.github.com/voidtools/ES/tar.gz/${{ version }}
   sha256: ${{ sha256 }}
   patches:
-  - 0001-conda-build.patch
+  - changes.patch
 
 build:
   number: 0
