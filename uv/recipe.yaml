@@ -1,6 +1,6 @@
 context:
-  version: 0.12.1
-  sha256: 4e87a6c0e5feddb55e080ba2e8b7ecc1379361471d724071b0c0e0ba5df72981
+  version: 0.12.17
+  sha256: 04bb7ac3d2fca11dd0e23eea26758e8f19987f764a1135f08a51d528c5e29afc
 
 package:
   name: uv
