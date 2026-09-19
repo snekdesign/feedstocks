@@ -16,10 +16,10 @@ LDFLAGS="$LDFLAGS -fuse-ld=lld" \
     --disable-runtime-cpudetect \
     --disable-xop \
     --enable-gpl \
+    --enable-libopenh264 \
     --enable-libplacebo \
     --enable-lto \
     --enable-shared \
-    --host-extralibs= \
     --ld=clang \
     --nm=llvm-nm \
     --ranlib=llvm-ranlib \
