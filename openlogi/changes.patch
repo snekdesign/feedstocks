@@ -1,0 +1,47 @@
+--- a/.cargo/config.toml
++++ b/.cargo/config.toml
+@@ -19,12 +19,5 @@
+ # holding this config file — the repo root — so it works from any cwd.
+ runner = ".cargo/run-macos.sh"
+
+-# Belt-and-suspenders DEVELOPER_DIR for contributors who run cargo outside
+-# the devenv shell and have xcode-select pointing at the Command Line Tools
+-# only (no Metal toolchain). `force = false` means a real DEVELOPER_DIR
+-# already exported in the shell (devenv users, CI runners) wins.
+-[env]
+-DEVELOPER_DIR = { value = "/Applications/Xcode.app/Contents/Developer", force = false }
+-
+ [alias]
+ xtask = "run -p xtask --"
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -153,4 +153,5 @@
+ [profile.release]
+ lto = "fat"
+ codegen-units = 1
++opt-level = 3
+ strip = "symbols"
+--- a/crates/openlogi-camera/src/uvc_macos/iokit.rs
++++ b/crates/openlogi-camera/src/uvc_macos/iokit.rs
+@@ -27,7 +27,7 @@
+     IOCFPlugInInterface, IOCreatePlugInInterfaceForService, IODestroyPlugInInterface,
+     IOIteratorNext, IOObjectRelease, IORegistryEntryCreateCFProperty, IOServiceGetMatchingServices,
+     IOServiceMatching, IOUSBConfigurationDescriptor, IOUSBConfigurationDescriptorPtr,
+-    IOUSBDevRequest, IOUSBDeviceInterface182, io_iterator_t, io_object_t, kIOMainPortDefault,
++    IOUSBDevRequest, IOUSBDeviceInterface182, io_iterator_t, io_object_t, kIOMasterPortDefault,
+ };
+
+ /// `kIOReturnSuccess`, which shares its value with `KERN_SUCCESS` and `S_OK`.
+@@ -85,10 +85,10 @@
+     // spells by taking it *by value* — so handing it over is its last use.
+     let matching = CFRetained::<CFDictionary>::from(&*matching);
+     let mut iterator: io_iterator_t = 0;
+-    // SAFETY: `kIOMainPortDefault` is IOKit's own static, and `iterator` is a
++    // SAFETY: `kIOMasterPortDefault` is IOKit's own static, and `iterator` is a
+     // live local the call fills in on success.
+     let rc = unsafe {
+-        IOServiceGetMatchingServices(kIOMainPortDefault, Some(matching), &raw mut iterator)
++        IOServiceGetMatchingServices(kIOMasterPortDefault, Some(matching), &raw mut iterator)
+     };
+     if rc != SUCCESS {
+         return Err("IOServiceGetMatchingServices");

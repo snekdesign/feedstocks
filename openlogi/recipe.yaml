@@ -1,0 +1,52 @@
+context:
+  version: 0.8.6
+  sha256: 35f1ffcb4c9ca068d7a03db6f0bb3dfb2b521dc7cb87aff15a0d4f9c4651cbc3
+
+package:
+  name: openlogi
+  version: ${{ version }}
+
+source:
+  url: https://codeload.github.com/AprilNEA/OpenLogi/tar.gz/v${{ version }}
+  sha256: ${{ sha256 }}
+  patches:
+  - changes.patch
+
+build:
+  number: 0
+  script:
+    content:
+    - if: win
+      then:
+      - cargo fetch
+      - cargo install --bin openlogi-agent --frozen --no-track --path crates/openlogi-agent --root "%LIBRARY_PREFIX%"
+      - cargo install --frozen --no-track --path crates/openlogi --root "%LIBRARY_PREFIX%"
+      else:
+      - cargo install --bin openlogi-agent --locked --no-track --path crates/openlogi-agent --root "$PREFIX"
+      - cargo install --locked --no-track --path crates/openlogi --root "$PREFIX"
+    env:
+      CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
+  skip:
+  - build_platform != target_platform
+  - linux
+  - win and not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - rust >=1.98.0
+  - ${{ stdlib('c') }}
+  - if: microarch_level|int > 0
+    then: x86_64-microarch-level ==${{ microarch_level }}
+  ignore_run_exports:
+    by_name:
+    - __osx
+
+tests:
+- script:
+  - openlogi -V
+
+about:
+  license: MIT
+  license_file: LICENSE-MIT
+  summary: A native, local-first alternative to Logitech Options+, written in Rust
