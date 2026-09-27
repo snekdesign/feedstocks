@@ -1,7 +1,7 @@
 context:
-  version: 0.1.0dev20260331
-  commit: 577474d89ee61aef4a48145cdec82a638d874751
-  sha256: 47e382d351b59104efbbae7e209357b75f908a00c9cb2fb00fe485a4b64eb888
+  version: 0.1.0dev20260917
+  commit: b09b56c29c1e367e598b60ca266e2cc9038751e0
+  sha256: f9438e8b0c8d8887c4b30b402b3b383b2cd059c9fd5c00a5e7eac8ddae24cad4
 
 package:
   name: wezterm
@@ -16,9 +16,12 @@ source:
 build:
   number: 0
   script:
-  - set "OPENSSL_DIR=%LIBRARY_PREFIX%"
-  - set OPENSSL_NO_VENDOR=1
-  - cargo install --locked --no-track --path wezterm-gui --root "%LIBRARY_PREFIX%"
+    content:
+    - set "OPENSSL_DIR=%LIBRARY_PREFIX%"
+    - set OPENSSL_NO_VENDOR=1
+    - cargo install --locked --no-track --path wezterm-gui --root "%LIBRARY_PREFIX%"
+    env:
+      CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
   skip:
   - not win
   - build_platform != target_platform

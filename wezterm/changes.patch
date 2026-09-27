@@ -1,3 +1,15 @@
+--- a/.cargo/config.toml
++++ b/.cargo/config.toml
+@@ -1,9 +1,3 @@
+ [target.x86_64-pc-windows-gnu]
+ linker = "x86_64-w64-mingw32-gcc"
+ ar = "x86_64-w64-mingw32-gcc-ar"
+-
+-# We need openssl to be statically linked on windows to avoid madness,
+-# and openssl-src does that based on the crt-static feature being
+-# enabled for the target, so let's turn that on here.
+-[target.x86_64-pc-windows-msvc]
+-rustflags = ["-C", "target-feature=+crt-static"]
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -24,8 +24,10 @@
@@ -333,3 +345,108 @@
  }
 
  fn main() {
+--- a/pty/src/cmdbuilder.rs
++++ b/pty/src/cmdbuilder.rs
+@@ -9,7 +9,37 @@
+ #[cfg(unix)]
+ use std::path::Component;
+ use std::path::Path;
++use std::str::FromStr;
++
++const WINDOWS_ENVVARS: &[&str] = &[
++    "SystemRoot",
++    "SystemDrive",
++    "ALLUSERSPROFILE",
++    "PUBLIC",
++    "ProgramData",
++    "COMPUTERNAME",
++    "USERNAME",
++    "USERDOMAIN",
++    "USERDNSDOMAIN",
++    "HOMEDRIVE",
++    "HOMESHARE",
++    "HOMEPATH",
++    "USERPROFILE",
++    "APPDATA",
++    "LOCALAPPDATA",
++];
+
++const PROGRAM_FILES_MAP: &[(&str, &str)] = &[
++    ("ProgramFilesDir", "ProgramFiles"),
++    ("CommonFilesDir", "CommonProgramFiles"),
++    // ("ProgramFilesDir (Arm)", "ProgramFiles(Arm)"),
++    // ("CommonFilesDir (Arm)", "CommonProgramFiles(Arm)"),
++    ("ProgramFilesDir (x86)", "ProgramFiles(x86)"),
++    ("CommonFilesDir (x86)", "CommonProgramFiles(x86)"),
++    ("ProgramW6432Dir", "ProgramW6432"),
++    ("CommonW6432Dir", "CommonProgramW6432"),
++];
++
+ /// Used to deal with Windows having case-insensitive environment variables.
+ #[derive(Clone, Debug, PartialEq, PartialOrd)]
+ #[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
+@@ -72,9 +102,21 @@
+ }
+
+ fn get_base_env() -> BTreeMap<OsString, EnvEntry> {
+-    let mut env: BTreeMap<OsString, EnvEntry> = std::env::vars_os()
+-        .map(|(key, value)| {
+-            (
++    let mut env: BTreeMap<OsString, EnvEntry> = if cfg!(target_os = "windows") {
++        // https://github.com/microsoft/terminal/blob/v1.24.11911.0/src/inc/til/env.h#L455-L469
++        WINDOWS_ENVVARS.iter()
++            .filter_map(|key| std::env::var_os(key).map(|value| (
++                EnvEntry::map_key(OsString::from_str(key).unwrap()),
++                EnvEntry {
++                    is_from_base_env: true,
++                    preferred_key: OsString::from_str(key).unwrap(),
++                    value,
++                },
++            )))
++            .collect()
++    } else {
++        std::env::vars_os()
++            .map(|(key, value)| (
+                 EnvEntry::map_key(key.clone()),
+                 EnvEntry {
+                     is_from_base_env: true,
+@@ -81,9 +123,9 @@
+                     preferred_key: key,
+                     value,
+                 },
+-            )
+-        })
+-        .collect();
++            ))
++            .collect()
++    };
+
+     #[cfg(unix)]
+     {
+@@ -135,6 +177,26 @@
+             }
+         }
+
++        // https://github.com/microsoft/terminal/blob/v1.24.11911.0/src/inc/til/env.h#L470
++        if let Ok(sys_env) = RegKey::predef(HKEY_LOCAL_MACHINE)
++            .open_subkey("Software\\Microsoft\\Windows\\CurrentVersion")
++        {
++            for (key, name) in PROGRAM_FILES_MAP.iter() {
++                if let Ok(value) = sys_env.get_raw_value(key) {
++                    if let Ok(value) = reg_value_to_string(&value) {
++                        env.insert(
++                            EnvEntry::map_key(OsString::from_str(name).unwrap()),
++                            EnvEntry {
++                                is_from_base_env: true,
++                                preferred_key: OsString::from_str(name).unwrap(),
++                                value,
++                            },
++                        );
++                    }
++                }
++            }
++        }
++
+         if let Ok(sys_env) = RegKey::predef(HKEY_LOCAL_MACHINE)
+             .open_subkey("System\\CurrentControlSet\\Control\\Session Manager\\Environment")
+         {
