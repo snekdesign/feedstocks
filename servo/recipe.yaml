@@ -1,6 +1,6 @@
 context:
-  version: 0.6.0
-  sha256: 9f4b0223d5d6f2f327a4628fc69dd53ffffe2d8928e7f9623d066d528980baf8
+  version: 0.7.0
+  sha256: 707f97dce2d017773eaf6b6c91c42c2e8085b70e9f35e4fbd6d5bc64d6c87bc7
 
 package:
   name: servo
