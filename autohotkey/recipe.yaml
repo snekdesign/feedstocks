@@ -1,7 +1,7 @@
 context:
-  version: 2.0.27
-  sha256_src: 976376e699695bf6435c2b6abf23f9e37e08fc1d1c6f51ac2f0d5eea721ebbf3
-  sha256_bin: f72cad4b98a7b5aa050b35d6deaa0b0e3949929b2aaff7d0d69858f1f380b3ef
+  version: 2.0.29
+  sha256_src: 5aae3c35fe9523a19486c5cfbb7d8bdf13c32e6cf10cc9bdc9bb0ff366503145
+  sha256_bin: b2d0200724a6b6ad22c965c939c5e5a2c64a35d1ccb455a3ca3f8ce415c5a296
 
 package:
   name: autohotkey
