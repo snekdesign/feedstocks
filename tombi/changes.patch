@@ -1,9 +1,9 @@
 --- a/.cargo/config.toml
 +++ b/.cargo/config.toml
 @@ -6,8 +6,5 @@
+ tombi-flamegraph = "flamegraph --output .tmp/flamegraph.svg --package tombi-cli --"
  xtask = "run --package xtask --bin xtask --"
- parse-jsonschema = "run --package tombi-schema-store --example parse_jsonschema --"
- 
+
 -[target.'cfg(all(windows, target_env = "msvc"))']
 -rustflags = ["-C", "target-feature=+crt-static"]
 -
@@ -11,7 +11,7 @@
  rustflags = ["--cfg", 'getrandom_backend="wasm_js"']
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -151,3 +151,9 @@
+@@ -164,3 +164,9 @@
  ignored = [
    "wasi",
  ]
@@ -23,12 +23,13 @@
 +strip = true
 --- a/crates/tombi-schema-store/src/http_client/reqwest_client.rs
 +++ b/crates/tombi-schema-store/src/http_client/reqwest_client.rs
-@@ -36,9 +36,20 @@
- impl HttpClient for ReqwestHttpClient {
-     fn get_bytes<'a>(&'a self, url: &'a str) -> HttpFuture<'a, Result<Bytes, FetchError>> {
-         async move {
-+            let client = self.client()?;
-+            let builder = if let Some(suffix) = url.strip_prefix("https://raw.githubusercontent.com/") {
+@@ -65,8 +65,18 @@
+         // store's stale-cache handling. Follow GET redirects here so a policy
+         // refusal remains a typed, terminal error.
+         for _ in 0..10 {
+-            let response = client
+-                .get(current_url.clone())
++            let builder = if let Some(suffix) = current_url.as_str().strip_prefix("https://raw.githubusercontent.com/") {
 +                let mut v: Vec<&str> = suffix.split('/').collect();
 +                let reference = v[2];
 +                v[2] = "contents";
@@ -37,15 +38,12 @@
 +                      .header("Accept", "application/vnd.github.raw+json")
 +                      .header("X-GitHub-Api-Version", "2026-03-10")
 +            } else {
-+                client.get(url)
++                client.get(current_url.clone())
 +            };
-             let response =
--                self.client()?
--                    .get(url)
-+                builder
-                     .send()
-                     .await
-                     .map_err(|err| FetchError::FetchFailed {
++            let response = builder
+                 .send()
+                 .await
+                 .map_err(fetch_error_from_reqwest)?;
 --- a/rust/tombi-cli/build.rs
 +++ b/rust/tombi-cli/build.rs
 @@ -1,29 +1,7 @@
@@ -74,7 +72,7 @@
 -        })
 -        .unwrap_or_else(|| env!("CARGO_PKG_VERSION").to_string());
 +    let git_version = env!("PKG_VERSION");
- 
+
      println!("cargo:rustc-env=__TOMBI_VERSION={git_version}");
      println!("cargo:rustc-env=__TOMBI_TARGET_TRIPLE={target}");
 -    println!("cargo:rerun-if-changed=.git/HEAD");
