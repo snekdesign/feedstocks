@@ -1,13 +1,13 @@
 context:
-  version: 0.12.17
-  sha256: 04bb7ac3d2fca11dd0e23eea26758e8f19987f764a1135f08a51d528c5e29afc
+  version: 0.13.0
+  sha256: 3d6cbbfd054cbea49336881fffdc2cdd366602a9df974285e84f5cedb25283e8
 
 package:
   name: uv
   version: ${{ version }}
 
 source:
-  url: https://codeload.github.com/astral-sh/uv/tar.gz/${{ version }}
+  url: https://github.com/astral-sh/uv/releases/download/${{ version }}/source.tar.gz
   sha256: ${{ sha256 }}
   patches:
   - changes.patch
@@ -24,6 +24,7 @@ build:
       - cargo install --locked --no-track --path crates/uv --root "$PREFIX"
     env:
       CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
+      ZSTD_SYS_USE_PKG_CONFIG: '1'
   skip:
   - build_platform != target_platform
   - win and not (compiler('c') is startingwith('vs'))
@@ -37,8 +38,11 @@ requirements:
     then: diffutils
   - if: win
     then: nasm
+  - pkg-config
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
+  host:
+  - zstd
   ignore_run_exports:
     by_name:
     - __osx
