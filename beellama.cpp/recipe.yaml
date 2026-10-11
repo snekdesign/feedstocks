@@ -1,0 +1,50 @@
+context:
+  version: 0.4.7
+  sha256: f8b1a7bea337e08f25167d8ed24d8050c8e4ee208e87d23035a722efa68a04c5
+  sha256_cuda: 400dfa350f7e5e23e0b9a3ad57fd959d65600ef2143d84f2b404bc84fbb0168b
+
+package:
+  name: beellama.cpp
+  version: ${{ version }}
+
+source:
+- if: cuda_compiler_version == 'None'
+  then:
+  - url: https://github.com/Anbeeld/beellama.cpp/releases/download/v${{ version }}/beellama-v${{ version }}-bin-win-vulkan-x64.zip
+    sha256: ${{ sha256 }}
+  else:
+  - url: https://github.com/Anbeeld/beellama.cpp/releases/download/v${{ version }}/beellama-v${{ version }}-bin-win-cuda-${{ cuda_compiler_version }}-x64.zip
+    sha256: ${{ sha256_cuda }}
+
+build:
+  number: ${{ (cuda_compiler_version != 'None') | int }}
+  script: cp -al *.exe ggml*.dll llama*.dll mtmd.dll "%LIBRARY_BIN%"
+  skip:
+  - not win
+  - build_platform != target_platform
+  - not (compiler('c') is startingwith('vs'))
+
+requirements:
+  build:
+  - ${{ compiler('c') }}
+  - if: cuda_compiler_version != 'None'
+    then: ${{ compiler('cuda') }}
+  host:
+  - if: cuda_compiler_version != 'None'
+    then: libcublas
+  - llvm-openmp
+  - m2-coreutils
+  run:
+  - if: cuda_compiler_version != 'None'
+    then:
+    - __cuda ${{ cuda_compiler_version }}.*
+    - libcublas
+
+tests:
+- script:
+  - llama-server --list-devices
+
+about:
+  license: MIT
+  license_file: LICENSE
+  summary: KVarN, KV cache precision tail, low-bit quants in llama.cpp for longer context of better precision in the same VRAM
