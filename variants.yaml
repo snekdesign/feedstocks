@@ -49,6 +49,13 @@ cxx_compiler_version:
 cdt_name:
 - cos7
 
+cuda_compiler:
+- cuda-nvcc
+
+cuda_compiler_version:
+- None
+- '13.3'
+
 fortran_compiler:
 - flang
 
