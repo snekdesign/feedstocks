@@ -1,10 +1,10 @@
 context:
-  version: 1.135.06055
-  sha256: 0bec978f201238624bc9ad43966f5e201ed8afacc37d77035a822252d9c9c200
+  version: 1.140.06880
+  sha256: 024ae1e88f431aee300e73c2ece92e42ebde80a7f3c484ff684f455ffa6a6a7f
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
-  cmake_version: 0.8.1
+  cmake_version: 0.8.2
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
-  cmake_sha256: 4a919b607a175c315bf095e1519e9451f6592f5e8582d3a5a80643ae16b24d33
+  cmake_sha256: 723c6d1e0b8b4d16a87ec9fb25a7b6318602ea5f9761339cf075fa8b32f737c2
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/versions?size=1
   clangd_version: 0.6.0
   # https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/latest/file/sha256
@@ -14,17 +14,17 @@ context:
   # https://open-vsx.org/api/whoami730/cython-enhanced/latest/file/sha256
   cython_sha256: 423715d7efbac30a5db53eb0eb64afe08b9ec7d462613b3622b96ccec3bfa54b
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/versions?size=1
-  ruff_version: 2026.78.0
+  ruff_version: 2026.86.0
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
-  ruff_sha256: fa299e23b1bf1cee800f7729f7352dea4f3293e3ea25727f7851e60d61a77cee
+  ruff_sha256: c333a1c3bd7cea1e55fb37a9251a2844a1563cb1000acd5c8cb2cb6b5aa58568
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/versions?size=1
-  toml_version: 1.5.4
+  toml_version: 1.8.4
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/latest/file/sha256
-  toml_sha256: dba9d41779e0e3cc8d7bf0ec17db1df08feb46f9983cd8dc522c798c753a06de
+  toml_sha256: 0de5bdb1ed33740273aae1d2c980aeb7ec16fc86d1538fb4f83dacabb8d204df
   # https://open-vsx.org/api/zensical/zensical-studio/versions?size=1
-  zensical_version: 0.2.13
+  zensical_version: 0.2.19
   # https://open-vsx.org/api/zensical/zensical-studio/latest/file/sha256
-  zensical_sha256: 122123cad27c25694620482d320e0d1e596c2f78db18f4ef2f173c07aab08f96
+  zensical_sha256: 19cddd76a4924ece7af7127210ba78a75c1795bcf28e520589faa085f74df90f
 
 package:
   name: vscodium
@@ -70,7 +70,6 @@ build:
 requirements:
   host:
   - m2-coreutils
-  - vc
 
 tests:
 - script:
