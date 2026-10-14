@@ -1,19 +1,19 @@
 context:
-  version: 0.80.0
-  sha256: 5f1c9096161d35772053268d89523a511e69a4d43270c145c9c5e91945751cbf
+  version: 0.82.0
+  sha256: cac8887774af2a54d1f303001769ec781558e3fe74797402931ee3f70ae605cf
 
 recipe:
   name: pixi
   version: ${{ version }}
 
 source:
-- url: https://codeload.github.com/prefix-dev/pixi/tar.gz/v${{ version }}
+- url: https://github.com/prefix-dev/pixi/releases/download/v${{ version }}/source.tar.gz
   sha256: ${{ sha256 }}
   target_directory: pixi
   patches:
   - changes.patch
-- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.48.6
-  sha256: 559c90be1c24b9a8882a59197d71a169a18055042539bc821521115aa61f3d3f
+- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.54.0
+  sha256: 861f0385543cd95a710eb0878a23cbd2575999a7ac76def83d73cfc7d36fa94d
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
@@ -37,8 +37,11 @@ outputs:
     - if: linux
       then: make
     - nasm
+    - pkg-config
     - if: microarch_level|int > 0
       then: x86_64-microarch-level ==${{ microarch_level }}
+    host:
+    - zstd
   build:
     script:
       content:
@@ -56,6 +59,7 @@ outputs:
         - cargo install --frozen --no-track --path crates/pixi_build_rattler_build --root "$PREFIX"
       env:
         CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
+        ZSTD_SYS_USE_PKG_CONFIG: '1'
 - package:
     name: pixi
   inherit: pixi-build

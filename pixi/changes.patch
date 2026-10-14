@@ -1,8 +1,8 @@
 --- a/.cargo/config.toml
 +++ b/.cargo/config.toml
-@@ -4,10 +4,6 @@
- [target.x86_64-pc-windows-msvc]
- linker = "rust-lld"
+@@ -26,10 +26,6 @@
+ [target.aarch64-unknown-linux-musl]
+ linker = "aarch64-linux-gnu-gcc"
 
 -# Statically link the C runtime so the executable does not depend on the MSVC runtime DLLs.
 -[target.'cfg(all(target_env = "msvc", target_os = "windows"))']
@@ -13,14 +13,14 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -269,11 +269,38 @@
+@@ -272,11 +272,38 @@
    "s3",
  ] }
- rattler_build_jinja = { version = "0.1.14" }
-+rattler_build_networking = { version = "0.1.11" }
- rattler_build_recipe = { version = "0.1.14" }
- rattler_build_types = { version = "0.1.13" }
- rattler_build_variant_config = { version = "0.1.14" }
+ rattler_build_jinja = { version = "0.1.19" }
++rattler_build_networking = { version = "0.1.15" }
+ rattler_build_recipe = { version = "0.1.19" }
+ rattler_build_types = { version = "0.1.17" }
+ rattler_build_variant_config = { version = "0.1.19" }
 
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
@@ -52,7 +52,7 @@
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -315,3 +342,9 @@
+@@ -318,3 +345,9 @@
  panic = "unwind"  # needed for backtraces
  # macOS only:
  codegen-units = 1  # better line info (slower build, clearer profiles)
@@ -71,7 +71,7 @@
 -        matchspec: MatchSpec,
 +        matchspec: Vec<MatchSpec>,
          channels: IndexSet<Channel>,
-         platforms: Vec<Platform>,
+         platforms: Vec<Subdir>,
          fuzzy_limit: Option<usize>,
 @@ -612,7 +612,7 @@
      /// Search for packages matching a [`MatchSpec`]
@@ -80,7 +80,7 @@
 -        matchspec: MatchSpec,
 +        matchspec: Vec<MatchSpec>,
          channels: IndexSet<Channel>,
-         platforms: Vec<Platform>,
+         platforms: Vec<Subdir>,
          fuzzy_limit: Option<usize>,
 --- a/crates/pixi_api/src/workspace/search/mod.rs
 +++ b/crates/pixi_api/src/workspace/search/mod.rs
@@ -91,7 +91,7 @@
 -    matchspec: MatchSpec,
 +    matchspec: Vec<MatchSpec>,
      channels: IndexSet<Channel>,
-     platforms: Vec<Platform>,
+     platforms: Vec<Subdir>,
      fuzzy_limit: Option<usize>,
 @@ -63,10 +63,11 @@
          }
@@ -171,7 +171,7 @@
  jsonrpc-http-server = { workspace = true }
 --- a/crates/pixi_build_backend/src/intermediate_backend.rs
 +++ b/crates/pixi_build_backend/src/intermediate_backend.rs
-@@ -839,10 +839,17 @@
+@@ -841,10 +841,17 @@
              .await
              .into_diagnostic()?;
 
@@ -209,7 +209,7 @@
  pixi_build_types = { workspace = true }
 --- a/crates/pixi_build_rattler_build/src/protocol.rs
 +++ b/crates/pixi_build_rattler_build/src/protocol.rs
-@@ -461,10 +461,17 @@
+@@ -463,10 +463,17 @@
              self.recipe_source.path.clone(),
          );
 
@@ -248,12 +248,12 @@
  use pixi_manifest::{FeaturesExt, HasWorkspaceManifest, PixiPlatformName};
  use pixi_progress::await_in_progress;
  use rattler_conda_types::{
--    MatchSpec, PackageName, ParseStrictness, ParseStrictnessWithNameMatcher, Platform,
-+    MatchSpec, PackageName, PackageNameMatcher, ParseStrictness, ParseStrictnessWithNameMatcher, Platform,
-     RepoDataRecord,
+-    MatchSpec, PackageName, ParseStrictness, ParseStrictnessWithNameMatcher, RepoDataRecord, Subdir,
++    MatchSpec, PackageName, PackageNameMatcher, ParseStrictness, ParseStrictnessWithNameMatcher, RepoDataRecord, Subdir,
  };
  use tracing::{debug, error};
-@@ -33,7 +33,7 @@
+ use url::Url;
+@@ -32,7 +32,7 @@
  pub struct Args {
      /// MatchSpec of a package to search
      #[arg(required = true)]
@@ -262,7 +262,7 @@
 
      #[clap(flatten)]
      pub channels: ChannelsConfig,
-@@ -55,7 +55,7 @@
+@@ -54,7 +54,7 @@
      pub platform: Option<PixiPlatformName>,
 
      /// Limit the number of versions shown per package, -1 for no limit
@@ -271,7 +271,7 @@
      pub limit: i64,
 
      /// Limit the number of packages shown, -1 for no limit
-@@ -62,7 +62,7 @@
+@@ -61,7 +61,7 @@
      #[clap(
          short = 'n',
          long = "limit-packages",
@@ -280,18 +280,18 @@
          allow_hyphen_values = true
      )]
      pub limit_packages: i64,
-@@ -146,17 +146,26 @@
+@@ -145,17 +145,26 @@
          }
          platforms
      } else {
--        Platform::all().collect()
+-        Subdir::all().collect()
 +        vec![
-+            Platform::Linux64,
-+            Platform::LinuxAarch64,
-+            Platform::NoArch,
-+            Platform::Osx64,
-+            Platform::OsxArm64,
-+            Platform::Win64,
++            Subdir::Linux64,
++            Subdir::LinuxAarch64,
++            Subdir::NoArch,
++            Subdir::Osx64,
++            Subdir::OsxArm64,
++            Subdir::Win64,
 +        ]
      };
 
@@ -316,7 +316,7 @@
 
      // Only fetch records for the packages that will be shown; the total
      // fuzzy match count comes back separately for the "... and N more" hint.
-@@ -169,7 +178,7 @@
+@@ -168,7 +177,7 @@
      let result = if let Some(workspace) = workspace {
          await_in_progress("searching packages...", |_| async {
              cli_context(workspace)
@@ -325,7 +325,7 @@
                  .await
          })
          .await?
-@@ -178,7 +187,7 @@
+@@ -177,7 +186,7 @@
              .merge_config(args.config.clone().into());
          await_in_progress("searching packages...", |_| async {
              DefaultContext::new(CliInterface {})
@@ -334,7 +334,7 @@
                  .await
          })
          .await?
-@@ -201,7 +210,16 @@
+@@ -200,7 +209,16 @@
          }
      } else {
          let limit_versions = if args.limit < 0 {
@@ -354,7 +354,7 @@
          };
 --- a/crates/pixi_global/src/install.rs
 +++ b/crates/pixi_global/src/install.rs
-@@ -55,7 +55,7 @@
+@@ -54,7 +54,7 @@
              } else {
                  false
              }
@@ -365,7 +365,7 @@
      };
 --- a/crates/pixi_global/src/project/parsed_manifest.rs
 +++ b/crates/pixi_global/src/project/parsed_manifest.rs
-@@ -504,11 +504,7 @@
+@@ -572,11 +572,7 @@
      type Err = ExposedNameError;
 
      fn from_str(value: &str) -> Result<Self, Self::Err> {
@@ -378,77 +378,3 @@
      }
  }
 
---- a/crates/pixi_uv_conversions/Cargo.toml
-+++ b/crates/pixi_uv_conversions/Cargo.toml
-@@ -12,6 +12,7 @@
- [dependencies]
- chrono = { workspace = true }
- dunce = { workspace = true }
-+http = { workspace = true }
- hex = { workspace = true }
- miette = { workspace = true }
- pathdiff = { workspace = true }
---- a/crates/pixi_uv_conversions/src/conversions.rs
-+++ b/crates/pixi_uv_conversions/src/conversions.rs
-@@ -5,6 +5,7 @@
-
- use crate::GitUrlWithPrefix;
- use crate::git_url::decode_windows_drive_letter;
-+use http::HeaderValue;
- use miette::IntoDiagnostic;
- use pep440_rs::VersionSpecifiers;
- use pixi_git::{git::GitReference as PixiGitReference, sha::GitSha as PixiGitSha};
-@@ -23,7 +24,8 @@
- use uv_configuration::BuildOptions;
- use uv_configuration::TrustedHost;
- use uv_distribution_types::{
--    ConfigSettingEntry, ConfigSettings, GitSourceDist, Index, IndexLocations, IndexUrl,
-+    ConfigSettingEntry, ConfigSettings, GitSourceDist, Index, IndexCacheControl, IndexLocations,
-+    IndexUrl,
- };
- use uv_normalize::{InvalidNameError, PackageName};
- use uv_pep508::{VerbatimUrl, VerbatimUrlError};
-@@ -130,6 +132,17 @@
-         ));
-     }
-
-+    let cache_control = Some(
-+        IndexCacheControl {
-+            api: Some(
-+                HeaderValue::from_static("max-age=600"),
-+            ),
-+            files: Some(
-+                HeaderValue::from_static("max-age=365000000, immutable, public"),
-+            ),
-+        },
-+    );
-+
-     // Convert the index to a `IndexUrl`
-     let index = options
-         .index_url
-@@ -137,7 +150,11 @@
-         .map(DisplaySafeUrl::from_url)
-         .map(VerbatimUrl::from_url)
-         .map(IndexUrl::from)
--        .map(Index::from_index_url)
-+        .map(|url| {
-+            let mut index = Index::from_index_url(url);
-+            index.cache_control = cache_control.clone();
-+            index
-+        })
-         .into_iter();
-
-     // Convert to list of extra indexes
-@@ -150,7 +167,11 @@
-                 .map(DisplaySafeUrl::from_url)
-                 .map(VerbatimUrl::from_url)
-                 .map(IndexUrl::from)
--                .map(Index::from_extra_index_url)
-+                .map(|url| {
-+                    let mut index = Index::from_extra_index_url(url);
-+                    index.cache_control = cache_control.clone();
-+                    index
-+                })
-         });
-
-     let flat_indexes = if let Some(flat_indexes) = options.find_links.clone() {
