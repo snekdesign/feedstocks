@@ -47,6 +47,8 @@ outputs:
       content:
       - cd pixi
       - cargo fetch
+      - if: osx
+        then: export DYLD_LIBRARY_PATH="$PREFIX/lib"
       - if: win
         then:
         - set AWS_LC_SYS_PREBUILT_NASM=0
