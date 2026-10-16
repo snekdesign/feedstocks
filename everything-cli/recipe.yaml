@@ -1,6 +1,6 @@
 context:
-  version: 1.1.0.38
-  sha256: 013f19e44c0f26cdb0a6f81d9dc4c0cdc6aa099f1379900ac966a4f74bd26dd5
+  version: 1.1.1.39
+  sha256: 8509696163d3279a419757e3f4b0a4c4a3f9a5aa51d26375b4e5f9eeb10e16bf
 
 package:
   name: everything-cli
