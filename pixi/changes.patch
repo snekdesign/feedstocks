@@ -13,7 +13,7 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -272,11 +272,38 @@
+@@ -274,11 +274,43 @@
    "s3",
  ] }
  rattler_build_jinja = { version = "0.1.19" }
@@ -27,10 +27,13 @@
 +file_url = { path = "../rattler/crates/file_url" }
 +path_resolver = { path = "../rattler/crates/path_resolver" }
 +rattler = { path = "../rattler/crates/rattler" }
++rattler_boot_id = { path = "../rattler/crates/rattler_boot_id" }
 +rattler_cache = { path = "../rattler/crates/rattler_cache" }
 +rattler_conda_types = { path = "../rattler/crates/rattler_conda_types" }
++rattler_conda_version = { path = "../rattler/crates/rattler_conda_version" }
 +rattler_config = { path = "../rattler/crates/rattler_config" }
 +rattler_digest = { path = "../rattler/crates/rattler_digest" }
++rattler_environment_digest = { path = "../rattler/crates/rattler_environment_digest" }
 +rattler_git = { path = "../rattler/crates/rattler_git" }
 +rattler_index = { path = "../rattler/crates/rattler_index" }
 +rattler_lock = { path = "../rattler/crates/rattler_lock" }
@@ -44,15 +47,17 @@
 +rattler_repodata_gateway = { path = "../rattler/crates/rattler_repodata_gateway" }
 +rattler_s3 = { path = "../rattler/crates/rattler_s3" }
 +rattler_shell = { path = "../rattler/crates/rattler_shell" }
++rattler_sigstore = { path = "../rattler/crates/rattler_sigstore" }
 +rattler_solve = { path = "../rattler/crates/rattler_solve" }
 +rattler_upload = { path = "../rattler/crates/rattler_upload" }
++rattler_virtual_package_detectors = { path = "../rattler/crates/rattler_virtual_package_detectors" }
 +rattler_virtual_packages = { path = "../rattler/crates/rattler_virtual_packages" }
 +simple_spawn_blocking = { path = "../rattler/crates/simple_spawn_blocking" }
 +
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -318,3 +345,9 @@
+@@ -320,3 +352,9 @@
  panic = "unwind"  # needed for backtraces
  # macOS only:
  codegen-units = 1  # better line info (slower build, clearer profiles)
@@ -280,7 +285,7 @@
          allow_hyphen_values = true
      )]
      pub limit_packages: i64,
-@@ -145,17 +145,26 @@
+@@ -147,17 +147,26 @@
          }
          platforms
      } else {
@@ -316,7 +321,7 @@
 
      // Only fetch records for the packages that will be shown; the total
      // fuzzy match count comes back separately for the "... and N more" hint.
-@@ -168,7 +177,7 @@
+@@ -170,7 +179,7 @@
      let result = if let Some(workspace) = workspace {
          await_in_progress("searching packages...", |_| async {
              cli_context(workspace)
@@ -325,7 +330,7 @@
                  .await
          })
          .await?
-@@ -177,7 +186,7 @@
+@@ -179,7 +188,7 @@
              .merge_config(args.config.clone().into());
          await_in_progress("searching packages...", |_| async {
              DefaultContext::new(CliInterface {})
@@ -334,7 +339,7 @@
                  .await
          })
          .await?
-@@ -200,7 +209,16 @@
+@@ -202,7 +211,16 @@
          }
      } else {
          let limit_versions = if args.limit < 0 {
