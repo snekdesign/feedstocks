@@ -1,6 +1,6 @@
 context:
-  version: 0.13.0
-  sha256: 3d6cbbfd054cbea49336881fffdc2cdd366602a9df974285e84f5cedb25283e8
+  version: 0.13.4
+  sha256: e1d874361b540ca2f1bc625d2a97b05bd38270437c935b1d6f01dff99c728b74
 
 package:
   name: uv
@@ -16,6 +16,8 @@ build:
   number: 0
   script:
     content:
+    - if: osx
+      then: export DYLD_LIBRARY_PATH="$PREFIX/lib"
     - if: win
       then:
       - set AWS_LC_SYS_PREBUILT_NASM=0
@@ -32,7 +34,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust >=1.94.0
+  - rust >=1.97.0
   - ${{ stdlib('c') }}
   - if: linux
     then: diffutils

@@ -8,7 +8,7 @@
 -rustflags = ["-C", "target-feature=+crt-static"]
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -479,6 +479,7 @@
+@@ -487,6 +487,7 @@
  codegen-units = 1
  strip = true
  lto = "fat"
@@ -18,7 +18,7 @@
 
 --- a/crates/uv-distribution/src/source/mod.rs
 +++ b/crates/uv-distribution/src/source/mod.rs
-@@ -37,7 +37,10 @@
+@@ -36,7 +36,10 @@
      SourceUrl,
  };
  use uv_fs::{Simplified, rename_with_retry, write_atomic};
@@ -30,7 +30,7 @@
  use uv_git_types::{GitHubRepository, GitOid, GitUrl};
  use uv_metadata::read_archive_metadata;
  use uv_normalize::PackageName;
-@@ -2638,6 +2641,10 @@
+@@ -2631,6 +2634,10 @@
          resource: &GitDirectorySourceUrl<'_>,
          client: &ManagedClient<'_>,
      ) -> Result<Option<ResolutionMetadata>, Error> {
@@ -41,12 +41,14 @@
          let GitDirectorySourceUrl {
              git, subdirectory, ..
          } = resource;
-@@ -2656,19 +2663,41 @@
+@@ -2649,10 +2656,15 @@
 
          // Fetch the `pyproject.toml` from the resolved commit.
-         let url =
--            format!("https://raw.githubusercontent.com/{owner}/{repo}/{commit}/pyproject.toml");
-+            format!("https://api.github.com/repos/{owner}/{repo}/contents/pyproject.toml?ref={commit}");
+         let url = SafeUrl::parse_relaxed(&format!(
+-            "https://raw.githubusercontent.com/{owner}/{repo}/{commit}/pyproject.toml"
++            "https://api.github.com/repos/{owner}/{repo}/contents/pyproject.toml?ref={commit}"
+         ))
+         .map_err(anyhow::Error::from)?;
 
 +        if GITHUB_RATE_LIMIT_STATUS.is_active() {
 +            debug!("Rate-limited by GitHub. Skipping GitHub fast path attempt for: {url}");
@@ -56,16 +58,16 @@
          debug!("Attempting to fetch `pyproject.toml` from: {url}");
 
          let content = client
-             .managed(async |client| {
--                let response = client.uncached_client(git.url()).get(&url).send().await?;
-+                let response = client.uncached_client(git.url())
-+                    .get(&url)
+@@ -2660,6 +2672,8 @@
+                 let response = client
+                     .uncached_client(git.url())
+                     .get(url.clone())
 +                    .header("Accept", "application/vnd.github.raw+json")
 +                    .header("X-GitHub-Api-Version", "2026-03-10")
-+                    .send()
-+                    .await?;
+                     .send()
+                     .await?;
 
-                 // If the `pyproject.toml` does not exist, the GitHub API will return a 404.
+@@ -2667,7 +2681,19 @@
                  if response.status() == StatusCode::NOT_FOUND {
                      return Ok::<Option<String>, Error>(None);
                  }
