@@ -11,7 +11,7 @@
  rustflags = ["--cfg", 'getrandom_backend="wasm_js"']
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -164,3 +164,9 @@
+@@ -172,3 +172,9 @@
  ignored = [
    "wasi",
  ]
@@ -23,10 +23,10 @@
 +strip = true
 --- a/crates/tombi-schema-store/src/http_client/reqwest_client.rs
 +++ b/crates/tombi-schema-store/src/http_client/reqwest_client.rs
-@@ -65,8 +65,18 @@
-         // store's stale-cache handling. Follow GET redirects here so a policy
-         // refusal remains a typed, terminal error.
-         for _ in 0..10 {
+@@ -70,8 +70,18 @@
+             #[cfg(not(target_arch = "wasm32"))]
+             check_proxied_destination(&self.policy, &current_url).await?;
+
 -            let response = client
 -                .get(current_url.clone())
 +            let builder = if let Some(suffix) = current_url.as_str().strip_prefix("https://raw.githubusercontent.com/") {
