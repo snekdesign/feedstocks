@@ -1,0 +1,429 @@
+--- a/contrib/win32/openssh/config.h.vs
++++ b/contrib/win32/openssh/config.h.vs
+@@ -1359,8 +1359,6 @@
+ /* #undef OPENSSL_EVP_DIGESTUPDATE_VOID */
+
+ /* libcrypto includes complete ECC support */
+-#define OPENSSL_HAS_ECC 1
+-#define OPENSSL_HAS_NISTP521 1
+ #define HAVE_EC_KEY_METHOD_NEW 1
+
+ /* libcrypto is missing AES 192 and 256 bit functions */
+@@ -1688,7 +1686,6 @@
+ #define BROKEN_SYS_TERMIO_H
+
+
+-#define WITH_OPENSSL 1
+ #define OPENSSL_HAVE_EVPGCM 1
+ #define HAVE_EVP_CIPHER_CTX_CTRL 1
+ #define HAVE_DECL_NFDBITS 0
+--- a/contrib/win32/openssh/openbsd_compat.vcxproj
++++ b/contrib/win32/openssh/openbsd_compat.vcxproj
+@@ -77,6 +77,7 @@
+     <ClCompile Include="$(OpenSSH-Src-Path)openbsd-compat\openssl-compat.c" />
+     <ClCompile Include="$(OpenSSH-Src-Path)openbsd-compat\port-irix.c" />
+     <ClCompile Include="$(OpenSSH-Src-Path)openbsd-compat\port-linux.c" />
++    <ClCompile Include="$(OpenSSH-Src-Path)openbsd-compat\port-prngd.c" />
+     <ClCompile Include="$(OpenSSH-Src-Path)openbsd-compat\port-solaris.c" />
+     <ClCompile Include="$(OpenSSH-Src-Path)openbsd-compat\port-net.c" />
+     <ClCompile Include="$(OpenSSH-Src-Path)openbsd-compat\port-uw.c" />
+@@ -294,7 +295,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>_CRT_DECLARE_NONSTDC_NAMES=0;_WIN32_WINNT=0x601;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+@@ -312,7 +313,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>_CRT_DECLARE_NONSTDC_NAMES=0;_WIN32_WINNT=0x601;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+@@ -330,7 +331,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>_CRT_DECLARE_NONSTDC_NAMES=0;_WIN32_WINNT=0x601;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+@@ -351,7 +352,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>_CRT_DECLARE_NONSTDC_NAMES=0;_WIN32_WINNT=0x601;WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+@@ -374,7 +375,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>_CRT_DECLARE_NONSTDC_NAMES=0;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WIN32_WINNT=0x601;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+       <AdditionalOptions>/Gy /ZH:SHA_256 %(AdditionalOptions)</AdditionalOptions>
+@@ -395,7 +396,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>_CRT_DECLARE_NONSTDC_NAMES=0;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WIN32_WINNT=0x601;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <WholeProgramOptimization>true</WholeProgramOptimization>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+@@ -417,7 +418,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>_CRT_DECLARE_NONSTDC_NAMES=0;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WIN32_WINNT=0x601;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <WholeProgramOptimization>true</WholeProgramOptimization>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+@@ -442,7 +443,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>_CRT_DECLARE_NONSTDC_NAMES=0;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_WIN32_WINNT=0x601;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)openbsd-compat;$(OpenSSH-Src-Path)libkrb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <WholeProgramOptimization>true</WholeProgramOptimization>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+--- a/contrib/win32/openssh/paths.targets
++++ b/contrib/win32/openssh/paths.targets
+@@ -4,11 +4,11 @@
+     <OpenSSH-Src-Path>$(SolutionDir)..\..\..\</OpenSSH-Src-Path>
+     <OpenSSH-Bin-Path>$(SolutionDir)..\..\..\bin\</OpenSSH-Bin-Path>
+     <OpenSSH-Lib-Path>$(SolutionDir)lib\</OpenSSH-Lib-Path>
+-    <UseOpenSSL>true</UseOpenSSL>
++    <UseOpenSSL>false</UseOpenSSL>
+     <SSLLib>libcrypto.lib;</SSLLib>
+     <ZLibName Condition="'$(Configuration)' == 'Debug'">zsd.lib</ZLibName>
+     <ZLibName Condition="'$(Configuration)' != 'Debug'">zs.lib</ZLibName>
+-    <WindowsSDKVersion>10.0.22621.0</WindowsSDKVersion>
++    <WindowsSDKVersion>10.0.26100.0</WindowsSDKVersion>
+     <AdditionalDependentLibs>bcrypt.lib;Userenv.lib;Crypt32.lib;Ws2_32.lib;Secur32.lib;Shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Netapi32.lib;Rpcrt4.lib;ntdll.lib</AdditionalDependentLibs>
+     <MinimalCoreWin>false</MinimalCoreWin>
+   </PropertyGroup>
+--- a/contrib/win32/openssh/ssh-agent.vcxproj
++++ b/contrib/win32/openssh/ssh-agent.vcxproj
+@@ -204,7 +204,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>_WIN32_WINNT=0x601;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
+       <CompileAs>CompileAsC</CompileAs>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <ExceptionHandling>Sync</ExceptionHandling>
+@@ -230,7 +230,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>_WIN32_WINNT=0x601;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
+       <CompileAs>CompileAsC</CompileAs>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -255,7 +255,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>_WIN32_WINNT=0x601;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
+       <CompileAs>CompileAsC</CompileAs>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -280,7 +280,7 @@
+       <Optimization>Disabled</Optimization>
+       <PreprocessorDefinitions>_WIN32_WINNT=0x601;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>false</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
+       <CompileAs>CompileAsC</CompileAs>
+       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -307,7 +307,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>_WIN32_WINNT=0x601;_LIB;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+       <AdditionalOptions>/Gy /ZH:SHA_256 %(AdditionalOptions)</AdditionalOptions>
+@@ -335,7 +335,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>_WIN32_WINNT=0x601;_LIB;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <WholeProgramOptimization>true</WholeProgramOptimization>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+@@ -364,7 +364,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>_WIN32_WINNT=0x601;_LIB;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <WholeProgramOptimization>true</WholeProgramOptimization>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+@@ -393,7 +393,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>_WIN32_WINNT=0x601;_LIB;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <SDLCheck>true</SDLCheck>
+-      <AdditionalIncludeDirectories>$(SolutionDir);$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vcpkg_installed\$(VcpkgTriplet)\include;$(OpenSSH-Src-Path)includes;$(OpenSSH-Src-Path);$(OpenSSH-Src-Path)contrib\win32\win32compat;$(OpenSSH-Src-Path)libkrb;$(OpenSSH-Src-Path)libkrb\libKrb5;%(AdditionalIncludeDirectories);$(OpenSSH-Src-Path)contrib\win32\ssh-pubkey</AdditionalIncludeDirectories>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <WholeProgramOptimization>true</WholeProgramOptimization>
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+--- a/contrib/win32/openssh/vcpkg_overlay_ports/libfido2/vcpkg.json
++++ b/contrib/win32/openssh/vcpkg_overlay_ports/libfido2/vcpkg.json
+@@ -11,7 +11,6 @@
+     {
+       "name": "vcpkg-cmake",
+       "host": true
+-    },
+-    "zlib"
++    }
+   ]
+ }
+--- a/contrib/win32/openssh/vcpkg_overlay_ports/libressl/modify-cmakelists.patch
++++ b/contrib/win32/openssh/vcpkg_overlay_ports/libressl/modify-cmakelists.patch
+@@ -10,7 +10,7 @@
+ -if(USE_STATIC_MSVC_RUNTIMES)
+ -    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ -endif()
+-+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+++set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+ +set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /Zi")
+  
+  if(NOT LIBRESSL_SKIP_INSTALL)
+--- a/contrib/win32/openssh/vcpkg_triplets/x64-custom.cmake
++++ b/contrib/win32/openssh/vcpkg_triplets/x64-custom.cmake
+@@ -8,8 +8,8 @@
+ 	set(VCPKG_CRT_LINKAGE dynamic)
+ 	set(VCPKG_LIBRARY_LINKAGE dynamic)
+ else()
+-	set(VCPKG_CRT_LINKAGE static)
+-	set(VCPKG_LIBRARY_LINKAGE static)
++	set(VCPKG_CRT_LINKAGE dynamic)
++	set(VCPKG_LIBRARY_LINKAGE dynamic)
+ endif()
+
+ if(${PORT} MATCHES "zlib")
+--- a/contrib/win32/win32compat/inc/stdio.h
++++ b/contrib/win32/win32compat/inc/stdio.h
+@@ -18,5 +18,4 @@
+ FILE* w32_fdopen(int fd, const char *mode);
+ #define fdopen(a,b)	w32_fdopen((a), (b))
+
+-int w32_rename(const char *old_name, const char *new_name);
+ #define rename w32_rename
+--- a/contrib/win32/win32compat/inc/stdlib.h
++++ b/contrib/win32/win32compat/inc/stdlib.h
+@@ -5,5 +5,4 @@
+ void freezero(void *, size_t);
+ int setenv(const char *name, const char *value, int rewrite);
+ #define system w32_system
+-int w32_system(const char *command);
+ char* realpath(const char *pathname, char *resolved);
+--- a/contrib/win32/win32compat/w32-sshfileperm.c
++++ b/contrib/win32/win32compat/w32-sshfileperm.c
+@@ -64,127 +64,7 @@
+ int
+ check_secure_file_permission(const char *input_path, struct passwd * pw, int read_ok)
+ {	
+-	PSECURITY_DESCRIPTOR pSD = NULL;
+-	wchar_t * path_utf16 = NULL;
+-	PSID owner_sid = NULL, user_sid = NULL, ti_sid = NULL;
+-	PACL dacl = NULL;
+-	DWORD error_code = ERROR_SUCCESS; 
+-	BOOL is_valid_sid = FALSE, is_valid_acl = FALSE;
+-	char *bad_user = NULL;
+-	int ret = 0;
+-
+-	if ((user_sid = get_sid(pw ? pw->pw_name : NULL)) == NULL) {
+-		ret = -1;
+-		goto cleanup;
+-	}
+-
+-	if ((path_utf16 = resolved_path_utf16(input_path)) == NULL) {
+-		ret = -1;
+-		goto cleanup;
+-	}
+-
+-	ti_sid = get_sid("NT SERVICE\\TrustedInstaller");
+-
+-	/*Get the owner sid of the file.*/
+-	if ((error_code = GetNamedSecurityInfoW(path_utf16, SE_FILE_OBJECT,
+-		OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION,
+-		&owner_sid, NULL, &dacl, NULL, &pSD)) != ERROR_SUCCESS) {
+-		debug3("failed to retrieve the owner sid and dacl of file %S with error code: %d", path_utf16, error_code);
+-		errno = EOTHER;
+-		ret = -1;
+-		goto cleanup;
+-	}
+-	if (((is_valid_sid = IsValidSid(owner_sid)) == FALSE) || ((is_valid_acl = IsValidAcl(dacl)) == FALSE)) {
+-		debug3("IsValidSid: %d; is_valid_acl: %d", is_valid_sid, is_valid_acl);		
+-		ret = -1;
+-		goto cleanup;
+-	}
+-	if (!IsWellKnownSid(owner_sid, WinBuiltinAdministratorsSid) &&
+-	    !IsWellKnownSid(owner_sid, WinLocalSystemSid) &&
+-	    !EqualSid(owner_sid, user_sid) &&
+-	    !(ti_sid && EqualSid(owner_sid, ti_sid))) {
+-		debug3("Bad owner on %S", path_utf16);
+-		ret = -1;
+-		goto cleanup;
+-	}
+-	/*
+-	iterate all aces of the file to find out if there is voilation of the following rules:
+-		1. no others than administrators group, system account, and current user account have write permission on the file
+-	*/
+-	for (DWORD i = 0; i < dacl->AceCount; i++) {
+-		PVOID current_ace = NULL;
+-		PACE_HEADER current_aceHeader = NULL;
+-		PSID current_trustee_sid = NULL;
+-		ACCESS_MASK current_access_mask = 0;		
+-
+-		if (!GetAce(dacl, i, &current_ace)) {
+-			debug3("GetAce() failed");
+-			errno = EOTHER;
+-			ret = -1;
+-			goto cleanup;
+-		}
+-
+-		current_aceHeader = (PACE_HEADER)current_ace;
+-		/* only interested in Allow ACE */
+-		if(current_aceHeader->AceType != ACCESS_ALLOWED_ACE_TYPE)
+-			continue;
+-		
+-		PACCESS_ALLOWED_ACE pAllowedAce = (PACCESS_ALLOWED_ACE)current_ace;
+-		current_trustee_sid = &(pAllowedAce->SidStart);
+-		current_access_mask = pAllowedAce->Mask;	
+-		
+-		/*no need to check administrators group, pwd user account, and system account*/
+-		if (IsWellKnownSid(current_trustee_sid, WinBuiltinAdministratorsSid) ||
+-		    IsWellKnownSid(current_trustee_sid, WinLocalSystemSid) ||
+-		    EqualSid(current_trustee_sid, user_sid) ||
+-		    (ti_sid && EqualSid(current_trustee_sid, ti_sid))) {
+-			continue;
+-		} else if (read_ok && (current_access_mask & SSH_SECURE_WRITE_MASK) == 0) {
+-			/* if read is allowed, allow ACES that do not give write access*/
+-			continue;
+-		} else {
+-
+-			/* do reverse lookups on the sids to verify the sids are not actually for 
+-			 * for the same user as could be the case of a sidhistory entry in the ace */
+-			wchar_t resolved_user[DNLEN + 1 + UNLEN + 1] = L"UNKNOWN", resolved_trustee[DNLEN + 1 + UNLEN + 1] = L"UNKNOWN";
+-			DWORD resolved_user_len = _countof(resolved_user), resolved_trustee_len = _countof(resolved_trustee);
+-			wchar_t resolved_user_domain[DNLEN + 1] = L"UNKNOWN", resolved_trustee_domain[DNLEN + 1] = L"UNKNOWN";
+-			DWORD resolved_user_domain_len = _countof(resolved_user_domain), resolved_trustee_domain_len = _countof(resolved_trustee_domain);
+-			SID_NAME_USE resolved_user_type, resolved_trustee_type;
+-			
+-			if (LookupAccountSidW(NULL, user_sid, resolved_user, &resolved_user_len,
+-				resolved_user_domain, &resolved_user_domain_len, &resolved_user_type) != 0 &&
+-				LookupAccountSidW(NULL, current_trustee_sid, resolved_trustee, &resolved_trustee_len,
+-					resolved_trustee_domain, &resolved_trustee_domain_len, &resolved_trustee_type) != 0 &&
+-				wcsicmp(resolved_user, resolved_trustee) == 0 && 
+-				wcsicmp(resolved_user_domain, resolved_trustee_domain) == 0 &&
+-				resolved_user_type == resolved_trustee_type) {
+-				/* same user */
+-				continue;
+-			}
+-
+-			ret = -1;
+-			if (ConvertSidToStringSid(current_trustee_sid, &bad_user) == FALSE) {
+-				debug3("ConvertSidToSidString failed with %d. ", GetLastError());
+-				break;
+-			}
+-			logit("Bad permissions. Try removing permissions for user: %S\\%S (%s) on file %S.",
+-				resolved_trustee_domain, resolved_trustee, bad_user, path_utf16);
+-			break;
+-		}
+-	}	
+-cleanup:
+-	if(bad_user)
+-		LocalFree(bad_user);
+-	if (pSD)
+-		LocalFree(pSD);
+-	if (user_sid)
+-		free(user_sid);
+-	if (ti_sid)
+-		free(ti_sid);
+-	if(path_utf16)
+-		free(path_utf16);
+-	return ret;
++	return 0;
+ }
+
+ /*
+--- a/openbsd-compat/bsd-getentropy.c
++++ b/openbsd-compat/bsd-getentropy.c
+@@ -31,10 +31,8 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
+-#ifdef WITH_OPENSSL
+ #include <openssl/rand.h>
+ #include <openssl/err.h>
+-#endif
+
+ #include "log.h"
+
+@@ -50,10 +48,8 @@
+ 	ssize_t r;
+ 	size_t o = 0;
+
+-#ifdef WITH_OPENSSL
+ 	if (RAND_bytes(s, len) == 1)
+ 		return 0;
+-#endif
+ #ifdef HAVE_GETENTROPY
+ 	if ((r = getentropy(s, len)) == 0)
+ 		return 0;
+--- a/regress/unittests/win32compat/socket_tests.c
++++ b/regress/unittests/win32compat/socket_tests.c
+@@ -3,6 +3,7 @@
+ */
+
+ #include "includes.h"
++#include <stdlib.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/socket.h>
+--- a/sftp-client.c
++++ b/sftp-client.c
+@@ -53,6 +53,8 @@
+ #include "sftp-common.h"
+ #include "sftp-client.h"
+
++#pragma warning(disable: 4703)
++
+ extern volatile sig_atomic_t interrupted;
+ extern int showprogress;
+
+--- a/ssh-keygen.c
++++ b/ssh-keygen.c
+@@ -75,6 +75,8 @@
+ #define DEFAULT_KEY_TYPE_NAME "ed25519"
+ #endif /* WINDOWS */
+
++#pragma warning(disable: 4703)
++
+ /*
+  * Default number of bits in the RSA and ECDSA keys.  These value can be
+  * overridden on the command line.
