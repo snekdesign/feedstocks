@@ -11,7 +11,29 @@
  rustflags = ["--cfg", 'getrandom_backend="wasm_js"']
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -172,3 +172,9 @@
+@@ -70,16 +70,19 @@
+ pythonize = "0.29.0"
+ quote = "1.0.40"
+ rattler_conda_types = { version = "0.57.0", default-features = false }
++rattler_config = { version = "0.9.4", default-features = false }
+ rattler_digest = "2.1.0"
++rattler_networking = { version = "0.34.2", default-features = false, features = [
++  "rattler_config",
++] }
+ rattler_repodata_gateway = { version = "0.36.4", default-features = false, features = [
+   "gateway",
+   "rustls",
+ ] }
+ rayon = "1.10.0"
+-reqwest = { version = "0.12.15", default-features = false, features = [
++reqwest = { version = "0.13.5", default-features = false, features = [
+   "gzip",
+   "json",
+-  "rustls-tls-native-roots",
+ ] }
+ reqwest-middleware = { package = "astral-reqwest-middleware", version = "0.5.1" }
+ rmp-serde = "1.3.1"
+@@ -183,3 +186,9 @@
  ignored = [
    "wasi",
  ]
@@ -21,29 +43,204 @@
 +lto = true
 +opt-level = 3
 +strip = true
+--- a/crates/tombi-schema-store/Cargo.toml
++++ b/crates/tombi-schema-store/Cargo.toml
+@@ -15,6 +15,7 @@
+ log.workspace = true
+ parking_lot.workspace = true
+ reqwest = { workspace = true, optional = true }
++reqwest-middleware.workspace = true
+ serde.workspace = true
+ serde_json.workspace = true
+ thiserror.workspace = true
+@@ -46,8 +47,11 @@
+ tombi-test-lib.workspace = true
+
+ [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
++async-trait = { workspace = true, optional = true }
+ http = { workspace = true, optional = true }
+ hyper-util = { workspace = true, optional = true }
++rattler_config = { workspace = true, optional = true }
++rattler_networking = { workspace = true, optional = true }
+ tokio = { workspace = true, features = ["process", "time"] }
+
+ [target.'cfg(target_os = "macos")'.dependencies]
+@@ -61,7 +65,13 @@
+ document-tree = ["dep:tombi-document-tree-syntax"]
+ gloo-net = ["dep:gloo-net", "dep:web-sys"]
+ gloo-net06 = ["gloo-net"]
+-native = ["reqwest", "tombi-future/native"]
++native = [
++  "dep:async-trait",
++  "dep:rattler_config",
++  "dep:rattler_networking",
++  "reqwest",
++  "tombi-future/native",
++]
+ reqwest = [
+   "dep:http",
+   "dep:hyper-util",
 --- a/crates/tombi-schema-store/src/http_client/reqwest_client.rs
 +++ b/crates/tombi-schema-store/src/http_client/reqwest_client.rs
-@@ -70,8 +70,18 @@
-             #[cfg(not(target_arch = "wasm32"))]
-             check_proxied_destination(&self.policy, &current_url).await?;
+@@ -3,11 +3,17 @@
+     schema_fetch_policy::{PolicyError, SchemaFetchPolicy},
+ };
+ use bytes::Bytes;
++use http::Extensions;
+ use std::{
+     collections::HashSet,
+     net::{IpAddr, SocketAddr},
+     sync::{Arc, OnceLock},
+ };
++use reqwest::{
++    Request, Response, Url,
++    header::{ACCEPT, Entry, HeaderName, HeaderValue},
++};
++use reqwest_middleware::{ClientBuilder, ClientWithMiddleware, Middleware, Next};
+ use tombi_future::Boxable;
 
--            let response = client
--                .get(current_url.clone())
-+            let builder = if let Some(suffix) = current_url.as_str().strip_prefix("https://raw.githubusercontent.com/") {
-+                let mut v: Vec<&str> = suffix.split('/').collect();
-+                let reference = v[2];
-+                v[2] = "contents";
-+                let path = v.join("/");
-+                client.get(format!("https://api.github.com/repos/{path}?ref={reference}"))
-+                      .header("Accept", "application/vnd.github.raw+json")
-+                      .header("X-GitHub-Api-Version", "2026-03-10")
-+            } else {
-+                client.get(current_url.clone())
-+            };
-+            let response = builder
-                 .send()
-                 .await
-                 .map_err(fetch_error_from_reqwest)?;
+ #[cfg(not(target_arch = "wasm32"))]
+@@ -17,7 +23,7 @@
+
+ #[derive(Debug, Clone)]
+ pub struct ReqwestHttpClient {
+-    client: Arc<OnceLock<Result<reqwest::Client, String>>>,
++    client: Arc<OnceLock<Result<ClientWithMiddleware, String>>>,
+     policy: Arc<SchemaFetchPolicy>,
+ }
+
+@@ -45,7 +51,7 @@
+         }
+     }
+
+-    fn client(&self) -> Result<&reqwest::Client, FetchError> {
++    fn client(&self) -> Result<&ClientWithMiddleware, FetchError> {
+         self.client
+             .get_or_init(|| build_client(self.policy.clone()).map_err(|err| err.to_string()))
+             .as_ref()
+@@ -148,7 +154,45 @@
+     }
+ }
+
+-fn build_client(policy: Arc<SchemaFetchPolicy>) -> Result<reqwest::Client, FetchError> {
++struct GitHubMiddleware {}
++
++#[cfg(feature = "native")]
++#[async_trait::async_trait]
++impl Middleware for GitHubMiddleware {
++    async fn handle(
++        &self,
++        mut req: Request,
++        extensions: &mut Extensions,
++        next: Next<'_>,
++    ) -> reqwest_middleware::Result<Response> {
++        if let Some(suffix) = req.url().as_str().strip_prefix(
++            "https://raw.githubusercontent.com/",
++        ) {
++            let mut v: Vec<&str> = suffix.split('/').collect();
++            let reference = v[2];
++            v[2] = "contents";
++            let path = v.join("/");
++            let redirect = format!("https://api.github.com/repos/{path}?ref={reference}");
++            *req.url_mut() = Url::parse(redirect.as_str())
++                .map_err(|err| reqwest_middleware::Error::middleware(err))?;
++            let headers = req.headers_mut();
++            if let Entry::Occupied(occupied) = headers.entry(ACCEPT) {
++                occupied.remove_entry_mult();
++            }
++            headers.insert(
++                ACCEPT,
++                HeaderValue::from_static("application/vnd.github.raw+json"),
++            );
++            headers.insert(
++                HeaderName::from_static("x-github-api-version"),
++                HeaderValue::from_static("2026-03-10"),
++            );
++        }
++        next.run(req, extensions).await
++    }
++}
++
++fn build_client(policy: Arc<SchemaFetchPolicy>) -> Result<ClientWithMiddleware, FetchError> {
+     let mut builder = reqwest::Client::builder()
+         .user_agent("tombi")
+         .timeout(std::time::Duration::from_secs(http_timeout_secs()))
+@@ -177,6 +221,22 @@
+     builder.build().map_err(|err| FetchError::FetchFailed {
+         reason: err.to_string(),
+     })
++    .map(|client| {
++        let mut builder = ClientBuilder::new(client);
++        #[cfg(feature = "native")]
++        {
++            use rattler_config::{ConfigBase, NoExtension};
++            use rattler_networking::MirrorMiddleware;
++
++            builder = builder.with(
++                MirrorMiddleware::from_config(
++                    &ConfigBase::<NoExtension>::load_from_default_locations("pixi")
++                        .unwrap_or_default(),
++                ),
++            ).with(GitHubMiddleware {})
++        }
++        builder.build()
++    })
+ }
+
+ fn is_redirect_status(status: reqwest::StatusCode) -> bool {
+@@ -183,7 +243,7 @@
+     matches!(status.as_u16(), 301 | 302 | 303 | 307 | 308)
+ }
+
+-fn fetch_error_from_reqwest(error: reqwest::Error) -> FetchError {
++fn fetch_error_from_reqwest(error: reqwest_middleware::Error) -> FetchError {
+     #[cfg(not(target_arch = "wasm32"))]
+     {
+         let mut source = std::error::Error::source(&error);
+--- a/extensions/tombi-extension-pixi/Cargo.toml
++++ b/extensions/tombi-extension-pixi/Cargo.toml
+@@ -25,6 +25,8 @@
+ async-trait = { workspace = true, optional = true }
+ futures = { workspace = true, optional = true }
+ http = { workspace = true, optional = true }
++rattler_config = { workspace = true, optional = true }
++rattler_networking = { workspace = true, optional = true }
+ rattler_repodata_gateway = { workspace = true, optional = true }
+ reqwest-middleware = { workspace = true, optional = true }
+
+@@ -39,6 +41,8 @@
+   "dep:async-trait",
+   "dep:futures",
+   "dep:http",
++  "dep:rattler_config",
++  "dep:rattler_networking",
+   "dep:rattler_repodata_gateway",
+   "dep:reqwest-middleware",
+   "tombi-schema-store/native",
+--- a/extensions/tombi-extension-pixi/src/conda.rs
++++ b/extensions/tombi-extension-pixi/src/conda.rs
+@@ -35,6 +35,8 @@
+
+     use itertools::Itertools;
+     use rattler_conda_types::{MatchSpec, PackageName};
++    use rattler_config::{ConfigBase, NoExtension};
++    use rattler_networking::MirrorMiddleware;
+     use rattler_repodata_gateway::{ChannelConfig, Gateway, SourceConfig, fetch::CacheAction};
+     use reqwest_middleware::{
+         Middleware, Next,
+@@ -85,6 +87,12 @@
+                     reqwest_middleware::reqwest::Client::new(),
+                 )
+                 .with(ShardedOnlyGuard)
++                .with(
++                    MirrorMiddleware::from_config(
++                        &ConfigBase::<NoExtension>::load_from_default_locations("pixi")
++                            .unwrap_or_default(),
++                    ),
++                )
+                 .build();
+
+                 let mut builder =
 --- a/rust/tombi-cli/build.rs
 +++ b/rust/tombi-cli/build.rs
 @@ -1,29 +1,7 @@
@@ -77,3 +274,19 @@
      println!("cargo:rustc-env=__TOMBI_TARGET_TRIPLE={target}");
 -    println!("cargo:rerun-if-changed=.git/HEAD");
  }
+--- a/rust/tombi-cli/src/app.rs
++++ b/rust/tombi-cli/src/app.rs
+@@ -79,6 +79,13 @@
+         .target(env_logger::Target::Stderr)
+         .init();
+
++    if let Some(pixi_home) = option_env!("PIXI_HOME")
++        && std::env::var("PIXI_HOME").is_err()
++        && std::path::Path::new(pixi_home).is_dir()
++    {
++        unsafe { std::env::set_var("PIXI_HOME", pixi_home); }
++    }
++
+     match args.subcommand {
+         command::TomlCommand::Cache(args) => command::cache::run(args),
+         command::TomlCommand::Format(args) => command::format::run(args),

@@ -1,13 +1,13 @@
 context:
   version: 1.8.9
-  sha256: 70c99a49437e1778b30909a3567a113cd4d01af998f22d82207a673f480313d0
+  sha256: 384022c2294d0332d70e7f87fff2b2961b304203140601ce432c8a421d1edda1
 
 package:
   name: tombi
   version: ${{ version }}
 
 source:
-  url: https://codeload.github.com/tombi-toml/tombi/tar.gz/v${{ version }}
+  url: https://codeload.github.com/pavelzw/tombi/tar.gz/v${{ version }}-pixi
   sha256: ${{ sha256 }}
   patches:
   - changes.patch
@@ -18,7 +18,9 @@ build:
     content:
     - cargo install --locked --no-track --path rust/tombi-cli --root "%LIBRARY_PREFIX%"
     env:
+      AWS_LC_SYS_PREBUILT_NASM: '0'
       CARGO_HOME: ${{ env.get('CARGO_HOME', default='') }}
+      PIXI_HOME: ${{ env.get('PIXI_HOME', default='') }}
   skip:
   - not win
   - build_platform != target_platform
@@ -27,6 +29,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
+  - nasm
   - rust >=1.94.0
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
