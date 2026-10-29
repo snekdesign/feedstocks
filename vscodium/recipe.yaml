@@ -1,6 +1,6 @@
 context:
-  version: 1.143.17183
-  sha256: 5aea75fde6a7aa239f661cfa0eb49c09eda782c7221f3f18840e7e679b5edc06
+  version: 1.143.17232
+  sha256: a1090868af8ac0ac04c22d79fdd02246fa115a78daf38a741d8db06df1753c1d
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/versions?size=1
   cmake_version: 0.8.2
   # https://open-vsx.org/api/KylinIdeTeam/cmake-intellisence/latest/file/sha256
@@ -14,13 +14,13 @@ context:
   # https://open-vsx.org/api/whoami730/cython-enhanced/latest/file/sha256
   cython_sha256: 423715d7efbac30a5db53eb0eb64afe08b9ec7d462613b3622b96ccec3bfa54b
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/versions?size=1
-  ruff_version: 2026.90.0
+  ruff_version: 2026.92.0
   # https://open-vsx.org/api/charliermarsh/ruff/win32-x64/latest/file/sha256
-  ruff_sha256: 8551ed346d8c1021385d05bbe9714be9d9fb7c9d57ea4346721055a3fa2bde2c
+  ruff_sha256: 001c4d2354d10931136b2a2cbb64232dc36e8b5ca4a37aea4cdea87479a5f02c
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/versions?size=1
-  toml_version: 1.9.6
+  toml_version: 1.9.8
   # https://open-vsx.org/api/tombi-toml/tombi/win32-x64/latest/file/sha256
-  toml_sha256: e0d9b600e3680305ccc2c96ae45fd6d69d80e5e64e0235f0ca58967eb5ff5be3
+  toml_sha256: 2c9988f6bdddcfe1a8d4753b7aec16f7751d22c552351333fd5bcba9bdbceef2
   # https://open-vsx.org/api/zensical/zensical-studio/versions?size=1
   zensical_version: 0.2.20
   # https://open-vsx.org/api/zensical/zensical-studio/latest/file/sha256
