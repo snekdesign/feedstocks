@@ -13,14 +13,14 @@
    # increase the stack size to prevent overflowing the stack in debug
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -274,11 +274,43 @@
+@@ -276,11 +276,43 @@
    "s3",
  ] }
- rattler_build_jinja = { version = "0.1.19" }
-+rattler_build_networking = { version = "0.1.15" }
- rattler_build_recipe = { version = "0.1.19" }
- rattler_build_types = { version = "0.1.17" }
- rattler_build_variant_config = { version = "0.1.19" }
+ rattler_build_jinja = { version = "0.1.24" }
++rattler_build_networking = { version = "0.1.20" }
+ rattler_build_recipe = { version = "0.1.24" }
+ rattler_build_types = { version = "0.1.22" }
+ rattler_build_variant_config = { version = "0.1.24" }
 
  [patch.crates-io]
 +coalesced_map = { path = "../rattler/crates/coalesced_map" }
@@ -57,7 +57,7 @@
  version-ranges = { git = "https://github.com/astral-sh/pubgrub", rev = "d8efd77673c9a90792da9da31b6c0da7ea8a324b" }
 
  # Redirect crates.io's `reqwest-middleware` to a local shim that re-exports
-@@ -320,3 +352,9 @@
+@@ -322,3 +354,9 @@
  panic = "unwind"  # needed for backtraces
  # macOS only:
  codegen-units = 1  # better line info (slower build, clearer profiles)
@@ -69,7 +69,7 @@
 +strip = true
 --- a/crates/pixi_api/src/context.rs
 +++ b/crates/pixi_api/src/context.rs
-@@ -37,7 +37,7 @@
+@@ -41,7 +41,7 @@
      pub async fn search(
          &self,
          config: pixi_config::Config,
@@ -78,7 +78,7 @@
          channels: IndexSet<Channel>,
          platforms: Vec<Subdir>,
          fuzzy_limit: Option<usize>,
-@@ -612,7 +612,7 @@
+@@ -672,7 +672,7 @@
      /// Search for packages matching a [`MatchSpec`]
      pub async fn search(
          &self,
@@ -176,7 +176,7 @@
  jsonrpc-http-server = { workspace = true }
 --- a/crates/pixi_build_backend/src/intermediate_backend.rs
 +++ b/crates/pixi_build_backend/src/intermediate_backend.rs
-@@ -841,10 +841,17 @@
+@@ -866,10 +866,17 @@
              .await
              .into_diagnostic()?;
 
@@ -214,7 +214,7 @@
  pixi_build_types = { workspace = true }
 --- a/crates/pixi_build_rattler_build/src/protocol.rs
 +++ b/crates/pixi_build_rattler_build/src/protocol.rs
-@@ -463,10 +463,17 @@
+@@ -477,10 +477,17 @@
              self.recipe_source.path.clone(),
          );
 
@@ -324,7 +324,7 @@
 @@ -170,7 +179,7 @@
      let result = if let Some(workspace) = workspace {
          await_in_progress("searching packages...", |_| async {
-             cli_context(workspace)
+             cli_workspace_context(workspace)
 -                .search(matchspec, channels, platforms, fuzzy_limit)
 +                .search(matchspec.clone(), channels, platforms, fuzzy_limit)
                  .await
@@ -359,7 +359,7 @@
          };
 --- a/crates/pixi_global/src/install.rs
 +++ b/crates/pixi_global/src/install.rs
-@@ -54,7 +54,7 @@
+@@ -53,7 +53,7 @@
              } else {
                  false
              }
@@ -370,7 +370,7 @@
      };
 --- a/crates/pixi_global/src/project/parsed_manifest.rs
 +++ b/crates/pixi_global/src/project/parsed_manifest.rs
-@@ -572,11 +572,7 @@
+@@ -557,11 +557,7 @@
      type Err = ExposedNameError;
 
      fn from_str(value: &str) -> Result<Self, Self::Err> {
