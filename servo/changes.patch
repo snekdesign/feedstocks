@@ -12,7 +12,7 @@
 
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -424,7 +424,7 @@
+@@ -446,7 +446,7 @@
  debug-assertions = false
  lto = true
  codegen-units = 1
@@ -100,7 +100,7 @@
 \ No newline at end of file
 --- a/components/servo/servo.rs
 +++ b/components/servo/servo.rs
-@@ -107,8 +107,12 @@
+@@ -132,8 +132,12 @@
              let mut plugin_dir = std::env::current_exe().unwrap();
              plugin_dir.pop();
 
@@ -128,7 +128,7 @@
 
 --- a/ports/servoshell/desktop/headed_window.rs
 +++ b/ports/servoshell/desktop/headed_window.rs
-@@ -118,6 +118,7 @@
+@@ -120,6 +120,7 @@
              .with_decorations(!no_native_titlebar)
              .with_transparent(no_native_titlebar)
              .with_inner_size(LogicalSize::new(inner_size.width, inner_size.height))
@@ -148,7 +148,7 @@
      }
 --- a/ports/servoshell/prefs.rs
 +++ b/ports/servoshell/prefs.rs
-@@ -577,7 +577,7 @@
+@@ -583,7 +583,7 @@
      zealous_gc: bool,
 
      /// The url we should load.
