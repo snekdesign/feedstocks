@@ -1,16 +1,3 @@
-From a30aa2efde2d136cac514c0e0000917f309d2cec Mon Sep 17 00:00:00 2001
-From: snekdesign <104812819+snekdesign@users.noreply.github.com>
-Date: Sun, 14 Jul 2024 22:12:43 +0800
-Subject: [PATCH] conda build
-
----
- src/common.build.post.props      | 6 +++---
- src/common.build.pre.props       | 7 +++----
- src/common.nugetversions.targets | 1 -
- 3 files changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/src/common.build.post.props b/src/common.build.post.props
-index ec14337..fc62baa 100644
 --- a/src/common.build.post.props
 +++ b/src/common.build.post.props
 @@ -28,7 +28,7 @@
@@ -31,32 +18,21 @@ index ec14337..fc62baa 100644
 +      <AdditionalLibraryDirectories>$(LIBRARY_LIB);$(LIBRARY_PREFIX)\x86_64-w64-mingw32\sysroot\usr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
    </ItemDefinitionGroup>
- 
+
 @@ -115,5 +116,4 @@
    </ItemDefinitionGroup>
- 
+
    <!-- For C++ projects, bring in the vcpkg targets at the end -->
 -  <Import Project="$(VcpkgRoot)/scripts/buildsystems/msbuild/vcpkg.targets" Condition="'$(MSBuildProjectExtension)'=='.vcxproj'" />
  </Project>
-diff --git a/src/common.build.pre.props b/src/common.build.pre.props
-index b3f57bf..a9c818d 100644
 --- a/src/common.build.pre.props
 +++ b/src/common.build.pre.props
-@@ -75,7 +75,7 @@
-   </ItemGroup>
- 
-   <PropertyGroup Label="Globals">
--    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)' == ''">10.0.22621.0</WindowsTargetPlatformVersion>
-+    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)' == ''">10.0.26100.0</WindowsTargetPlatformVersion>
-     <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)' == ''">10.0.18362.0</WindowsTargetPlatformMinVersion>
-   </PropertyGroup>
- 
 @@ -137,11 +137,11 @@
            This diagnostic is broken in VS 17.7 which our CI currently uses. It's fixed in 17.8.
        -->
        <DisableSpecificWarnings>4201;4312;4467;5105;26434;26445;26456;26478;26494;%(DisableSpecificWarnings)</DisableSpecificWarnings>
 -      <PreprocessorDefinitions>_WINDOWS;EXTERNAL_BUILD;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <PreprocessorDefinitions>_WINDOWS;EXTERNAL_BUILD;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;ubrk_close=ubrk_close_78;ubrk_next=ubrk_next_78;ubrk_open=ubrk_open_78;uregex_close=uregex_close_78;uregex_end64=uregex_end64_78;uregex_find=uregex_find_78;uregex_findNext=uregex_findNext_78;uregex_open=uregex_open_78;uregex_setStackLimit=uregex_setStackLimit_78;uregex_setTimeLimit=uregex_setTimeLimit_78;uregex_setUText=uregex_setUText_78;uregex_start64=uregex_start64_78;utext_close=utext_close_78;utext_setup=utext_setup_78;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_WINDOWS;EXTERNAL_BUILD;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING;ubrk_close=ubrk_close_79;ubrk_next=ubrk_next_79;ubrk_open=ubrk_open_79;uregex_close=uregex_close_79;uregex_end64=uregex_end64_79;uregex_find=uregex_find_79;uregex_findNext=uregex_findNext_79;uregex_open=uregex_open_79;uregex_setStackLimit=uregex_setStackLimit_79;uregex_setTimeLimit=uregex_setTimeLimit_79;uregex_setUText=uregex_setUText_79;uregex_start64=uregex_start64_79;utext_close=utext_close_79;utext_setup=utext_setup_79;%(PreprocessorDefinitions)</PreprocessorDefinitions>
        <SDLCheck>true</SDLCheck>
        <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
        <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -65,24 +41,19 @@ index b3f57bf..a9c818d 100644
        <MultiProcessorCompilation>true</MultiProcessorCompilation>
        <MinimalRebuild>false</MinimalRebuild>
        <RuntimeTypeInfo>false</RuntimeTypeInfo>
-@@ -298,5 +298,4 @@
+@@ -297,5 +297,4 @@
      <VCPkgLocalAppDataDisabled>true</VCPkgLocalAppDataDisabled>
    </PropertyGroup>
- 
+
 -  <Import Project="$(VcpkgRoot)/scripts/buildsystems/msbuild/vcpkg.props" Condition="'$(MSBuildProjectExtension)'=='.vcxproj'" />
  </Project>
-diff --git a/src/common.nugetversions.targets b/src/common.nugetversions.targets
-index 186f933..a253ff3 100644
 --- a/src/common.nugetversions.targets
 +++ b/src/common.nugetversions.targets
 @@ -95,7 +95,6 @@
      <Error Condition="'$(TerminalMUX)' == 'true' AND !Exists('$(MSBuildThisFileDirectory)..\packages\Microsoft.Web.WebView2.1.0.1661.34\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)..\packages\Microsoft.Web.WebView2.1.0.1661.34\build\native\Microsoft.Web.WebView2.targets'))" />
- 
+
      <!-- WIL (so widely used that this one does not have a TerminalWIL opt-in property; it is automatic) -->
--    <Error Condition="!Exists('$(MSBuildThisFileDirectory)..\packages\Microsoft.Windows.ImplementationLibrary.1.0.240122.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)..\packages\Microsoft.Windows.ImplementationLibrary.1.0.240122.1\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
- 
+-    <Error Condition="!Exists('$(MSBuildThisFileDirectory)..\packages\Microsoft.Windows.ImplementationLibrary.1.0.250325.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)..\packages\Microsoft.Windows.ImplementationLibrary.1.0.250325.1\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
+
    </Target>
- 
--- 
-2.45.2.windows.1
 

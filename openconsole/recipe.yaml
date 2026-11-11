@@ -1,29 +1,28 @@
 context:
-  version: 1.24.10621
-  sha256: 09d68525eb05c5bd867181ae42dfa80e4a35aad2c4642f65252d7e13049de6f9
+  version: 1.25.3131
+  sha256: 45c9150f3317ef8f9840b70c7357fd6578762617178edf59521645b58842d228
 
 package:
   name: openconsole
   version: ${{ version }}
 
 source:
-- url: https://codeload.github.com/microsoft/terminal/tar.gz/v${{ version }}.0
+  url: https://codeload.github.com/microsoft/terminal/tar.gz/v${{ version }}.0
   sha256: ${{ sha256 }}
   patches:
   - 0001-conda-build.patch
-# ms-gsl 3.1.0 is missing in conda-forge; added as source
-- url: https://codeload.github.com/microsoft/GSL/tar.gz/v3.1.0
-  sha256: d3234d7f94cea4389e3ca70619b82e8fb4c2f33bb3a070799f1e18eef500a083
-  target_directory: dep/gsl
 
 build:
   number: 0
   script:
-  - set "SolutionDir=%SRC_DIR%\"
-  - msbuild src\host\exe\Host.EXE.vcxproj -p:Configuration=Release;Platform=x64
-  - msbuild src\winconpty\dll\winconptydll.vcxproj -p:Configuration=Release;Platform=x64
-  - mklink /H "%LIBRARY_BIN%\OpenConsole.exe" bin\x64\Release\OpenConsole.exe
-  - mklink /H "%LIBRARY_BIN%\conpty.dll" bin\x64\Release\conpty.dll
+    content:
+    - set "SolutionDir=%SRC_DIR%\"
+    - msbuild src\host\exe\Host.EXE.vcxproj -p:Configuration=Release;Platform=x64
+    - msbuild src\winconpty\dll\winconptydll.vcxproj -p:Configuration=Release;Platform=x64
+    - mklink /H "%LIBRARY_BIN%\OpenConsole.exe" bin\x64\Release\OpenConsole.exe
+    - mklink /H "%LIBRARY_BIN%\conpty.dll" bin\x64\Release\conpty.dll
+    env:
+      USERPROFILE: ${{ env.get('USERPROFILE') }}
   skip:
   - not win
   - build_platform != target_platform
@@ -34,7 +33,8 @@ requirements:
   - ${{ compiler('cxx') }}
   host:
   - fmt
-  - icu 78.*
+  - ms-gsl 4.2.*
+  - icu 79.*
   - mingw-w64-ucrt-x86_64-crt-git
   - wil
 
