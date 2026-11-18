@@ -30,7 +30,7 @@
  use uv_git_types::{GitHubRepository, GitOid, GitUrl};
  use uv_metadata::read_archive_metadata;
  use uv_normalize::PackageName;
-@@ -2631,6 +2634,10 @@
+@@ -2618,6 +2621,10 @@
          resource: &GitDirectorySourceUrl<'_>,
          client: &ManagedClient<'_>,
      ) -> Result<Option<ResolutionMetadata>, Error> {
@@ -41,7 +41,7 @@
          let GitDirectorySourceUrl {
              git, subdirectory, ..
          } = resource;
-@@ -2649,10 +2656,15 @@
+@@ -2637,10 +2644,15 @@
 
          // Fetch the `pyproject.toml` from the resolved commit.
          let url = SafeUrl::parse_relaxed(&format!(
@@ -58,7 +58,7 @@
          debug!("Attempting to fetch `pyproject.toml` from: {url}");
 
          let content = client
-@@ -2660,6 +2672,8 @@
+@@ -2648,6 +2660,8 @@
                  let response = client
                      .uncached_client(git.url())
                      .get(url.clone())
@@ -67,7 +67,7 @@
                      .send()
                      .await?;
 
-@@ -2667,7 +2681,19 @@
+@@ -2655,7 +2669,19 @@
                  if response.status() == StatusCode::NOT_FOUND {
                      return Ok::<Option<String>, Error>(None);
                  }

@@ -1,6 +1,6 @@
 context:
-  version: 0.13.4
-  sha256: e1d874361b540ca2f1bc625d2a97b05bd38270437c935b1d6f01dff99c728b74
+  version: 0.13.9
+  sha256: 9ff3b8467058929c25c6be93805dd14f1ba7f35013edc8146643af0b015231c5
 
 package:
   name: uv
@@ -34,7 +34,7 @@ build:
 requirements:
   build:
   - ${{ compiler('c') }}
-  - rust >=1.97.0
+  - rust >=1.98.0
   - ${{ stdlib('c') }}
   - if: linux
     then: diffutils
