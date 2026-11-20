@@ -1,6 +1,6 @@
 context:
-  version: 0.6.0
-  sha256: 0eeb2575b3eca698939364b0cbb38505cc7fa773ac07fb33985089e92c97c5cc
+  version: 0.8.0
+  sha256: 9feaa3bb68131d5176c8fd89a0a505852e2bc5ecf05b8572d0fc47493c3e6ffa
 
 package:
   name: ruffle
@@ -35,7 +35,7 @@ requirements:
   - if: microarch_level|int > 0
     then: x86_64-microarch-level ==${{ microarch_level }}
   run:
-  - openh264 ==2.4.1
+  - openh264 ==2.7.0
 
 tests:
 - script:

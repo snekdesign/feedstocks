@@ -1,6 +1,6 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -72,6 +72,7 @@
+@@ -78,6 +78,7 @@
  enum-map = "2.7.3"
  flate2 = "1.1.9"
  futures = "0.3.32"
@@ -8,7 +8,7 @@
  image = { version = "0.25.10", default-features = false }
  js-sys = "0.3.97"
  web-sys = "0.3.97"
-@@ -156,7 +157,9 @@
+@@ -163,7 +164,9 @@
  panic = "unwind"
 
  [profile.release]
@@ -20,7 +20,7 @@
  inherits = "release"
 --- a/core/src/avm1/globals.rs
 +++ b/core/src/avm1/globals.rs
-@@ -374,9 +374,7 @@
+@@ -367,9 +367,7 @@
          .get(0)
          .unwrap_or(&Value::Undefined)
          .coerce_to_i32(activation)?;
@@ -55,15 +55,15 @@
  [lints]
  workspace = true
 
-@@ -19,6 +23,7 @@
+@@ -20,6 +24,7 @@
  image = { workspace = true, features = ["png"] }
  egui-winit = { workspace = true }
  fontdb = "0.23"
 +gdt-cpus = { workspace = true }
+ ruffle_common = { path = "../core/common" }
  ruffle_core = { path = "../core", features = ["audio", "clap", "mp3", "aac", "nellymoser", "default_compatibility_rules", "egui"] }
  ruffle_render = { path = "../render", features = ["clap"] }
- ruffle_render_wgpu = { path = "../render/wgpu", features = ["clap"] }
-@@ -76,7 +81,7 @@
+@@ -78,7 +83,7 @@
  CompanyName = "Ruffle LLC"
  LegalCopyright = "Copyright © 2018 Ruffle LLC and Ruffle contributors"
  # InternalName should be the same as the module name
@@ -74,26 +74,26 @@
  [features]
 --- a/desktop/src/backends/ui.rs
 +++ b/desktop/src/backends/ui.rs
-@@ -324,7 +324,7 @@
-         let is_italic = query.is_italic;
-
-         let query = fontdb::Query {
--            families: &[Family::Name(name)],
-+            families: &[Family::Name(name.strip_suffix("_GB2312").unwrap_or(name))],
-             weight: if is_bold {
-                 fontdb::Weight::BOLD
-             } else {
+@@ -350,7 +350,7 @@
+                 tracing::info!("Device font \"{name}\" matched case-insensitively to \"{canon}\"");
+             }
+             let query = fontdb::Query {
+-                families: &[Family::Name(&canon)],
++                families: &[Family::Name(canon.strip_suffix("_GB2312").unwrap_or(&canon))],
+                 weight,
+                 style,
+                 ..Default::default()
 --- a/desktop/src/main.rs
 +++ b/desktop/src/main.rs
-@@ -26,6 +26,7 @@
- use app::App;
+@@ -28,6 +28,7 @@
+ use clap::CommandFactory;
  use clap::Parser;
  use cli::Opt;
 +use gdt_cpus::{CoreKind, CpuInfo, ThreadPriority, pin_thread_to_core, set_thread_priority};
  use rfd::MessageDialogResult;
  use ruffle_core::StaticCallstack;
  use std::cell::RefCell;
-@@ -186,6 +187,30 @@
+@@ -196,6 +197,30 @@
      subscriber.init();
 
      let result = App::new(preferences).and_then(|(mut app, event_loop)| {
@@ -129,8 +129,8 @@
 @@ -52,6 +52,7 @@
 
          let local_filenames = match OS {
-             "linux" => ["libopenh264.so.7", "libopenh264.so.2.4.1", "libopenh264.so"].as_slice(),
-+            "windows" => ["openh264-7.dll"].as_slice(),
+             "linux" => ["libopenh264.so.8", "libopenh264.so.2.7.0", "libopenh264.so"].as_slice(),
++            "windows" => ["openh264-8.dll"].as_slice(),
              // TODO: investigate other OSes
              _ => [].as_slice(),
          };
