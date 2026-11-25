@@ -1,6 +1,6 @@
 context:
-  version: 0.84.2
-  sha256: ccd49ba6ac73f50f23d09d411d16dbf6df58c879428e6f16a1e1a9770216c537
+  version: 0.85.0
+  sha256: 18d0d1f90814769b5ed78314d00e4986a058524ca402e1694afb0a00a07f83c2
 
 recipe:
   name: pixi
@@ -12,8 +12,8 @@ source:
   target_directory: pixi
   patches:
   - changes.patch
-- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.55.5
-  sha256: e6562bf32fea4d47707d92cfd2e54a1b9917c81a12211d1dce6b013886c08fde
+- url: https://codeload.github.com/conda/rattler/tar.gz/rattler-v0.55.9
+  sha256: 7482c350ecf5a3a89602ac7b093d896d68bc5d8c470e04ad60d74139e90eb098
   target_directory: rattler
   patches:
   - 0001-strip-dquotes.patch
