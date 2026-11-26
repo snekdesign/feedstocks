@@ -1,23 +1,23 @@
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -759,6 +759,8 @@
- quick-xml = "0.38"
+@@ -867,6 +867,8 @@
+ quick-xml = "0.41"
  quote = "1.0.9"
- rand = "0.9"
-+rattler_conda_types = { version = "0.50.0", default-features = false }
-+rattler_shell = { version = "0.27.14", default-features = false }
- rayon = "1.8"
+ rand = { version = "0.9", default-features = false, features = ["std", "std_rng", "os_rng"] }
++rattler_conda_types = { version = "0.58.4", default-features = false }
++rattler_shell = { version = "0.29.11", default-features = false }
  raw-window-handle = "0.6"
- regex = "1.5"
-@@ -898,6 +900,7 @@
- webrtc-sys = "0.3.23"
- wgpu = "29.0.4"
- windows-core = "0.61"
+ rayon = "1.8"
+ regex = { version = "1.5", default-features = false, features = ["std", "perf"] }
+@@ -1012,6 +1014,7 @@
+ wgpu = { git = "https://github.com/gfx-rs/wgpu", rev = "cddb2f5d80dc0009b2ef6767635140cacf90a007", default-features = false }
+ which = "8"
+ windows-core = "0.62"
 +windows-link = "0.2"
  windows-registry = "0.6.0"
- yaml-rust2 = "0.8"
- yawc = { git = "https://github.com/zed-industries/yawc", rev = "71a452f551cac178367eaac5d7418a09afa1f3a2", version = "0.3.3" }
-@@ -1058,13 +1061,11 @@
+ xkbcommon = { version = "0.8", default-features = false }
+ yaml-rust2 = { version = "0.8", default-features = false }
+@@ -1156,13 +1159,11 @@
  zed_actions = { codegen-units = 1 }
 
  [profile.release]
@@ -36,14 +36,12 @@
  debug = "full"
 --- a/crates/explorer_command_injector/Cargo.toml
 +++ b/crates/explorer_command_injector/Cargo.toml
-@@ -22,6 +22,7 @@
+@@ -23,4 +23,5 @@
  [target.'cfg(target_os = "windows")'.dependencies]
- windows.workspace = true
+ windows = { workspace = true, features = ["Win32_Globalization", "Win32_System_SystemServices"] }
  windows-core.workspace = true
 +windows-link.workspace = true
- windows-registry = "0.5"
-
- [dependencies]
+ windows-registry.workspace = true
 --- a/crates/explorer_command_injector/src/explorer_command_injector.rs
 +++ b/crates/explorer_command_injector/src/explorer_command_injector.rs
 @@ -8,7 +8,6 @@
@@ -54,27 +52,27 @@
          System::{
              Com::{IBindCtx, IClassFactory, IClassFactory_Impl},
              LibraryLoader::GetModuleFileNameW,
-@@ -168,7 +167,10 @@
+@@ -164,7 +163,10 @@
          buf = vec![0u16; buf.len() * 2];
          unsafe { GetModuleFileNameW(Some(DLL_INSTANCE.into()), &mut buf) };
      }
 -    let len = unsafe { u_strlen(buf.as_ptr()) };
 +    let len = unsafe {
-+        windows_link::link!("icuuc78.dll" "C" fn u_strlen_78(s : *const u16) -> i32);
-+        u_strlen_78(buf.as_ptr())
++        windows_link::link!("icuuc79.dll" "C" fn u_strlen_79(s : *const u16) -> i32);
++        u_strlen_79(buf.as_ptr())
 +    };
      let path: PathBuf = std::ffi::OsString::from_wide(&buf[..len as usize])
          .into_string()
          .ok()?
 --- a/crates/gpui_windows/Cargo.toml
 +++ b/crates/gpui_windows/Cargo.toml
-@@ -38,6 +38,7 @@
- uuid.workspace = true
- windows.workspace = true
+@@ -66,6 +66,7 @@
+     "Win32_UI_Input_Pointer",
+ ] }
  windows-core.workspace = true
 +windows-link.workspace = true
- windows-numerics = "0.2"
- windows-registry = "0.5"
+ windows-numerics = "0.3"
+ windows-registry.workspace = true
 
 --- a/crates/gpui_windows/src/destination_list.rs
 +++ b/crates/gpui_windows/src/destination_list.rs
@@ -103,16 +101,16 @@
              unsafe { shell_link.GetDescription(&mut buffer)? };
 -            let len = unsafe { u_strlen(buffer.as_ptr()) };
 +            let len = unsafe {
-+                windows_link::link!("icuuc78.dll" "C" fn u_strlen_78(s : *const u16) -> i32);
-+                u_strlen_78(buffer.as_ptr())
++                windows_link::link!("icuuc79.dll" "C" fn u_strlen_79(s : *const u16) -> i32);
++                u_strlen_79(buffer.as_ptr())
 +            };
              String::from_utf16_lossy(&buffer[..len as usize])
          };
          let args = description.split('\n').map(PathBuf::from).collect();
 --- a/crates/zed/build.rs
 +++ b/crates/zed/build.rs
-@@ -88,120 +88,6 @@
-             println!("cargo:rustc-link-arg=/stack:{}", 8 * 1024 * 1024);
+@@ -88,121 +88,6 @@
+             println!("cargo:rustc-link-lib=delayimp");
          }
 
 -        if cfg!(target_arch = "x86_64") || cfg!(target_arch = "aarch64") {
@@ -127,7 +125,8 @@
 -            let conpty_dll_target = target_dir.join("conpty.dll");
 -            let open_console_target = target_dir.join("OpenConsole.exe");
 -
--            let conpty_url = "https://github.com/microsoft/terminal/releases/download/v1.24.10621.0/Microsoft.Windows.Console.ConPTY.1.24.260303001.nupkg";
+-            // TODO: Switch back to the stable channel once Microsoft finally decides to publish v1.26
+-            let conpty_url = "https://github.com/microsoft/terminal/releases/download/v1.25.1912.0/Microsoft.Windows.Console.ConPTY.1.25.260710002-preview.nupkg";
 -            let nupkg_path = out_dir.join("conpty.nupkg.zip");
 -            let extract_dir = out_dir.join("conpty");
 -
@@ -234,8 +233,8 @@
 
 --- a/crates/zed/Cargo.toml
 +++ b/crates/zed/Cargo.toml
-@@ -177,6 +177,8 @@
- project_symbols.workspace = true
+@@ -181,6 +181,8 @@
+ project_bookmarks.workspace = true
  prompt_store.workspace = true
  proto.workspace = true
 +rattler_conda_types.workspace = true
@@ -245,15 +244,15 @@
  remote.workspace = true
 --- a/crates/zed/src/main.rs
 +++ b/crates/zed/src/main.rs
-@@ -46,6 +46,7 @@
+@@ -52,6 +52,7 @@
  use node_runtime::{NodeBinaryOptions, NodeRuntime};
  use parking_lot::Mutex;
- use project::{project_settings::ProjectSettings, trusted_worktrees};
+ use project::{Project, ProjectGroupKey, project_settings::ProjectSettings, trusted_worktrees};
 +use rattler_shell::activation::{ActivationVariables, Activator};
  use recent_projects::{RemoteSettings, open_remote_project};
  use release_channel::{AppCommitSha, AppVersion, ReleaseChannel};
  use session::{AppSession, Session};
-@@ -252,7 +253,7 @@
+@@ -254,7 +255,7 @@
      unsafe {
          use windows::Win32::System::Console::{ATTACH_PARENT_PROCESS, AttachConsole};
 
@@ -262,7 +261,7 @@
              let _ = AttachConsole(ATTACH_PARENT_PROCESS);
          }
      }
-@@ -338,7 +339,32 @@
+@@ -348,7 +349,32 @@
      );
 
      #[cfg(windows)]
@@ -277,7 +276,7 @@
 +            && let Ok(activator) = Activator::from_path(
 +                target_prefix,
 +                rattler_shell::shell::ShellEnum::default(),
-+                rattler_conda_types::Platform::current(),
++                rattler_conda_types::Subdir::current().unwrap(),
 +            )
 +            && let Ok(after_env) = activator.run_activation(before_env, None)
 +        {
@@ -294,5 +293,5 @@
 +        unsafe { env::set_var("CARGO_HOME", cargo_home); }
 +    }
 
-     let app = build_application().with_assets(Assets);
-
+     let app = build_application()
+         .with_assets(Assets)

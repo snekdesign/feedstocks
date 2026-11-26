@@ -1,7 +1,7 @@
 context:
   license: GPL-3.0-or-later
-  version: 1.16.1
-  sha256: dcdf914cb89ede19cd9dd5fe6c20f8d1da10091e2d566d07a3e43c0ddd8ae777
+  version: 1.30.2
+  sha256: 4278dd5692451d7a6227439cb353edf261803f3a45716f794eec0bf36f3928c4
 
 package:
   name: zed
@@ -39,9 +39,9 @@ requirements:
   - nasm
   - rust >=1.95.0
   host:
-  - icu 78.*
+  - icu 79.*
   run:
-  - openconsole ==1.24.10621
+  - openconsole ==1.25.3131
 
 tests:
 - script:
