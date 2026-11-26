@@ -14,7 +14,7 @@ c_compiler_version:
   then: '21.1'
   else: '16.2'
 - if: win
-  then: '2026.1'
+  then: '2026.2'
 
 c_stdlib:
 - if: linux
@@ -30,7 +30,7 @@ c_stdlib_version:
 - if: osx
   then: '10.15'
 - if: win
-  then: '2026.1'
+  then: '2026.2'
 
 cxx_compiler:
 - if: osx
@@ -44,7 +44,7 @@ cxx_compiler_version:
   then: '21.1'
   else: '16.2'
 - if: win
-  then: '2026.1'
+  then: '2026.2'
 
 cdt_name:
 - cos7
